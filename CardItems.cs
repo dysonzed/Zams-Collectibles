@@ -5,9 +5,11 @@ using System.Linq;
 namespace ZamsCollectibles
 {
     /// <summary>
-    /// Item factories for cards, booster packs, the collector's box and complete sets.
+    /// Item factories for cards, booster packs, the collector's box and sealed sets.
     /// Per-copy data lives in tags (saved with the item); name, description and unitValue are
     /// also saved per item, so a factory only has to set the defaults and the behaviour.
+    /// Because the game saves the names and descriptions too, RefreshText re-applies them in
+    /// the current language after a save loads.
     /// </summary>
     public static class CardItems
     {
@@ -26,17 +28,34 @@ namespace ZamsCollectibles
         public static string BoosterId(CardSetDef set) => $"{ModEntry.MOD_ID}.booster.{set.id}";
         public static string BundleId(CardSetDef set) => $"{ModEntry.MOD_ID}.set.{set.id}";
 
+        // Item id -> sets that item's name and descriptions in the current language.
+        private static readonly Dictionary<string, Action<GameItem>> textByItemId = new Dictionary<string, Action<GameItem>>();
+
         public static void Register(ModItemDirectory dir)
         {
             CardDatabase.EnsureLoaded();
             foreach (CardSetDef set in CardDatabase.Sets)
             {
                 foreach (CardDef card in set.cards)
+                {
                     dir.Add(CardId(card), () => CreateCard(card));
+                    textByItemId[CardId(card)] = item => SetCardText(item, card);
+                }
                 dir.Add(BoosterId(set), () => CreateBooster(set));
+                textByItemId[BoosterId(set)] = item => SetBoosterText(item, set);
                 dir.Add(BundleId(set), () => CreateBundle(set));
+                textByItemId[BundleId(set)] = item => SetBundleText(item, set);
             }
             dir.Add(COLLECTOR_BOX_ID, CreateCollectorBox);
+            textByItemId[COLLECTOR_BOX_ID] = SetBoxText;
+        }
+
+        /// <summary>Re-applies an item's name and descriptions in the current language; false if it isn't ours.</summary>
+        public static bool RefreshText(GameItem item)
+        {
+            if (item?.identifier == null || !textByItemId.TryGetValue(item.identifier, out Action<GameItem> setText)) return false;
+            setText(item);
+            return true;
         }
 
         // ---------------------------------------------------------------- cards
@@ -45,9 +64,7 @@ namespace ZamsCollectibles
         {
             GameItem item = ItemDirectory.CreateEmptyItem(CardId(card))
                 .SetSpriteAndShapeFromMod(ModEntry.MOD_ID, card.set.cardSprite);
-            item.name = CardName(card);
-            item.shortDescription = CardText(card);
-            item.flavorText = card.flavor;
+            SetCardText(item, card);
             item.SetGameItemType(Collectibles.TYPE);
             item.EnableTag(CARD_TAG);
             item.ModifyTag(CARD_SET_STRING, s => s.Enable().SetString(card.set.id));
@@ -61,6 +78,13 @@ namespace ZamsCollectibles
             // Rolled for every new copy. When a save loads, the saved tags, value and sprite replace these.
             SetCondition(item, CardCondition.RollFreshCondition());
             return item;
+        }
+
+        private static void SetCardText(GameItem item, CardDef card)
+        {
+            item.name = CardName(card);
+            item.shortDescription = CardText(card);
+            item.flavorText = Loc.CardFlavor(card);
         }
 
         /// <summary>Sets a card's hidden condition, with the value and inventory icon that follow from it.</summary>
@@ -83,22 +107,29 @@ namespace ZamsCollectibles
             return mod != null && mod.Sprites.ContainsKey(key);
         }
 
-        /// <summary>"#01 - Rust Rat": the number padded to the set's size, at least two digits.</summary>
-        public static string CardName(CardDef card) =>
-            $"#{card.number.ToString().PadLeft(Math.Max(2, card.set.cards.Length.ToString().Length), '0')} - {card.name}";
+        /// <summary>The card number padded to the set's size, at least two digits ("01").</summary>
+        public static string CardNumber(CardDef card) =>
+            card.number.ToString().PadLeft(Math.Max(2, card.set.cards.Length.ToString().Length), '0');
 
-        /// <summary>Type, cost, stats and rules in one block: the item description and the simple viewer.</summary>
+        /// <summary>"#01 - Rust Rat"</summary>
+        public static string CardName(CardDef card) => Loc.Get("card_name", CardNumber(card), Loc.CardTitle(card));
+
+        /// <summary>Type, cost, stats and rules in one block: the item description and the plain viewer.</summary>
         public static string CardText(CardDef card)
         {
-            string stats = card.type == "Creature" ? $"{card.type} · Cost {card.cost} · {card.power}/{card.defense}" : $"{card.type} · Cost {card.cost}";
-            return string.IsNullOrEmpty(card.text) ? stats : $"{stats}\n{card.text}";
+            string stats = card.type == "Creature"
+                ? Loc.Get("card_stats_creature", Loc.CardType(card), card.cost, card.power, card.defense)
+                : Loc.Get("card_stats", Loc.CardType(card), card.cost);
+            string rules = Loc.CardRules(card);
+            return string.IsNullOrEmpty(rules) ? stats : $"{stats}\n{rules}";
         }
 
         /// <summary>The card face's type line ("Creature · 1/1"); the cost has its own gem.</summary>
         public static string TypeLine(CardDef card) =>
-            card.type == "Creature" ? $"{card.type} · {card.power}/{card.defense}" : card.type;
+            card.type == "Creature" ? Loc.Get("card_type_line_creature", Loc.CardType(card), card.power, card.defense) : Loc.CardType(card);
 
-        public static string RulesText(CardDef card) => card.text ?? "";
+        /// <summary>"SCR 001/012"</summary>
+        public static string SetNumber(CardDef card) => $"{card.set.code} {card.number:000}/{card.set.cards.Length:000}";
 
         public static bool IsCard(GameItem item) => item != null && item.IsTag(CARD_TAG);
 
@@ -140,9 +171,7 @@ namespace ZamsCollectibles
         {
             GameItem item = ItemDirectory.CreateEmptyItem(BoosterId(set))
                 .SetSpriteAndShapeFromMod(ModEntry.MOD_ID, string.IsNullOrEmpty(set.packSprite) ? "booster_pack" : set.packSprite);
-            item.name = $"{set.name} Booster Pack";
-            item.shortDescription = $"A sealed pack of {PackSize(set)} {set.name} cards. Activate to open it.";
-            item.flavorText = "Sealed packs are worth more to collectors. Probably.";
+            SetBoosterText(item, set);
             item.SetGameItemType(Collectibles.TYPE);
             item.ModifyTag(BOOSTER_SET_STRING, s => s.Enable().SetString(set.id));
             item.SetValue(set.packValue);
@@ -150,7 +179,7 @@ namespace ZamsCollectibles
             item.mayActivateSlotItemFunc = (s, _, _) => GeneralHelper.IsItemOwned(s);
             item.onActivateSlotItemFunc = (_, curInv, _) =>
             {
-                Confirm($"Open the {set.name} booster pack?\nIt can't be resealed.", () =>
+                Confirm(Loc.Get("booster_open_confirm", Loc.SetName(set)), () =>
                 {
                     item.Destroy();
                     foreach (PackSlotDef slot in set.packSlots)
@@ -159,6 +188,13 @@ namespace ZamsCollectibles
                 });
             };
             return item;
+        }
+
+        private static void SetBoosterText(GameItem item, CardSetDef set)
+        {
+            item.name = Loc.Get("booster_name", Loc.SetName(set));
+            item.shortDescription = Loc.Get("booster_desc", PackSize(set), Loc.SetName(set));
+            item.flavorText = Loc.Get("booster_flavor");
         }
 
         private static int PackSize(CardSetDef set) => set.packSlots.Sum(s => s.count);
@@ -171,10 +207,10 @@ namespace ZamsCollectibles
         }
 
         /// <summary>"3 Common, 1 Uncommon, 1 Rare or Ultra Rare"</summary>
-        public static string PackContents(CardSetDef set) => string.Join(", ", set.packSlots.Select(slot =>
-            $"{slot.count} {string.Join(" or ", slot.rarities.Select(r => CardDatabase.GetRarity(r)?.name ?? r))}"));
+        public static string PackContents(CardSetDef set) => string.Join(Loc.Get("list_separator"), set.packSlots.Select(slot =>
+            Loc.Get("pack_slot", slot.count, string.Join(Loc.Get("list_or"), slot.rarities.Select(Loc.RarityName)))));
 
-        // ---------------------------------------------------------------- collector's box and complete sets
+        // ---------------------------------------------------------------- collector's box and sealed sets
 
         private const int BOX_GRID_WIDTH = 6;
         private const long BOX_VALUE = 10;
@@ -187,22 +223,21 @@ namespace ZamsCollectibles
         {
             int largestSet = CardDatabase.Sets.Count > 0 ? CardDatabase.Sets.Max(s => s.cards.Length) : BOX_GRID_WIDTH;
             GameGridInventory grid = new GameGridInventory(BOX_GRID_WIDTH, (largestSet + BOX_GRID_WIDTH - 1) / BOX_GRID_WIDTH);
-            MachineryText status = MachineryText.Status("Set", "empty");
+            MachineryText status = MachineryText.Status(Loc.Get("box_status"), Loc.Get("box_status_empty"));
             GameItem item = null;
-            MachineryButton seal = new MachineryButton("Seal Set", () => TrySeal(item, grid, status))
-                .SetDescription("Seals the box when it holds exactly one of each card of a set.");
+            MachineryButton seal = new MachineryButton(Loc.Get("box_seal_button"), () => TrySeal(item, grid, status))
+                .SetDescription(Loc.Get("box_seal_button_desc"));
 
             PixelWindow window = MachineHelper.CreateMachineryWindow(true,
-                MachineHelper.Panel("Cards", grid, "cards"),
-                MachineHelper.Panel("Seal", MachineryStack.Vertical(status, seal), "seal"));
+                MachineHelper.Panel(Loc.Get("box_panel_cards"), grid, "cards"),
+                MachineHelper.Panel(Loc.Get("box_panel_seal"), MachineryStack.Vertical(status, seal), "seal"));
             // a loaded save refills the grid without the add callbacks below, so refresh on open too
             window.openCallback += () => RefreshStatus(grid, status);
 
             item = ItemDirectory.CreateEmptyItem(COLLECTOR_BOX_ID)
                 .SetContentWindow(window)
                 .SetSpriteAndShapeFromMod(ModEntry.MOD_ID, "collector_box");
-            item.name = "Collector's Box";
-            item.shortDescription = "A display box for one card set. Fill it with one of each card, then seal it: sealed sets sell for a little more than the loose cards.";
+            SetBoxText(item);
             item.SetGameItemType(Collectibles.TYPE);
             item.SetValue(BOX_VALUE);
 
@@ -214,31 +249,36 @@ namespace ZamsCollectibles
             return item;
         }
 
+        private static void SetBoxText(GameItem item)
+        {
+            item.name = Loc.Get("box_name");
+            item.shortDescription = Loc.Get("box_desc");
+        }
+
         /// <summary>The set the box holds exactly, or null with the reason it can't be sealed.</summary>
         private static CardSetDef CheckContents(GameInventory grid, out string problem)
         {
             List<GameItem> cards = grid.childItems.Where(IsCard).ToList();
             problem = null;
-            if (cards.Count == 0) { problem = "empty"; return null; }
+            if (cards.Count == 0) { problem = Loc.Get("box_status_empty"); return null; }
 
             List<CardDef> defs = cards.Select(GetCardDef).ToList();
-            if (defs.Any(d => d == null)) { problem = "unknown card"; return null; }
+            if (defs.Any(d => d == null)) { problem = Loc.Get("box_status_unknown"); return null; }
 
             CardSetDef set = defs[0].set;
-            if (defs.Any(d => d.set != set)) { problem = "mixed sets"; return null; }
+            if (defs.Any(d => d.set != set)) { problem = Loc.Get("box_status_mixed"); return null; }
 
             CardDef duplicate = defs.GroupBy(d => d).Where(g => g.Count() > 1).Select(g => g.Key).FirstOrDefault();
-            if (duplicate != null) { problem = $"two of #{duplicate.number:000}"; return null; }
+            if (duplicate != null) { problem = Loc.Get("box_status_duplicate", CardNumber(duplicate)); return null; }
 
-            int missing = set.cards.Length - defs.Count;
-            if (missing > 0) { problem = $"{set.code} {defs.Count}/{set.cards.Length}"; return null; }
+            if (defs.Count < set.cards.Length) { problem = Loc.Get("box_status_progress", set.code, defs.Count, set.cards.Length); return null; }
             return set;
         }
 
         private static void RefreshStatus(GameInventory grid, MachineryText status)
         {
             CardSetDef set = CheckContents(grid, out string problem);
-            status.SetStatus("Set", set != null ? $"{set.code} complete" : problem);
+            status.SetStatus(Loc.Get("box_status"), set != null ? Loc.Get("box_status_complete", set.code) : problem);
         }
 
         private static void TrySeal(GameItem box, GameInventory grid, MachineryText status)
@@ -247,14 +287,14 @@ namespace ZamsCollectibles
             CardSetDef set = CheckContents(grid, out string problem);
             if (set == null)
             {
-                status.SetStatus("Can't seal", problem);
+                status.SetStatus(Loc.Get("box_status_cant_seal"), problem);
                 return;
             }
 
             List<GameItem> cards = grid.childItems.Where(IsCard).ToList();
             long loose = cards.Sum(c => c.unitValue);
             long sealedValue = (long)Math.Round(loose * (1f + set.sealedMarkup));
-            Confirm($"Seal the {set.name} set?\nThe cards can't be taken out again.\nLoose value {loose}, sealed value {sealedValue}.", () =>
+            Confirm(Loc.Get("box_seal_confirm", Loc.SetName(set), loose, sealedValue), () =>
             {
                 float avgCondition = cards.Average(GetCondition);
                 GameInventory parent = box.parentInventory;
@@ -273,8 +313,7 @@ namespace ZamsCollectibles
         {
             GameItem item = ItemDirectory.CreateEmptyItem(BundleId(set))
                 .SetSpriteAndShapeFromMod(ModEntry.MOD_ID, "complete_set");
-            item.name = $"Sealed Set: {set.name}";
-            item.shortDescription = $"All {set.cards.Length} cards of {set.name}, sealed in a display box.";
+            SetBundleText(item, set);
             item.SetGameItemType(Collectibles.TYPE);
             item.EnableTag(BUNDLE_TAG);
             // Real value is set when a box is sealed; this is the fallback for spawned copies.
@@ -282,11 +321,18 @@ namespace ZamsCollectibles
             return item;
         }
 
+        private static void SetBundleText(GameItem item, CardSetDef set)
+        {
+            item.name = Loc.Get("sealed_name", Loc.SetName(set));
+            item.shortDescription = Loc.Get("sealed_desc", set.cards.Length, Loc.SetName(set));
+        }
+
         // ---------------------------------------------------------------- shared
 
+        // Yes / No come from the game's own strings, already translated.
         private static void Confirm(string message, Action onConfirm)
         {
-            GenericConfirmationUIManager.Instance.OpenPanel(message, "Yes", "No", () =>
+            GenericConfirmationUIManager.Instance.OpenPanel(message, LocHelper.GetLocalizedMainMenu("yes"), LocHelper.GetLocalizedMainMenu("no"), () =>
             {
                 GenericConfirmationUIManager.Instance.ClosePanel();
                 onConfirm();

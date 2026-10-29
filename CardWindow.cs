@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ZamsCollectibles
@@ -38,18 +39,19 @@ namespace ZamsCollectibles
                 UnityEngine.Object.Destroy(body);   // the window made its own copy
             }
 
-            string rules = CardItems.RulesText(card);
-            if (!string.IsNullOrEmpty(card.flavor))
-                rules = (string.IsNullOrEmpty(rules) ? "" : rules + "\n") + $"<i><color=#5f5a66>{card.flavor}</color></i>";
+            string rules = Loc.CardRules(card);
+            string flavor = Loc.CardFlavor(card);
+            if (!string.IsNullOrEmpty(flavor))
+                rules = (string.IsNullOrEmpty(rules) ? "" : rules + "\n") + $"<i><color=#5f5a66>{flavor}</color></i>";
 
             CustomUIWindow window = builder
                 .SetDraggable(true)
                 .SetCloseOnEscape(true)
-                .AddLabel(card.name, "name")
+                .AddLabel(Loc.CardTitle(card), "name")
                 .AddLabel(card.cost.ToString(), "cost")
                 .AddLabel(CardItems.TypeLine(card), "type")
                 .AddLabel(rules, "rules")
-                .AddLabel($"{card.set.code} {card.number:000}/{card.set.cards.Length:000}", "footer")
+                .AddLabel(CardItems.SetNumber(card), "footer")
                 .Center()
                 .Show();
 
@@ -73,9 +75,8 @@ namespace ZamsCollectibles
             face.sprite = cardSprite;
             face.raycastTarget = true;
 
-            // Clicking the card closes it (a drag does not count as a click).
-            Button close = root.AddComponent<Button>();
-            close.transition = Selectable.Transition.None;
+            // Clicking the card closes it; moving it does not.
+            root.AddComponent<CloseOnClick>();
 
             // Builder content lands here first; Place moves each label onto its slot.
             RectTransform content = Child(root, "content", new RectInt(0, 0, CardLayout.WIDTH, CardLayout.HEIGHT));
@@ -86,7 +87,6 @@ namespace ZamsCollectibles
 
             CustomUIWindowFrame frame = root.AddComponent<CustomUIWindowFrame>();
             frame.contentRoot = content;
-            frame.closeButton = close;
 
             Child(root, "name", CardLayout.NameText);
             Child(root, "cost", CardLayout.CostText);
@@ -139,6 +139,23 @@ namespace ZamsCollectibles
             text.color = color;
             text.margin = Vector4.zero;
             text.raycastTarget = false;
+        }
+
+        /// <summary>
+        /// Closes the card on a click. A Button can't do this: with the drag handler on the same
+        /// object, Unity still reports press, drag and release as a click, so a moved card closed.
+        /// </summary>
+        private class CloseOnClick : MonoBehaviour, IPointerClickHandler
+        {
+            // Screen pixels the pointer may move between press and release and still count as a click.
+            private const float CLICK_SLOP = 6f;
+
+            public void OnPointerClick(PointerEventData eventData)
+            {
+                if (eventData.button != PointerEventData.InputButton.Left) return;
+                if (eventData.dragging || (eventData.position - eventData.pressPosition).sqrMagnitude > CLICK_SLOP * CLICK_SLOP) return;
+                CustomUIManager.Instance?.CloseWindow(WINDOW_ID);
+            }
         }
 
         private static void Stretch(RectTransform rt, Transform parent)

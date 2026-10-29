@@ -3,9 +3,11 @@
   <ID>zams-collectibles</ID>
   <Name>Zam's Collectibles</Name>
   <Author>Zam</Author>
-  <ModVersion>1.0</ModVersion>
-  <Description>A mod for Probably Stolen.</Description>
-  <GameVersions />
+  <ModVersion>0.1</ModVersion>
+  <Description>Zamco Electronics brings the Aug Warriors trading card game to the station: booster packs to open, cards to collect, grade and sell, and complete sets to seal in a Collector's Box. Cards are mod items: they are lost if the mod is disabled.</Description>
+  <GameVersions>
+    <Version>0.46</Version>
+  </GameVersions>
   <Prerequisites />
   <!-- Every DLL the game must load, relative to this folder. Nothing else in the folder is loaded. -->
   <Assemblies>

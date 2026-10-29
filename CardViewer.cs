@@ -13,8 +13,7 @@ namespace ZamsCollectibles
     {
         public const string PLACEHOLDER_ART = "art_placeholder";
 
-        // Fallback window. Kept short: the title bar does not wrap.
-        private const string FALLBACK_TITLE = "Aug Warriors";
+        // Fallback window (its title, viewer_title, is kept short: the title bar does not wrap).
         private const int FALLBACK_WIDTH = 300;
         private const int FALLBACK_HEIGHT = 470;
         private const int ART_WIDTH = 63;
@@ -48,13 +47,13 @@ namespace ZamsCollectibles
 
         private static void OpenPlain(GameItem item, CardDef card, string artKey)
         {
-            RarityDef rarity = CardDatabase.GetRarity(card.rarity);
             float condition = CardItems.GetCondition(item);
             string conditionLine = CardItems.IsGraded(item)
-                ? $"Graded {CardCondition.GradeOf(condition):0.0} ({CardCondition.Label(condition)})"
-                : $"{CardCondition.Label(condition)}, ungraded";
+                ? Loc.Get("tooltip_graded", CardCondition.GradeOf(condition).ToString("0.0"), CardCondition.Label(condition))
+                : Loc.Get("viewer_ungraded", CardCondition.Label(condition));
+            string flavor = Loc.CardFlavor(card);
 
-            CustomUIBuilder builder = CustomUIManager.Window(CardWindow.WINDOW_ID, FALLBACK_TITLE, CustomUIManager.LAYER_PAPER)
+            CustomUIBuilder builder = CustomUIManager.Window(CardWindow.WINDOW_ID, Loc.Get("viewer_title"), CustomUIManager.LAYER_PAPER)
                 .UseMachineryStyle()
                 .SetSize(FALLBACK_WIDTH, FALLBACK_HEIGHT)
                 .SetDraggable(true)
@@ -62,11 +61,11 @@ namespace ZamsCollectibles
                 .BeginColumn(6f, TextAnchor.UpperCenter)
                     .AddHeader(CardItems.CardName(card))
                     .AddImage(artKey, ART_WIDTH * ZOOM, ART_HEIGHT * ZOOM)
-                    .AddLabel($"{card.set.name} · {card.set.code} {card.number:000}/{card.set.cards.Length:000}")
-                    .AddLabel(rarity?.name ?? card.rarity)
+                    .AddLabel(Loc.Get("tooltip_card_set", Loc.SetName(card.set), card.set.code, card.number.ToString("000"), card.set.cards.Length.ToString("000")))
+                    .AddLabel(Loc.RarityName(card.rarity))
                     .AddLabel(CardItems.CardText(card));
-            if (!string.IsNullOrEmpty(card.flavor))
-                builder.AddLabel($"<i>{card.flavor}</i>");
+            if (!string.IsNullOrEmpty(flavor))
+                builder.AddLabel($"<i>{flavor}</i>");
             builder
                     .AddLabel(conditionLine)
                 .End()

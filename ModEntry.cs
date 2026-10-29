@@ -35,6 +35,7 @@ namespace ZamsCollectibles
             ModHook.OnCreateDevTooltipLate += OnCreateDevTooltip;
             ModHook.OnPlaceInventorInventoryItemLate += OnInventorStock;
             ModHook.OnGenerateCustomerLate += Collectibles.OnGenerateCustomer;
+            ModHook.OnGameLoadedLate += OnGameLoaded;
             RegisterDebugButtons();
             Log.Log("Enabled.");
         }
@@ -46,6 +47,7 @@ namespace ZamsCollectibles
             ModHook.OnCreateDevTooltipLate -= OnCreateDevTooltip;
             ModHook.OnPlaceInventorInventoryItemLate -= OnInventorStock;
             ModHook.OnGenerateCustomerLate -= Collectibles.OnGenerateCustomer;
+            ModHook.OnGameLoadedLate -= OnGameLoaded;
             ModHelper.RemoveDebugFunctions(MOD_ID);
             Log.Log("Disabled.");
         }
@@ -55,15 +57,15 @@ namespace ZamsCollectibles
             if (item.IsTag(CardItems.BUNDLE_TAG))
             {
                 float avg = item.GetTagReadonly(CardItems.BUNDLE_AVG_CONDITION_FLOAT).GetFloat();
-                if (avg > 0f) builder.AddLine($"Average condition: {CardCondition.Label(avg)}");
+                if (avg > 0f) builder.AddLine(Loc.Get("tooltip_sealed_condition", CardCondition.Label(avg)));
                 return;
             }
 
             CardSetDef boosterSet = CardItems.GetBoosterSet(item);
             if (boosterSet != null)
             {
-                builder.AddLine($"Set: {boosterSet.name} ({boosterSet.code}, {boosterSet.cards.Length} cards)", bold: true);
-                builder.AddLine($"Contains {CardItems.PackContents(boosterSet)}");
+                builder.AddLine(Loc.Get("tooltip_booster_set", Loc.SetName(boosterSet), boosterSet.code, boosterSet.cards.Length), bold: true);
+                builder.AddLine(Loc.Get("tooltip_booster_contents", CardItems.PackContents(boosterSet)));
                 return;
             }
 
@@ -71,14 +73,30 @@ namespace ZamsCollectibles
             if (card == null) return;
 
             RarityDef rarity = CardDatabase.GetRarity(card.rarity);
-            builder.AddLine($"{card.set.name} · {card.set.code} {card.number:000}/{card.set.cards.Length:000}");
-            builder.AddLine(rarity?.name ?? card.rarity, color: ParseColor(rarity?.color), bold: true);
+            builder.AddLine(Loc.Get("tooltip_card_set", Loc.SetName(card.set), card.set.code, card.number.ToString("000"), card.set.cards.Length.ToString("000")));
+            builder.AddLine(Loc.RarityName(card.rarity), color: ParseColor(rarity?.color), bold: true);
 
             float condition = CardItems.GetCondition(item);
             if (CardItems.IsGraded(item))
-                builder.AddLine($"Graded {CardCondition.GradeOf(condition):0.0} ({CardCondition.Label(condition)})", color: RenderHandler.ColorPalette.Yellow);
+                builder.AddLine(Loc.Get("tooltip_graded", CardCondition.GradeOf(condition).ToString("0.0"), CardCondition.Label(condition)), color: RenderHandler.ColorPalette.Yellow);
             else
-                builder.AddLine($"Condition: {CardCondition.Label(condition)} (ungraded)");
+                builder.AddLine(Loc.Get("tooltip_ungraded", CardCondition.Label(condition)));
+        }
+
+        // Item names and descriptions are saved with the items, in the language they were made in:
+        // re-apply ours in the current language whenever a save loads.
+        private void OnGameLoaded()
+        {
+            EmporiumEntry store = EmporiumEntry.Instance;
+            if (store == null) return;
+            int refreshed = 0;
+            foreach (GraphNodeStorage root in new GraphNodeStorage[] { store.invElement, store.frontInvinvElement, store.backInvinvElement, store.showcaseElement, store.afterhourInventory })
+            {
+                if (root == null) continue;
+                foreach (GameItem item in GraphUtils.FindAllChildrenType<GameItem>(root))
+                    if (CardItems.RefreshText(item)) refreshed++;
+            }
+            if (refreshed > 0) Log.Log($"Refreshed the text of {refreshed} item(s).");
         }
 
         // The F9 dev tooltip shows the hidden exact condition, for testing.

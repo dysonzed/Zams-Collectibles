@@ -46,7 +46,7 @@ namespace ZamsCollectibles
     {
         static void Postfix(string typeConst, ref string __result)
         {
-            if (typeConst == Collectibles.TYPE) __result = "Collectible";
+            if (typeConst == Collectibles.TYPE) __result = Loc.Get("type_collectible");
         }
     }
 

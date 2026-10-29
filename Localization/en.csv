@@ -1,0 +1,62 @@
+# Zam's Collectibles - English. Key, comma, text. {0} {1}... are filled in by the mod.
+# Card content (card/set/rarity names, rules, flavour) defaults to Data/sets.json; override it
+# per language with set_<set>_name, rarity_<id>, card_type_<type>, card_<set>_<nn>_name/_text/_flavor.
+
+# Item category
+type_collectible,Collectible
+
+# Card condition (TCG scale)
+condition_mint,Mint
+condition_near_mint,Near Mint
+condition_lightly_played,Lightly Played
+condition_moderately_played,Moderately Played
+condition_heavily_played,Heavily Played
+condition_damaged,Damaged
+
+# Cards
+card_name,#{0} - {1}
+card_stats_creature,{0} · Cost {1} · {2}/{3}
+card_stats,{0} · Cost {1}
+card_type_line_creature,{0} · {1}/{2}
+
+# Tooltips
+tooltip_card_set,{0} · {1} {2}/{3}
+tooltip_graded,Graded {0} ({1})
+tooltip_ungraded,Condition: {0} (ungraded)
+tooltip_sealed_condition,Average condition: {0}
+tooltip_booster_set,"Set: {0} ({1}, {2} cards)"
+tooltip_booster_contents,Contains {0}
+pack_slot,{0} {1}
+list_or," or "
+list_separator,", "
+
+# Booster packs
+booster_name,{0} Booster Pack
+booster_desc,A sealed pack of {0} {1} cards. Activate to open it.
+booster_flavor,Sealed packs are worth more to collectors. Probably.
+booster_open_confirm,Open the {0} booster pack?\nIt can't be resealed.
+
+# Collector's Box
+box_name,Collector's Box
+box_desc,"A display box for one card set. Fill it with one of each card, then seal it: sealed sets sell for a little more than the loose cards."
+box_panel_cards,Cards
+box_panel_seal,Seal
+box_seal_button,Seal Set
+box_seal_button_desc,Seals the box when it holds exactly one of each card of a set.
+box_status,Set
+box_status_cant_seal,Can't seal
+box_status_empty,empty
+box_status_unknown,unknown card
+box_status_mixed,mixed sets
+box_status_duplicate,two of #{0}
+box_status_progress,{0} {1}/{2}
+box_status_complete,{0} complete
+box_seal_confirm,"Seal the {0} set?\nThe cards can't be taken out again.\nLoose value {1}, sealed value {2}."
+
+# Sealed sets
+sealed_name,Sealed Set: {0}
+sealed_desc,"All {0} cards of {1}, sealed in a display box."
+
+# Card viewer (plain fallback window)
+viewer_title,Aug Warriors
+viewer_ungraded,"{0}, ungraded"

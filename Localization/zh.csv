@@ -1,0 +1,62 @@
+# Zam's Collectibles - 简体中文 (DRAFT: machine-assisted, needs a native speaker's review).
+# Card content (card/set/rarity names, rules, flavour) falls back to English until added here,
+# e.g. set_scrapyard_name,废料场传奇  or  card_scrapyard_01_name,锈鼠
+
+# 物品类别
+type_collectible,收藏品
+
+# 卡牌品相
+condition_mint,完美品
+condition_near_mint,近完美品
+condition_lightly_played,轻度使用
+condition_moderately_played,中度使用
+condition_heavily_played,重度使用
+condition_damaged,损坏
+
+# 卡牌
+card_name,#{0} - {1}
+card_stats_creature,{0} · 费用 {1} · {2}/{3}
+card_stats,{0} · 费用 {1}
+card_type_line_creature,{0} · {1}/{2}
+
+# 提示
+tooltip_card_set,{0} · {1} {2}/{3}
+tooltip_graded,已评级 {0}（{1}）
+tooltip_ungraded,品相：{0}（未评级）
+tooltip_sealed_condition,平均品相：{0}
+tooltip_booster_set,系列：{0}（{1}，共 {2} 张）
+tooltip_booster_contents,内含 {0}
+pack_slot,{0} 张{1}
+list_or,或
+list_separator,、
+
+# 补充包
+booster_name,{0} 补充包
+booster_desc,一包未拆封的 {1} 卡牌，共 {0} 张。使用即可拆开。
+booster_flavor,未拆封的卡包更受收藏家青睐。大概吧。
+booster_open_confirm,要拆开 {0} 补充包吗？\n拆开后无法复原。
+
+# 收藏盒
+box_name,收藏盒
+box_desc,用于收纳一整套卡牌的展示盒。放入该系列每张卡各一张后即可封装：封装的套卡比散卡卖得更贵一些。
+box_panel_cards,卡牌
+box_panel_seal,封装
+box_seal_button,封装套卡
+box_seal_button_desc,盒内恰好有该系列每张卡各一张时，才能封装。
+box_status,系列
+box_status_cant_seal,无法封装
+box_status_empty,空
+box_status_unknown,未知卡牌
+box_status_mixed,混有多个系列
+box_status_duplicate,#{0} 重复
+box_status_progress,{0} {1}/{2}
+box_status_complete,{0} 已集齐
+box_seal_confirm,要封装 {0} 套卡吗？\n封装后卡牌无法再取出。\n散卡价值 {1}，封装价值 {2}。
+
+# 封装套卡
+sealed_name,封装套卡：{0}
+sealed_desc,{1} 全部 {0} 张卡牌，封装在展示盒中。
+
+# 卡牌查看器（备用窗口）
+viewer_title,Aug Warriors
+viewer_ungraded,{0}，未评级

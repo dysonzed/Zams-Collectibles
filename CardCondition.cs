@@ -10,15 +10,15 @@ namespace ZamsCollectibles
     /// </summary>
     public static class CardCondition
     {
-        // The standard TCG condition scale.
-        private static readonly (float min, string label, float multiplier)[] Labels =
+        // The standard TCG condition scale; labels are localization keys.
+        private static readonly (float min, string key, float multiplier)[] Labels =
         {
-            (9.5f, "Mint",              1.5f),
-            (8.5f, "Near Mint",         1.25f),
-            (7.0f, "Lightly Played",    1.0f),
-            (5.0f, "Moderately Played", 0.75f),
-            (3.0f, "Heavily Played",    0.5f),
-            (0.0f, "Damaged",           0.25f),
+            (9.5f, "condition_mint",              1.5f),
+            (8.5f, "condition_near_mint",         1.25f),
+            (7.0f, "condition_lightly_played",    1.0f),
+            (5.0f, "condition_moderately_played", 0.75f),
+            (3.0f, "condition_heavily_played",    0.5f),
+            (0.0f, "condition_damaged",           0.25f),
         };
 
         /// <summary>Condition of a card fresh out of a pack: mostly 8 to 10, occasionally worse.</summary>
@@ -35,8 +35,8 @@ namespace ZamsCollectibles
         public static string Label(float condition)
         {
             foreach (var entry in Labels)
-                if (condition >= entry.min) return entry.label;
-            return Labels[Labels.Length - 1].label;
+                if (condition >= entry.min) return Loc.Get(entry.key);
+            return Loc.Get(Labels[Labels.Length - 1].key);
         }
 
         public static float RawMultiplier(float condition)
