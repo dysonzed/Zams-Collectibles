@@ -22,6 +22,7 @@ namespace ZamsCollectibles
         public int value;           // base value of a card of this rarity in average (Excellent) condition
         public string color;        // RenderHandler.ColorPalette name used in the tooltip
         public string gem;          // #rrggbb of the rarity gem on the card face
+        public float shopWeight;    // how often the Downside Den stocks singles of this rarity
     }
 
     [Serializable]
@@ -35,6 +36,8 @@ namespace ZamsCollectibles
         public string frameColor;   // card face frame: red, teal, purple or slate
         public int packValue;
         public float sealedMarkup;  // sealed-set value = sum of the card values * (1 + this)
+        public int boxPacks;        // booster packs in a booster box
+        public int boxValue;        // value of a sealed booster box
         public PackSlotDef[] packSlots;
         public CardDef[] cards;
     }
@@ -53,10 +56,17 @@ namespace ZamsCollectibles
         public int number;
         public string name;
         public string rarity;
-        public string type;
-        public int cost;
+
+        // Aug Warriors rules (see AugWarriors/AugRules.cs)
+        public string kind;         // augment, mod or hack
+        public string slot;         // augments: head, torso, arm or legs
+        public string modFor;       // mods: the slot they attach to, or "any"
         public int power;
-        public int defense;
+        public int glitch;          // may be negative on mods (they stabilise)
+        public int stability;       // raises the glitch limit
+        public string effect;       // special rule id, see AugRules
+        public int amount;          // the effect's number
+
         public string text;
         public string flavor;
         public int value;           // optional override of the rarity's base value (0 = use rarity)

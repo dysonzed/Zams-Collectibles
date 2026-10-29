@@ -33,9 +33,9 @@ namespace ZamsCollectibles
             ModHook.OnModItemDirectoryInit += CardItems.Register;
             ModHook.OnCreateTooltipLate += OnCreateTooltip;
             ModHook.OnCreateDevTooltipLate += OnCreateDevTooltip;
-            ModHook.OnPlaceInventorInventoryItemLate += OnInventorStock;
             ModHook.OnGenerateCustomerLate += Collectibles.OnGenerateCustomer;
             ModHook.OnGameLoadedLate += OnGameLoaded;
+            DownsideDen.Register();
             RegisterDebugButtons();
             Log.Log("Enabled.");
         }
@@ -45,9 +45,9 @@ namespace ZamsCollectibles
             ModHook.OnModItemDirectoryInit -= CardItems.Register;
             ModHook.OnCreateTooltipLate -= OnCreateTooltip;
             ModHook.OnCreateDevTooltipLate -= OnCreateDevTooltip;
-            ModHook.OnPlaceInventorInventoryItemLate -= OnInventorStock;
             ModHook.OnGenerateCustomerLate -= Collectibles.OnGenerateCustomer;
             ModHook.OnGameLoadedLate -= OnGameLoaded;
+            ModHelper.RemoveAfterhourLocations(MOD_ID);
             ModHelper.RemoveDebugFunctions(MOD_ID);
             Log.Log("Disabled.");
         }
@@ -65,7 +65,9 @@ namespace ZamsCollectibles
             if (boosterSet != null)
             {
                 builder.AddLine(Loc.Get("tooltip_booster_set", Loc.SetName(boosterSet), boosterSet.code, boosterSet.cards.Length), bold: true);
-                builder.AddLine(Loc.Get("tooltip_booster_contents", CardItems.PackContents(boosterSet)));
+                builder.AddLine(item.identifier == CardItems.BoosterBoxId(boosterSet)
+                    ? Loc.Get("boosterbox_contents", CardItems.BoxPacks(boosterSet))
+                    : Loc.Get("tooltip_booster_contents", CardItems.PackContents(boosterSet)));
                 return;
             }
 
@@ -106,14 +108,6 @@ namespace ZamsCollectibles
                 builder.AddLine($"[dev] exact condition {CardItems.GetCondition(item):0.00}");
         }
 
-        // Dr. Jackson sometimes has a booster pack on his table.
-        private void OnInventorStock(List<GameItem> ownedItems)
-        {
-            if (CardDatabase.Sets.Count == 0 || !RNG.Roll(50)) return;
-            CardSetDef set = RNG.GetRandomElement(CardDatabase.Sets);
-            PlayerStore.Instance.AddDirectSellingItemToTable(CardItems.BoosterId(set));
-        }
-
         // One F9 button that opens our own debug window, so the shared menu stays uncluttered.
         private const string DEBUG_WINDOW_ID = MOD_ID + ".debug";
 
@@ -137,8 +131,19 @@ namespace ZamsCollectibles
                         foreach (CardSetDef set in CardDatabase.Sets)
                             ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardItems.BoosterId(set)));
                     })
+                    .AddButton("Booster Boxes (one per set)", () =>
+                    {
+                        foreach (CardSetDef set in CardDatabase.Sets)
+                            ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardItems.BoosterBoxId(set)));
+                    })
                     .AddButton("Collector's Box", () =>
                         ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardItems.COLLECTOR_BOX_ID)))
+                    .AddButton("Collection Binder", () =>
+                        ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardBinder.BINDER_ID)))
+                    .AddButton("Deck Box", () =>
+                        ModHelper.MoveItemToInventory(ModHelper.SpawnItem(AugWarriors.DeckBox.DECKBOX_ID)))
+                    .AddButton("Test Match (random deck, no stakes)", () =>
+                        AugWarriors.AugMatchWindow.Start(null, "Rook", AugWarriors.AugPersonality.Cautious, 0))
                     .AddButton("Full Card Set (first set)", () =>
                     {
                         CardSetDef set = CardDatabase.Sets.Count > 0 ? CardDatabase.Sets[0] : null;

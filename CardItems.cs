@@ -27,6 +27,9 @@ namespace ZamsCollectibles
         public static string CardId(CardDef card) => $"{ModEntry.MOD_ID}.card.{card.set.id}.{card.number:000}";
         public static string BoosterId(CardSetDef set) => $"{ModEntry.MOD_ID}.booster.{set.id}";
         public static string BundleId(CardSetDef set) => $"{ModEntry.MOD_ID}.set.{set.id}";
+        // Booster packs and boxes are sold only at the Downside Den: don't add them to loot tables or other shops.
+        public static string BoosterBoxId(CardSetDef set) => $"{ModEntry.MOD_ID}.boosterbox.{set.id}";
+        public static string OpenedBoxId(CardSetDef set) => $"{ModEntry.MOD_ID}.boosterbox_open.{set.id}";
 
         // Item id -> sets that item's name and descriptions in the current language.
         private static readonly Dictionary<string, Action<GameItem>> textByItemId = new Dictionary<string, Action<GameItem>>();
@@ -45,9 +48,15 @@ namespace ZamsCollectibles
                 textByItemId[BoosterId(set)] = item => SetBoosterText(item, set);
                 dir.Add(BundleId(set), () => CreateBundle(set));
                 textByItemId[BundleId(set)] = item => SetBundleText(item, set);
+                dir.Add(BoosterBoxId(set), () => CreateBoosterBox(set));
+                textByItemId[BoosterBoxId(set)] = item => SetBoosterBoxText(item, set);
+                dir.Add(OpenedBoxId(set), () => CreateOpenedBox(set));
+                textByItemId[OpenedBoxId(set)] = item => SetOpenedBoxText(item, set);
             }
             dir.Add(COLLECTOR_BOX_ID, CreateCollectorBox);
             textByItemId[COLLECTOR_BOX_ID] = SetBoxText;
+            CardBinder.Register(dir, textByItemId);
+            AugWarriors.DeckBox.Register(dir, textByItemId);
         }
 
         /// <summary>Re-applies an item's name and descriptions in the current language; false if it isn't ours.</summary>
@@ -117,16 +126,32 @@ namespace ZamsCollectibles
         /// <summary>Type, cost, stats and rules in one block: the item description and the plain viewer.</summary>
         public static string CardText(CardDef card)
         {
-            string stats = card.type == "Creature"
-                ? Loc.Get("card_stats_creature", Loc.CardType(card), card.cost, card.power, card.defense)
-                : Loc.Get("card_stats", Loc.CardType(card), card.cost);
+            string stats = StatLine(card, includePower: true);
+            stats = string.IsNullOrEmpty(stats) ? Loc.CardType(card) : $"{Loc.CardType(card)} · {stats}";
             string rules = Loc.CardRules(card);
             return string.IsNullOrEmpty(rules) ? stats : $"{stats}\n{rules}";
         }
 
+        /// <summary>"Power 5 · Glitch 3 · Stability +4". Mods show signed changes; zeroes are left out.</summary>
+        public static string StatLine(CardDef card, bool includePower)
+        {
+            bool mod = card.kind == "mod";
+            List<string> parts = new List<string>();
+            if (includePower && (card.kind == "augment" || card.power != 0)) parts.Add(Loc.Get("stat_power", mod ? Signed(card.power) : card.power.ToString()));
+            if (card.kind == "augment" || card.glitch != 0) parts.Add(Loc.Get("stat_glitch", mod ? Signed(card.glitch) : card.glitch.ToString()));
+            if (card.stability != 0) parts.Add(Loc.Get("stat_stability", Signed(card.stability)));
+            return string.Join(" · ", parts);
+        }
+
+        private static string Signed(int v) => v > 0 ? "+" + v : v < 0 ? "−" + (-v) : "0";
+
+        /// <summary>What the card face's gem shows: an augment's Power, a mod's Power change, nothing for hacks.</summary>
+        public static string GemText(CardDef card) =>
+            card.kind == "augment" ? card.power.ToString() : card.kind == "mod" && card.power != 0 ? Signed(card.power) : "";
+
         /// <summary>The card face's type line ("Creature · 1/1"); the cost has its own gem.</summary>
         public static string TypeLine(CardDef card) =>
-            card.type == "Creature" ? Loc.Get("card_type_line_creature", Loc.CardType(card), card.power, card.defense) : Loc.CardType(card);
+            string.IsNullOrEmpty(StatLine(card, includePower: false)) ? Loc.CardType(card) : $"{Loc.CardType(card)} · {StatLine(card, includePower: false)}";
 
         /// <summary>"SCR 001/012"</summary>
         public static string SetNumber(CardDef card) => $"{card.set.code} {card.number:000}/{card.set.cards.Length:000}";
@@ -149,11 +174,15 @@ namespace ZamsCollectibles
         {
             CardDef card = GetCardDef(item);
             if (card == null) return;
-            float condition = GetCondition(item);
-            float multiplier = IsGraded(item)
+            item.SetValue(ValueFor(card, GetCondition(item), IsGraded(item)));
+        }
+
+        public static long ValueFor(CardDef card, float condition, bool graded)
+        {
+            float multiplier = graded
                 ? CardCondition.GradedMultiplier(CardCondition.GradeOf(condition))
                 : CardCondition.RawMultiplier(condition);
-            item.SetValue(Math.Max(1L, (long)Math.Round(CardDatabase.BaseValue(card) * multiplier)));
+            return Math.Max(1L, (long)Math.Round(CardDatabase.BaseValue(card) * multiplier));
         }
 
         /// <summary>Reveals the exact condition. Returns false when the card was already graded.</summary>
@@ -210,6 +239,81 @@ namespace ZamsCollectibles
         public static string PackContents(CardSetDef set) => string.Join(Loc.Get("list_separator"), set.packSlots.Select(slot =>
             Loc.Get("pack_slot", slot.count, string.Join(Loc.Get("list_or"), slot.rarities.Select(Loc.RarityName)))));
 
+        // ---------------------------------------------------------------- booster boxes
+
+        // Packs are 1 x 2 cells, so the opened box is two rows of nine.
+        private const int OPENED_BOX_COLUMNS = 9;
+        private const long OPENED_BOX_VALUE = 2;
+
+        public static int BoxPacks(CardSetDef set) => set.boxPacks > 0 ? set.boxPacks : 18;
+
+        private static string BoxSprite(CardSetDef set, bool opened)
+        {
+            string key = $"booster_box{(opened ? "_open" : "")}_{set.frameColor}";
+            return HasModSprite(key) ? key : (opened ? "booster_box_open_purple" : "booster_box_purple");
+        }
+
+        /// <summary>A sealed booster box: activating it (after a confirmation) turns it into an opened box full of packs.</summary>
+        private static GameItem CreateBoosterBox(CardSetDef set)
+        {
+            GameItem item = ItemDirectory.CreateEmptyItem(BoosterBoxId(set))
+                .SetSpriteAndShapeFromMod(ModEntry.MOD_ID, BoxSprite(set, false));
+            SetBoosterBoxText(item, set);
+            item.SetGameItemType(Collectibles.TYPE);
+            item.ModifyTag(BOOSTER_SET_STRING, s => s.Enable().SetString(set.id));
+            item.SetValue(set.boxValue > 0 ? set.boxValue : set.packValue * BoxPacks(set));
+            item.canActivateSlotItemFunc = (s, _, _) => GeneralHelper.IsItemOwned(s);
+            item.mayActivateSlotItemFunc = (s, _, _) => GeneralHelper.IsItemOwned(s);
+            item.onActivateSlotItemFunc = (_, curInv, _) =>
+            {
+                Confirm(Loc.Get("boosterbox_open_confirm", Loc.SetName(set), BoxPacks(set)), () =>
+                {
+                    item.Destroy();
+                    GameItem opened = DirectoryMaster.Item(OpenedBoxId(set));
+                    GameGridInventory grid = GraphUtils.FindChildType<GameGridInventory>(opened);
+                    for (int i = 0; i < BoxPacks(set); i++)
+                    {
+                        GameItem pack = DirectoryMaster.Item(BoosterId(set));
+                        if (grid == null || GraphUtils.TryAcceptAll(grid, pack) > 0) GraphUtils.EmporiumTryAdd(curInv, pack);
+                    }
+                    GraphUtils.EmporiumTryAdd(curInv, opened);
+                });
+            };
+            return item;
+        }
+
+        private static void SetBoosterBoxText(GameItem item, CardSetDef set)
+        {
+            item.name = Loc.Get("boosterbox_name", Loc.SetName(set));
+            item.shortDescription = Loc.Get("boosterbox_desc", BoxPacks(set), Loc.SetName(set));
+            item.flavorText = Loc.Get("boosterbox_flavor");
+        }
+
+        /// <summary>
+        /// The opened box: a container holding only this set's packs, worth its packs plus a
+        /// little cardboard. It is an ordinary owned item, so it can go in the trash once empty.
+        /// </summary>
+        private static GameItem CreateOpenedBox(CardSetDef set)
+        {
+            int rows = 2 * ((BoxPacks(set) + OPENED_BOX_COLUMNS - 1) / OPENED_BOX_COLUMNS);
+            (PixelWindow window, GameGridInventory grid) = DirectoryUtils.CreateGridWindow(OPENED_BOX_COLUMNS, rows);
+            GameItem item = ItemDirectory.CreateEmptyItem(OpenedBoxId(set))
+                .SetContentWindow(window)
+                .SetSpriteAndShapeFromMod(ModEntry.MOD_ID, BoxSprite(set, true));
+            SetOpenedBoxText(item, set);
+            item.SetGameItemType(Collectibles.TYPE);
+            item.SetValue(OPENED_BOX_VALUE);
+            ContainerHelper.InitContainerItem(grid, item, allowedId: new List<string> { BoosterId(set) });
+            TrackContainerValue(item, OPENED_BOX_VALUE, grid);
+            return item;
+        }
+
+        private static void SetOpenedBoxText(GameItem item, CardSetDef set)
+        {
+            item.name = Loc.Get("boosterbox_opened_name", Loc.SetName(set));
+            item.shortDescription = Loc.Get("boosterbox_opened_desc", BoxPacks(set), Loc.SetName(set));
+        }
+
         // ---------------------------------------------------------------- collector's box and sealed sets
 
         private const int BOX_GRID_WIDTH = 6;
@@ -242,8 +346,7 @@ namespace ZamsCollectibles
             item.SetValue(BOX_VALUE);
 
             ContainerHelper.InitContainerItem(grid, item, allowedTags: new List<string> { CARD_TAG });
-            ContainerHelper.SetBasicContainerValueChangeRule(item, grid);
-            // the value rule owns the add/remove callbacks, so chain the status refresh onto them
+            TrackContainerValue(item, BOX_VALUE, grid);
             grid.onSlotAddItemEndFunc += (_, _, _) => RefreshStatus(grid, status);
             grid.onSlotRemoveItemEndFunc += (_, _, _) => RefreshStatus(grid, status);
             return item;
@@ -328,6 +431,23 @@ namespace ZamsCollectibles
         }
 
         // ---------------------------------------------------------------- shared
+
+        /// <summary>
+        /// Keeps a container's value at its own value plus everything inside it. Recomputed from
+        /// scratch on every change: the game re-adds the contents when a save loads, so adding
+        /// and subtracting deltas (ContainerHelper's value rule) would count them twice.
+        /// </summary>
+        public static void TrackContainerValue(GameItem container, long ownValue, params GameGridInventory[] grids)
+        {
+            void Recompute(GameItem _, GameInventory __, SlotMarker ___) =>
+                container.SetValue(ownValue + grids.Sum(g => g.childItems.Sum(c => c.unitValue * Math.Max(1, c.unitCount))));
+            foreach (GameGridInventory grid in grids)
+            {
+                grid.onSlotAddItemEndFunc += Recompute;
+                grid.onSlotRemoveItemEndFunc += Recompute;
+            }
+        }
+
 
         // Yes / No come from the game's own strings, already translated.
         private static void Confirm(string message, Action onConfirm)

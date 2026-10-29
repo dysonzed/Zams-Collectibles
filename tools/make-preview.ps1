@@ -26,12 +26,12 @@ function Put($name, $x, $y) {
 }
 
 # card art in a cream frame on the right
-$art = [System.Drawing.Image]::FromFile((Join-Path $items "art_scrapyard_01.png"))
+$art = [System.Drawing.Image]::FromFile((Join-Path $items "den_scene.png"))   # Downside Dan
 $frame = New-Object System.Drawing.SolidBrush (C "#d5d2b8")
 $outline = New-Object System.Drawing.SolidBrush (C "#292234")
 $g.FillRectangle($outline, 103, 6, 51, 78)
 $g.FillRectangle($frame, 104, 7, 49, 76)
-$g.DrawImage($art, (New-Object System.Drawing.Rectangle 106, 9, 45, 63), (New-Object System.Drawing.Rectangle 9, 12, 45, 63), [System.Drawing.GraphicsUnit]::Pixel)
+$g.DrawImage($art, (New-Object System.Drawing.Rectangle 106, 9, 45, 63), (New-Object System.Drawing.Rectangle 420, 100, 90, 126), [System.Drawing.GraphicsUnit]::Pixel)
 $g.FillRectangle($outline, 106, 74, 45, 1)
 $g.FillRectangle($outline, 106, 77, 30, 1)
 $art.Dispose()

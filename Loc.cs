@@ -38,8 +38,19 @@ namespace ZamsCollectibles
         public static string RarityName(string rarityId) =>
             Optional($"rarity_{rarityId}", CardDatabase.GetRarity(rarityId)?.name ?? rarityId);
 
-        public static string CardType(CardDef card) =>
-            string.IsNullOrEmpty(card.type) ? "" : Optional($"card_type_{card.type.ToLowerInvariant()}", card.type);
+        /// <summary>"Arm Augment", "Torso Mod", "Mod", "Hack".</summary>
+        public static string CardType(CardDef card)
+        {
+            switch (card.kind)
+            {
+                case "augment": return Get("card_kind_augment", SlotName(card.slot));
+                case "mod": return card.modFor == null || card.modFor == "any" ? Get("card_kind_mod_any") : Get("card_kind_mod", SlotName(card.modFor));
+                case "hack": return Get("card_kind_hack");
+                default: return "";
+            }
+        }
+
+        public static string SlotName(string slot) => string.IsNullOrEmpty(slot) ? "" : Get($"slot_{slot}");
 
         public static string CardTitle(CardDef card) => Optional(CardKey(card, "name"), card.name);
 

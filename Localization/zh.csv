@@ -15,9 +15,17 @@ condition_damaged,损坏
 
 # 卡牌
 card_name,#{0} - {1}
-card_stats_creature,{0} · 费用 {1} · {2}/{3}
-card_stats,{0} · 费用 {1}
-card_type_line_creature,{0} · {1}/{2}
+card_kind_augment,{0}义体
+card_kind_mod,{0}改装件
+card_kind_mod_any,改装件
+card_kind_hack,骇入
+slot_head,头部
+slot_torso,躯干
+slot_arm,手臂
+slot_legs,腿部
+stat_power,力量 {0}
+stat_glitch,故障 {0}
+stat_stability,稳定 {0}
 
 # 提示
 tooltip_card_set,{0} · {1} {2}/{3}
@@ -60,3 +68,137 @@ sealed_desc,{1} 全部 {0} 张卡牌，封装在展示盒中。
 # 卡牌查看器（备用窗口）
 viewer_title,Aug Warriors
 viewer_ungraded,{0}，未评级
+
+# 下城据点（夜间卡牌店）
+den_name,下城据点
+den_greeting,每晚都有新卡包，售完即止。展柜里的单卡先到先得。
+den_credits,你的信用点：{0}
+den_packs,补充包
+den_singles,单卡
+den_pack_row,{0} ×{1}
+den_single_detail,{0} · {1}
+den_buy,购买
+den_view,查看
+den_sold,已售出
+den_sold_out,今晚已售罄。
+den_not_enough,你买不起。
+den_challenge,挑战玩家
+den_dan_name,下城丹
+den_dan_greeting,欢迎来到下城据点。卡包在展板上，单卡在柜台里。带卡来，我给你出个价。
+den_markup,据点加价
+den_board_hint,把展板上的商品拖到柜台上即可购买。丹也收购收藏品。
+
+# 补充包盒
+boosterbox_name,{0} 补充包盒
+boosterbox_desc,原厂密封的 {1} 补充包盒，内含 {0} 包。使用即可拆开。
+boosterbox_flavor,Zamco 电子出品。内容随机，快乐不变。
+boosterbox_open_confirm,要拆开 {0} 补充包盒吗？\n里面的 {1} 包会留在拆开的盒子里，拆开后无法复原。
+boosterbox_opened_name,已拆开的 {0} 补充包盒
+boosterbox_opened_desc,已拆开的 {1} 补充包盒。打开它取出卡包，空了就扔掉。
+boosterbox_contents,内含 {0} 包补充包
+
+# 收藏册
+binder_name,收藏册
+binder_desc,带卡页的活页册，最多可放 {0} 张单卡。可按编号、稀有度、价值或品相整理。
+binder_tab,{0}
+binder_panel_pages,卡页
+binder_panel_sort,整理
+binder_sort_number,编号
+binder_sort_number_desc,按系列和卡号排序，品相好的在前。
+binder_sort_rarity,稀有度
+binder_sort_rarity_desc,最稀有的卡在前。
+binder_sort_value,价值
+binder_sort_value_desc,最值钱的卡在前。
+binder_sort_condition,品相
+binder_sort_condition_desc,品相最好的在前。
+
+# 卡组盒
+deckbox_name,卡组盒
+deckbox_desc,存放一副 Aug Warriors 卡组：{0} 到 {1} 张卡，每张最多 {2} 份。带到下城据点即可对战。
+
+# Aug Warriors：挑战
+aug_challenge_title,Aug Warriors
+aug_deck_too_small,卡组至少需要 {0} 张卡；你的卡组盒里只有 {1} 张。
+aug_deck_too_big,卡组最多 {0} 张卡；你的卡组盒里有 {1} 张。
+aug_deck_copies,{1} 有 {2} 张：卡组中最多只能放 {0} 张。
+aug_challenge_opponent,对手
+aug_regular_cautious,稳扎稳打，从不冒故障的险。
+aug_regular_reckless,只要力量，不踩刹车。经常失控。
+aug_regular_hacker,最爱用骇入搞垮你的配置。
+aug_challenge_ante,赌注
+aug_challenge_rules,用义体装满身体。对决时力量高者获胜，但故障超过稳定会让你失控：力量减半。你随时可以发起对决，对手还有最后一回合。各自 {0} 回合后会自动对决。
+aug_challenge_start,开打
+aug_close,关闭
+
+# Aug Warriors：对战
+aug_title,Aug Warriors
+aug_you,你
+aug_header,对手 {0} · 第 {1}/{2} 回合 · 赌注 {3}
+aug_no_stakes,无
+aug_totals,{0}：力量 {1} · 故障 {2} / 稳定 {3} · 手牌 {4} · 牌库 {5}
+aug_empty,（空）
+aug_slot_stats,力 {0} · 障 {1}
+aug_slot_hacked,（被骇 +{0}）
+aug_do_install,安装
+aug_do_replace,替换
+aug_do_mod,附加
+aug_do_hack,骇入
+aug_hand,你的手牌
+aug_hand_final,你的手牌：最后一回合！
+aug_select,选择
+aug_selected,已选
+aug_pick_card,选择一张卡，或跳过。
+aug_pick_target,选择放置位置。
+aug_hold,跳过
+aug_call,发起对决
+aug_concede,认输
+aug_log,记录
+aug_log_hold,{0} 跳过。
+aug_log_call,{0} 发起对决！
+aug_log_install,{0} 安装了 {1}。
+aug_log_replace,{0} 用 {1} 替换了 {2}。
+aug_log_mod,{0} 把 {1} 装到 {2} 上。
+aug_log_hack,{0} 用 {1} 骇入 {2}：故障 +{3}。
+aug_log_scrap,{0} 用 {1} 废掉了 {2}。
+aug_log_showdown,对决！
+aug_result_win,你赢了 {0}！
+aug_result_lose,{0} 获胜。
+aug_result_draw,与 {0} 打平。
+aug_result_scores,你：{0} · {1}：{2}
+aug_score_compromised,{0}（失控，原为 {1}）
+aug_result_won_ante,你赢得 {0}。
+aug_result_lost_ante,你输掉 {0}。
+aug_deck_no_torso,没有躯干义体：你的稳定将停留在 3。
+aug_deck_few_arms,手臂义体少于两张。
+aug_deck_no_head,没有头部义体。
+aug_deck_no_legs,没有腿部义体。
+aug_deck_mod_heavy,改装件比可装的义体还多。
+
+# 卡组盒窗口与报告
+deckbox_panel_cards,卡牌
+deckbox_panel_deck,卡组
+deckbox_status,卡组
+deckbox_status_ok,{0} 张 · 合规
+deckbox_status_errors,{0} 张 · {1} 个问题
+deckbox_validate,检查
+deckbox_validate_desc,检查这副卡组并查看构成。
+deckbox_report_title,卡组报告
+deckbox_report_legal,合规卡组 · {0} 张
+deckbox_report_illegal,不合规卡组 · {0} 张
+deckbox_report_overview,概览
+deckbox_report_slot,{0}义体：{1}
+deckbox_report_mods,改装件：{0}
+deckbox_report_hacks,骇入：{0}
+deckbox_report_average,义体平均力量 {0}，故障 {1}
+
+# Aug Warriors 牌桌
+aug_table_deck,卡组
+aug_table_play,开打
+aug_table_rules,规则
+aug_table_no_deck,把卡组盒放在这里。
+aug_table_no_card,可选：放一张卡作为赌注。
+aug_table_card_ante,以一张{0}卡作赌注。
+aug_table_need_deck,把卡组盒放进卡组槽。
+aug_table_fix_deck,你的卡组不合规：打开卡组盒并检查。
+aug_table_ready,准备就绪。
+aug_table_ante_rules,卡牌赌注：赢了保留你的卡，并赢得一张同稀有度的卡（有时更好，常常是你还没有的）。输了或认输，卡归对手。

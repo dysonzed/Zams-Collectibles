@@ -15,9 +15,17 @@ condition_damaged,Damaged
 
 # Cards
 card_name,#{0} - {1}
-card_stats_creature,{0} · Cost {1} · {2}/{3}
-card_stats,{0} · Cost {1}
-card_type_line_creature,{0} · {1}/{2}
+card_kind_augment,{0} Augment
+card_kind_mod,{0} Mod
+card_kind_mod_any,Mod
+card_kind_hack,Hack
+slot_head,Head
+slot_torso,Torso
+slot_arm,Arm
+slot_legs,Legs
+stat_power,Power {0}
+stat_glitch,Glitch {0}
+stat_stability,Stability {0}
 
 # Tooltips
 tooltip_card_set,{0} · {1} {2}/{3}
@@ -60,3 +68,137 @@ sealed_desc,"All {0} cards of {1}, sealed in a display box."
 # Card viewer (plain fallback window)
 viewer_title,Aug Warriors
 viewer_ungraded,"{0}, ungraded"
+
+# Downside Den (afterhour game store)
+den_name,Downside Den
+den_greeting,"Fresh packs every night, while they last. Singles in the case, first come, first served."
+den_credits,Your credits: {0}
+den_packs,Booster Packs
+den_singles,Singles
+den_pack_row,{0} ×{1}
+den_single_detail,{0} · {1}
+den_buy,Buy
+den_view,View
+den_sold,Sold
+den_sold_out,Sold out for tonight.
+den_not_enough,You can't afford that.
+den_challenge,Challenge a Player
+den_dan_name,Downside Dan
+den_dan_greeting,"Welcome to the Den. Packs on the board, singles in the case. Bring me cards, I'll make you an offer."
+den_markup,Den markup
+den_board_hint,"Drag anything from the board onto the counter to buy it. Dan buys collectibles too."
+
+# Booster boxes
+boosterbox_name,{0} Booster Box
+boosterbox_desc,A factory-sealed box of {0} {1} booster packs. Activate to crack it open.
+boosterbox_flavor,Zamco Electronics. Contents may vary. Joy may not.
+boosterbox_open_confirm,"Crack open the {0} booster box?\nIts {1} packs go into the opened box, and it can't be resealed."
+boosterbox_opened_name,Opened {0} Booster Box
+boosterbox_opened_desc,"An opened box of {1} booster packs. Open it to take the packs out, and trash it when it's empty."
+boosterbox_contents,Contains {0} booster packs
+
+# Collection binder
+binder_name,Collection Binder
+binder_desc,"A ring binder of pocket pages for up to {0} single cards. Sort it by number, rarity, value or condition."
+binder_tab,{0}
+binder_panel_pages,Pages
+binder_panel_sort,Sort
+binder_sort_number,Number
+binder_sort_number_desc,"By set and card number, best copy first."
+binder_sort_rarity,Rarity
+binder_sort_rarity_desc,Rarest cards first.
+binder_sort_value,Value
+binder_sort_value_desc,Most valuable cards first.
+binder_sort_condition,Condition
+binder_sort_condition_desc,Best condition first.
+
+# Deck box
+deckbox_name,Deck Box
+deckbox_desc,"Holds one Aug Warriors deck: {0} to {1} cards, at most {2} copies of each. Bring it to the Downside Den to play."
+
+# Aug Warriors: challenge
+aug_challenge_title,Aug Warriors
+aug_deck_too_small,"A deck needs at least {0} cards; your deck box has {1}."
+aug_deck_too_big,"A deck can have at most {0} cards; your deck box has {1}."
+aug_deck_copies,"{2} copies of {1}: a deck can have at most {0}."
+aug_challenge_opponent,Opponent
+aug_regular_cautious,"Plays it safe, never pushes the glitch."
+aug_regular_reckless,"All power, no brakes. Often goes Aug."
+aug_regular_hacker,Loves wrecking your build with hacks.
+aug_challenge_ante,Ante
+aug_challenge_rules,"Fill your body with augments. Highest Power at the showdown wins, but Glitch over your Stability leaves you Compromised: half Power. Call the showdown whenever you like; your opponent gets one last turn. It happens on its own after {0} turns each."
+aug_challenge_start,Play
+aug_close,Close
+
+# Aug Warriors: match
+aug_title,Aug Warriors
+aug_you,You
+aug_header,"vs {0} · Round {1} of {2} · Ante {3}"
+aug_no_stakes,none
+aug_totals,"{0}: Power {1} · Glitch {2} / Stability {3} · Hand {4} · Deck {5}"
+aug_empty,(empty)
+aug_slot_stats,P {0} · G {1}
+aug_slot_hacked," (+{0} hacked)"
+aug_do_install,Install
+aug_do_replace,Replace
+aug_do_mod,Attach
+aug_do_hack,Hack
+aug_hand,Your hand
+aug_hand_final,"Your hand: last turn!"
+aug_select,Select
+aug_selected,Selected
+aug_pick_card,"Select a card to play, or hold."
+aug_pick_target,Pick where it goes.
+aug_hold,Hold
+aug_call,Call Showdown
+aug_concede,Concede
+aug_log,Log
+aug_log_hold,{0} holds.
+aug_log_call,{0} calls the showdown!
+aug_log_install,{0} installs {1}.
+aug_log_replace,{0} installs {1} over {2}.
+aug_log_mod,{0} attaches {1} to {2}.
+aug_log_hack,"{0} hacks {2} with {1}: +{3} Glitch."
+aug_log_scrap,{0} scraps {2} with {1}.
+aug_log_showdown,Showdown!
+aug_result_win,You beat {0}!
+aug_result_lose,{0} wins.
+aug_result_draw,A draw with {0}.
+aug_result_scores,"You: {0} · {1}: {2}"
+aug_score_compromised,{0} (Compromised from {1})
+aug_result_won_ante,You win {0}.
+aug_result_lost_ante,You lose {0}.
+aug_deck_no_torso,"No torso augments: your Stability stays at 3."
+aug_deck_few_arms,Fewer than two arm augments.
+aug_deck_no_head,No head augments.
+aug_deck_no_legs,No leg augments.
+aug_deck_mod_heavy,More mods than augments to put them on.
+
+# Deck box window and report
+deckbox_panel_cards,Cards
+deckbox_panel_deck,Deck
+deckbox_status,Deck
+deckbox_status_ok,{0} cards · legal
+deckbox_status_errors,{0} cards · {1} problem(s)
+deckbox_validate,Validate
+deckbox_validate_desc,Check this deck and see what's in it.
+deckbox_report_title,Deck Report
+deckbox_report_legal,Legal deck · {0} cards
+deckbox_report_illegal,Not a legal deck · {0} cards
+deckbox_report_overview,Overview
+deckbox_report_slot,{0} augments: {1}
+deckbox_report_mods,Mods: {0}
+deckbox_report_hacks,Hacks: {0}
+deckbox_report_average,"Augments average Power {0}, Glitch {1}"
+
+# Aug Warriors table
+aug_table_deck,Deck
+aug_table_play,Play
+aug_table_rules,Rules
+aug_table_no_deck,Drop your deck box here.
+aug_table_no_card,"Optional: drop a card to ante."
+aug_table_card_ante,Anteing a {0} card.
+aug_table_need_deck,Put your deck box in the deck slot.
+aug_table_fix_deck,Your deck isn't legal: open the deck box and Validate.
+aug_table_ready,Ready.
+aug_table_ante_rules,"Card ante: win and you keep your card and win another of the same rarity (sometimes better, and often one you don't have yet). Lose or concede and your opponent keeps it."

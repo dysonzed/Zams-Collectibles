@@ -48,7 +48,7 @@ namespace ZamsCollectibles
                 .SetDraggable(true)
                 .SetCloseOnEscape(true)
                 .AddLabel(Loc.CardTitle(card), "name")
-                .AddLabel(card.cost.ToString(), "cost")
+                .AddLabel(CardItems.GemText(card), "cost")
                 .AddLabel(CardItems.TypeLine(card), "type")
                 .AddLabel(rules, "rules")
                 .AddLabel(CardItems.SetNumber(card), "footer")
