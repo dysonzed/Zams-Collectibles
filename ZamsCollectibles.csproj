@@ -25,6 +25,26 @@
       <HintPath>$(ManagedDir)\UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(ManagedDir)\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(ManagedDir)\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>$(ManagedDir)\UnityEngine.UIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(ManagedDir)\Unity.TextMeshPro.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(ManagedDir)\Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="0Harmony">
       <HintPath>$(ManagedDir)\0Harmony.dll</HintPath>
       <Private>false</Private>
@@ -33,15 +53,15 @@
 
   <!-- Files that ship with the mod besides the DLL: the manifest and the asset folders. -->
   <ItemGroup>
-    <ModFile Include="manifest.xml;preview.png;Textures\**;Sounds\**;Localization\**;LootTables\**;Books\**" />
-    <None Remove="Textures\**;Sounds\**;Localization\**;LootTables\**;Books\**" />
+    <ModFile Include="manifest.xml;preview.png;Textures\**;Sounds\**;Localization\**;LootTables\**;Books\**;Data\**" Exclude="**\.gitkeep" />
+    <None Remove="Textures\**;Sounds\**;Localization\**;LootTables\**;Books\**;Data\**;tools\**" />
   </ItemGroup>
 
   <!-- After every build, install the mod into <game>\Mods\ZamsCollectibles\ so the game picks it up. -->
   <Target Name="InstallMod" AfterTargets="Build">
     <MakeDir Directories="$(ModInstallDir)" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModInstallDir)" />
-    <Copy SourceFiles="@(ModFile)" DestinationFiles="@(ModFile->'$(ModInstallDir)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="Exists('%(ModFile.FullPath)')" />
+    <Copy SourceFiles="@(ModFile)" DestinationFiles="@(ModFile->'$(ModInstallDir)\%(RelativeDir)%(Filename)%(Extension)')" Condition="Exists('%(ModFile.FullPath)')" />
     <Message Importance="high" Text="Installed into $(ModInstallDir)" />
   </Target>
 

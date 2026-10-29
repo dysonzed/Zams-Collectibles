@@ -1,0 +1,62 @@
+{
+  "rarities": [
+    { "id": "common",   "name": "Common",     "value": 4,   "color": "Gray",      "gem": "#a8aea5" },
+    { "id": "uncommon", "name": "Uncommon",   "value": 12,  "color": "Green",     "gem": "#67aaa5" },
+    { "id": "rare",     "name": "Rare",       "value": 45,  "color": "Turquoise", "gem": "#6f93d9" },
+    { "id": "ultra",    "name": "Ultra Rare", "value": 160, "color": "Yellow",    "gem": "#e0b050" }
+  ],
+  "sets": [
+    {
+      "id": "scrapyard",
+      "name": "Scrapyard Legends",
+      "code": "SCR",
+      "cardSprite": "card_back_red",
+      "packSprite": "booster_pack_red",
+      "frameColor": "red",
+      "packValue": 30,
+      "sealedMarkup": 0.1,
+      "packSlots": [
+        { "count": 3, "rarities": ["common"],          "weights": [1] },
+        { "count": 1, "rarities": ["uncommon"],        "weights": [1] },
+        { "count": 1, "rarities": ["rare", "ultra"],   "weights": [85, 15] }
+      ],
+      "cards": [
+        { "number": 1,  "name": "Rust Rat",            "rarity": "common",   "type": "Creature", "cost": 1, "power": 1, "defense": 1, "text": "When Rust Rat is scrapped, draw a card.", "flavor": "It ate the bolts. Then the wrench." },
+        { "number": 2,  "name": "Tin Can Knight",      "rarity": "common",   "type": "Creature", "cost": 2, "power": 1, "defense": 3, "text": "Guard.", "flavor": "Dented, never defeated." },
+        { "number": 3,  "name": "Magnet Crane",        "rarity": "common",   "type": "Gear",     "cost": 2, "power": 0, "defense": 2, "text": "Once per turn: take a Gear card from your scrap pile.", "flavor": "" },
+        { "number": 4,  "name": "Tetanus Shot",        "rarity": "common",   "type": "Trick",    "cost": 1, "power": 0, "defense": 0, "text": "Remove all damage from a creature.", "flavor": "Mandatory after every shift." },
+        { "number": 5,  "name": "Junk Golem",          "rarity": "common",   "type": "Creature", "cost": 3, "power": 3, "defense": 2, "text": "", "flavor": "Assembled from regrets." },
+        { "number": 6,  "name": "Scavenger's Hook",    "rarity": "common",   "type": "Gear",     "cost": 1, "power": 1, "defense": 0, "text": "Equipped creature gets +1 power.", "flavor": "" },
+        { "number": 7,  "name": "Compactor Hound",     "rarity": "uncommon", "type": "Creature", "cost": 3, "power": 3, "defense": 3, "text": "When this attacks, scrap the top card of each deck.", "flavor": "" },
+        { "number": 8,  "name": "Toxic Puddle",        "rarity": "uncommon", "type": "Trick",    "cost": 2, "power": 0, "defense": 0, "text": "Deal 2 damage to every creature with defense 2 or less.", "flavor": "Do not drink. Again." },
+        { "number": 9,  "name": "Night Shift Foreman", "rarity": "uncommon", "type": "Creature", "cost": 4, "power": 2, "defense": 4, "text": "Your other creatures get +1 defense.", "flavor": "" },
+        { "number": 10, "name": "Georgio, Pile King",  "rarity": "rare",     "type": "Creature", "cost": 5, "power": 4, "defense": 5, "text": "At the start of your turn, put a random Gear from your scrap pile into your hand.", "flavor": "Every heap has a throne." },
+        { "number": 11, "name": "Fresh Dump",          "rarity": "rare",     "type": "Trick",    "cost": 3, "power": 0, "defense": 0, "text": "Look at the top five cards of your deck. Take two.", "flavor": "" },
+        { "number": 12, "name": "The Hauler",          "rarity": "ultra",    "type": "Creature", "cost": 7, "power": 7, "defense": 7, "text": "When The Hauler arrives, scrap every Gear in play.", "flavor": "Nobody knows what it hauls. Nobody asks." }
+      ]
+    },
+    {
+      "id": "neon",
+      "name": "Neon Nights",
+      "code": "NEO",
+      "cardSprite": "card_back_blue",
+      "packSprite": "booster_pack_blue",
+      "frameColor": "teal",
+      "packValue": 35,
+      "sealedMarkup": 0.1,
+      "packSlots": [
+        { "count": 2, "rarities": ["common"],          "weights": [1] },
+        { "count": 1, "rarities": ["uncommon"],        "weights": [1] },
+        { "count": 1, "rarities": ["rare", "ultra"],   "weights": [80, 20] }
+      ],
+      "cards": [
+        { "number": 1, "name": "Street Vendor",   "rarity": "common",   "type": "Creature", "cost": 1, "power": 1, "defense": 2, "text": "", "flavor": "Two for one. No refunds." },
+        { "number": 2, "name": "Flicker Sign",    "rarity": "common",   "type": "Gear",     "cost": 1, "power": 0, "defense": 1, "text": "Your first Trick each turn costs 1 less.", "flavor": "" },
+        { "number": 3, "name": "Back Alley Deal", "rarity": "common",   "type": "Trick",    "cost": 2, "power": 0, "defense": 0, "text": "Swap a card in your hand with the top card of your deck.", "flavor": "" },
+        { "number": 4, "name": "Chrome Courier",  "rarity": "uncommon", "type": "Creature", "cost": 3, "power": 2, "defense": 2, "text": "Can't be blocked by Gear.", "flavor": "Always on time. Rarely legal." },
+        { "number": 5, "name": "Blackout",        "rarity": "rare",     "type": "Trick",    "cost": 4, "power": 0, "defense": 0, "text": "Gear cards have no effect until your next turn.", "flavor": "" },
+        { "number": 6, "name": "The Fence",       "rarity": "ultra",    "type": "Creature", "cost": 6, "power": 5, "defense": 6, "text": "Whenever an opponent scraps a card, you may take it instead.", "flavor": "Probably stolen." }
+      ]
+    }
+  ]
+}

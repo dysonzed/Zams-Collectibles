@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using HarmonyLib;
 
@@ -12,6 +14,8 @@ namespace ZamsCollectibles
     /// </summary>
     public class ModEntry : IMod
     {
+        public const string MOD_ID = "zams-collectibles";
+
         public static ModEntry Instance { get; private set; }
         public ModManifest Manifest { get; private set; }
         public ModLog Log { get; private set; }
@@ -26,15 +30,134 @@ namespace ZamsCollectibles
 
         public void OnEnable()
         {
-            // Runs right after Init, still in the main menu. Register hooks, items, loot edits,
-            // options and configuration here.
+            ModHook.OnModItemDirectoryInit += CardItems.Register;
+            ModHook.OnCreateTooltipLate += OnCreateTooltip;
+            ModHook.OnCreateDevTooltipLate += OnCreateDevTooltip;
+            ModHook.OnPlaceInventorInventoryItemLate += OnInventorStock;
+            ModHook.OnGenerateCustomerLate += Collectibles.OnGenerateCustomer;
+            RegisterDebugButtons();
             Log.Log("Enabled.");
         }
 
         public void OnDisable()
         {
-            // Runs when the game shuts down. Unsubscribe what you subscribed in OnEnable.
+            ModHook.OnModItemDirectoryInit -= CardItems.Register;
+            ModHook.OnCreateTooltipLate -= OnCreateTooltip;
+            ModHook.OnCreateDevTooltipLate -= OnCreateDevTooltip;
+            ModHook.OnPlaceInventorInventoryItemLate -= OnInventorStock;
+            ModHook.OnGenerateCustomerLate -= Collectibles.OnGenerateCustomer;
+            ModHelper.RemoveDebugFunctions(MOD_ID);
             Log.Log("Disabled.");
         }
+
+        private void OnCreateTooltip(RichTextBuilder builder, GameItem item)
+        {
+            if (item.IsTag(CardItems.BUNDLE_TAG))
+            {
+                float avg = item.GetTagReadonly(CardItems.BUNDLE_AVG_CONDITION_FLOAT).GetFloat();
+                if (avg > 0f) builder.AddLine($"Average condition: {CardCondition.Label(avg)}");
+                return;
+            }
+
+            CardSetDef boosterSet = CardItems.GetBoosterSet(item);
+            if (boosterSet != null)
+            {
+                builder.AddLine($"Set: {boosterSet.name} ({boosterSet.code}, {boosterSet.cards.Length} cards)", bold: true);
+                builder.AddLine($"Contains {CardItems.PackContents(boosterSet)}");
+                return;
+            }
+
+            CardDef card = CardItems.GetCardDef(item);
+            if (card == null) return;
+
+            RarityDef rarity = CardDatabase.GetRarity(card.rarity);
+            builder.AddLine($"{card.set.name} · {card.set.code} {card.number:000}/{card.set.cards.Length:000}");
+            builder.AddLine(rarity?.name ?? card.rarity, color: ParseColor(rarity?.color), bold: true);
+
+            float condition = CardItems.GetCondition(item);
+            if (CardItems.IsGraded(item))
+                builder.AddLine($"Graded {CardCondition.GradeOf(condition):0.0} ({CardCondition.Label(condition)})", color: RenderHandler.ColorPalette.Yellow);
+            else
+                builder.AddLine($"Condition: {CardCondition.Label(condition)} (ungraded)");
+        }
+
+        // The F9 dev tooltip shows the hidden exact condition, for testing.
+        private void OnCreateDevTooltip(RichTextBuilder builder, GameItem item)
+        {
+            if (CardItems.IsCard(item))
+                builder.AddLine($"[dev] exact condition {CardItems.GetCondition(item):0.00}");
+        }
+
+        // Dr. Jackson sometimes has a booster pack on his table.
+        private void OnInventorStock(List<GameItem> ownedItems)
+        {
+            if (CardDatabase.Sets.Count == 0 || !RNG.Roll(50)) return;
+            CardSetDef set = RNG.GetRandomElement(CardDatabase.Sets);
+            PlayerStore.Instance.AddDirectSellingItemToTable(CardItems.BoosterId(set));
+        }
+
+        // One F9 button that opens our own debug window, so the shared menu stays uncluttered.
+        private const string DEBUG_WINDOW_ID = MOD_ID + ".debug";
+
+        // One card per condition label, for checking the wear and icons.
+        private static readonly float[] DebugConditions = { 9.8f, 9.0f, 7.8f, 6.0f, 4.0f, 1.5f };
+
+        private void RegisterDebugButtons()
+        {
+            ModHelper.AddDebugFunction(MOD_ID, ModHelper.DEBUG_CATEGORY_SPECIAL, "Zam's Collectibles", OpenDebugWindow);
+        }
+
+        private void OpenDebugWindow()
+        {
+            if (CustomUIManager.Instance == null) return;
+            CustomUIManager.Window(DEBUG_WINDOW_ID, "Zam's Collectibles", CustomUIManager.LAYER_OVERLAY)
+                .SetDraggable(true)
+                .BeginColumn(4f)
+                    .AddHeader("Spawn")
+                    .AddButton("Booster Packs (one per set)", () =>
+                    {
+                        foreach (CardSetDef set in CardDatabase.Sets)
+                            ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardItems.BoosterId(set)));
+                    })
+                    .AddButton("Collector's Box", () =>
+                        ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardItems.COLLECTOR_BOX_ID)))
+                    .AddButton("Full Card Set (first set)", () =>
+                    {
+                        CardSetDef set = CardDatabase.Sets.Count > 0 ? CardDatabase.Sets[0] : null;
+                        if (set == null) return;
+                        foreach (CardDef card in set.cards)
+                            ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardItems.CardId(card)));
+                    })
+                    .AddButton("Rust Rat in Every Condition", SpawnConditionRats)
+                    .AddHeader("Command")
+                    // Stand-in for a real grading service: grades every card in the player's inventory.
+                    .AddButton("Grade Inventory Cards", () =>
+                    {
+                        int graded = 0;
+                        foreach (GameItem item in GraphUtils.FindChildrenType<GameItem>(EmporiumEntry.Instance.invElement, CardItems.IsCard))
+                            if (CardItems.Grade(item)) graded++;
+                        Log.Log($"Graded {graded} card(s).");
+                    })
+                    .AddButton("Close", () => CustomUIManager.Instance.CloseWindow(DEBUG_WINDOW_ID))
+                .End()
+                .Center()
+                .Show();
+        }
+
+        private void SpawnConditionRats()
+        {
+            CardDef rat = CardDatabase.SetsById.TryGetValue("scrapyard", out CardSetDef set) ? set.cards.FirstOrDefault(c => c.number == 1) : null;
+            if (rat == null) return;
+            foreach (float condition in DebugConditions)
+            {
+                GameItem card = ModHelper.SpawnItem(CardItems.CardId(rat));
+                CardItems.SetCondition(card, condition);
+                ModHelper.MoveItemToInventory(card);
+                Log.Log($"Spawned Rust Rat at {condition:0.0} ({CardCondition.Label(condition)}).");
+            }
+        }
+
+        private static RenderHandler.ColorPalette ParseColor(string name) =>
+            Enum.TryParse(name, out RenderHandler.ColorPalette color) ? color : RenderHandler.ColorPalette.None;
     }
 }
