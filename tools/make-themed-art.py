@@ -20,6 +20,9 @@ THEMES = {
     "brood": {"hue": 0.24, "sat": 0.75, "val": 0.85, "detail": (232, 222, 172), "kind": "specks"},
     "neural": {"hue": 0.85, "sat": 1.0, "val": 1.05, "detail": (80, 220, 230), "kind": "drips"},
     "fates": {"hue": 0.98, "sat": 0.9, "val": 0.5, "detail": (210, 60, 70), "kind": "drips"},
+    "ascension": {"hue": 0.72, "sat": 0.45, "val": 1.3, "detail": (255, 250, 220), "kind": "specks"},
+    "singularity": {"hue": 0.70, "sat": 0.9, "val": 0.45, "detail": (250, 170, 70), "kind": "specks"},
+    "recursion": {"hue": 0.38, "sat": 0.85, "val": 0.55, "detail": (90, 240, 120), "kind": "drips"},
 }
 
 

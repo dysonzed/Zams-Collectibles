@@ -136,6 +136,8 @@ namespace ZamsCollectibles.AugWarriors
             float gain = Value(meAfter, themAfter, style) - now;
             gain += (theirs - AugRules.Score(themAfter, false, meAfter).final) * style.hackWeight;
             if (card.effect == AugRules.DRAW) gain += card.amount;
+            if (card.effect == AugRules.EXTRA_ACTIONS || card.effect == AugRules.EXTRA_ACTIONS_COSTLY) gain += 1.5f * card.amount;
+            if (card.effect == AugRules.DRAW_BOTH || card.effect == AugRules.KARMIC) gain += 1f;
             if (card.kind == AugRules.MOD) gain += style.modBonus;
             return gain;
         }
@@ -229,6 +231,8 @@ namespace ZamsCollectibles.AugWarriors
                     case AugRules.STRIP_BEST: case AugRules.SILENCE: case AugRules.VOID_ARM: case AugRules.BROOD_DRAIN: return 2.5f;
                     case AugRules.SCORE_PENALTY: return 1f * c.amount;
                     case AugRules.GLITCH_PER_MOD: case AugRules.LOGIC_BOMB: case AugRules.DRONE_SWARM: case AugRules.MOD_LOCK: return 2f;
+                    case AugRules.SPAGHETTI: return 4f;
+                    case AugRules.MOD_SWAP: case AugRules.KARMIC: case AugRules.DRAW_BOTH: case AugRules.REBOOT: case AugRules.DISCARD: return 2f;
                     default: return 1.2f * c.amount;
                 }
             }
@@ -259,6 +263,14 @@ namespace ZamsCollectibles.AugWarriors
                 case AugRules.POWER_PER_ANY_MOD: worth += 2f * c.amount; break;
                 case AugRules.LAST_WORD: worth += 0.5f * c.amount; break;
                 case AugRules.WARD: worth += 1.5f; break;
+                case AugRules.MOD_GUARD: case AugRules.TIME_DILATION: worth += 1.5f; break;
+                case AugRules.HACK_REWARD: case AugRules.ECHO: case AugRules.DRAW_POWER: worth += 1.5f * c.amount; break;
+                case AugRules.HACKED_POWER: worth += c.amount; break;
+                case AugRules.EXTRA_ACTIONS: worth += 2f * c.amount; break;
+                case AugRules.EXTRA_ACTIONS_COSTLY: worth += 1.5f * c.amount; break;
+                case AugRules.UNIFIED: case AugRules.STABILITY_DOUBLE: case AugRules.SINGULARITY: case AugRules.OUROBOROS: worth += 4f; break;
+                case AugRules.DOUBLE_MOD: worth += 1.5f; break;
+                case AugRules.ACCRETION: worth += 3f * c.amount; break;
                 case AugRules.POWER_IF_CALLED: worth += 0.5f * c.amount; break;
                 case AugRules.SOFT_COMPROMISE: worth += 1f; break;
             }

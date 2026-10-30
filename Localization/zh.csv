@@ -370,3 +370,5 @@ aug_log_steal_you,你的 {1} 抢走了 {2}。
 upgrade_card_zamco,Zamco 经销
 upgrade_tier2_title,Zamco 二级授权
 upgrade_tier2_desc,Zamco 的高级系列：Restored Grace、Broodmother's Clutch、Neural Tap 和 Fate's End。卡牌更强、价格更高，在 Downside Den 有售，卡牌顾客也会带来。附赠一包样品。
+upgrade_tier3_title,Zamco 三级授权
+upgrade_tier3_desc,Zamco 的旗舰系列：Ascension、Singularity 和 Recursion。Zamco 最强的卡牌，价格也相称。附赠一包样品。

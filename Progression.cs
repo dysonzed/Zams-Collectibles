@@ -17,6 +17,8 @@ namespace ZamsCollectibles
         private const int DEN_UPGRADE_COST = 500;
         public const string TIER2_UPGRADE = ModEntry.MOD_ID + ".TIER_2";
         private const int TIER2_UPGRADE_COST = 1500;
+        public const string TIER3_UPGRADE = ModEntry.MOD_ID + ".TIER_3";
+        private const int TIER3_UPGRADE_COST = 4000;
         private const string ZAMCO_CARD = "Zamco";   // their own card in Wild's Network: Den, then the tier licenses
 
         private const int JACKSON_PACK_CHANCE = 20;   // percent per visit
@@ -24,8 +26,9 @@ namespace ZamsCollectibles
 
         public static bool DenUnlocked => ModHelper.IsNetworkUpgradeUnlocked(DEN_UPGRADE);
 
-        /// <summary>The highest power tier the player has licensed: 1 to start, 2 with the Tier 2 License.</summary>
-        public static int MaxTier => ModHelper.IsNetworkUpgradeUnlocked(TIER2_UPGRADE) ? 2 : 1;
+        /// <summary>The highest power tier the player has licensed: 1 to start, then 2 and 3 with the licenses.</summary>
+        public static int MaxTier =>
+            ModHelper.IsNetworkUpgradeUnlocked(TIER3_UPGRADE) ? 3 : ModHelper.IsNetworkUpgradeUnlocked(TIER2_UPGRADE) ? 2 : 1;
 
         /// <summary>The sets shops and customers stock: those of the licensed tiers.</summary>
         public static List<CardSetDef> AvailableSets()
@@ -56,9 +59,16 @@ namespace ZamsCollectibles
                 ModHelper.AddNetworkUpgrade(ModEntry.MOD_ID, TIER2_UPGRADE, TIER2_UPGRADE_COST, ZAMCO_CARD,
                     title: () => Loc.Get("upgrade_tier2_title"),
                     description: () => Loc.Get("upgrade_tier2_desc"),
-                    onUnlock: OnTier2Unlocked,
+                    onUnlock: () => OnTierUnlocked(2),
                     iconKey: $"{ModEntry.MOD_ID}:booster_box_grace",
                     prerequisites: new[] { DEN_UPGRADE },
+                    subtitleLabel: () => Loc.Get("upgrade_card_zamco"));
+                ModHelper.AddNetworkUpgrade(ModEntry.MOD_ID, TIER3_UPGRADE, TIER3_UPGRADE_COST, ZAMCO_CARD,
+                    title: () => Loc.Get("upgrade_tier3_title"),
+                    description: () => Loc.Get("upgrade_tier3_desc"),
+                    onUnlock: () => OnTierUnlocked(3),
+                    iconKey: $"{ModEntry.MOD_ID}:booster_box_singularity",
+                    prerequisites: new[] { TIER2_UPGRADE },
                     subtitleLabel: () => Loc.Get("upgrade_card_zamco"));
             }
             catch (NullReferenceException)
@@ -74,11 +84,11 @@ namespace ZamsCollectibles
             DealerCertificate.GiveToCounter();
         }
 
-        // The license comes with a sample: a Tier 2 booster pack on the counter.
-        private static void OnTier2Unlocked()
+        // A license comes with a sample: one of the tier's booster packs on the counter.
+        private static void OnTierUnlocked(int tier)
         {
-            List<CardSetDef> tier2 = CardDatabase.Sets.Where(s => s.tier == 2).ToList();
-            if (tier2.Count > 0) PlaceOnCounter(DirectoryMaster.Item(CardItems.BoosterId(RNG.GetRandomElement(tier2))));
+            List<CardSetDef> sets = CardDatabase.Sets.Where(s => s.tier == tier).ToList();
+            if (sets.Count > 0) PlaceOnCounter(DirectoryMaster.Item(CardItems.BoosterId(RNG.GetRandomElement(sets))));
         }
 
         /// <summary>Puts an item on the store's front counter (the back counter if it's full).</summary>

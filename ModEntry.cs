@@ -187,6 +187,7 @@ namespace ZamsCollectibles
                     .AddHeader("Store")
                     .AddButton("Unlock Downside Den", () => { ModHelper.GetNetworkUpgrade(Progression.DEN_UPGRADE)?.Unlock(); Log.Log("Downside Den unlocked."); })
                     .AddButton("Unlock Tier 2 License", () => { ModHelper.GetNetworkUpgrade(Progression.TIER2_UPGRADE)?.Unlock(); Log.Log("Tier 2 licensed."); })
+                    .AddButton("Unlock Tier 3 License", () => { ModHelper.GetNetworkUpgrade(Progression.TIER3_UPGRADE)?.Unlock(); Log.Log("Tier 3 licensed."); })
                     .AddButton("Next Customer: Card Grader", () => NextCustomer(CardGrading.CreateGrader()))
                     .AddButton("Grader: Return Cards Now", () => { StoreClient back = CardGrading.DebugReturnNow(); if (back != null) NextCustomer(back); })
                     .AddButton("Next Customer: Deck Builder", () => NextCustomer(DeckOrders.CreateCustomer()))

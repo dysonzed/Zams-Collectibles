@@ -7,6 +7,9 @@
 #   booster_pack_brood     olive chitin with egg spots, an egg cluster emblem
 #   booster_pack_neural    magenta with cyan circuit traces, a circuit emblem
 #   booster_pack_fates     near-black with crimson cracks, an hourglass emblem
+#   booster_pack_ascension pale violet sky with stars, a winged emblem
+#   booster_pack_singularity  deep indigo with an accretion glow, a black hole emblem
+#   booster_pack_recursion terminal green on black with code streaks, a loop emblem
 # Usage: python make-pack-art.py <repo root>
 import sys
 from PIL import Image
@@ -118,6 +121,33 @@ THEMES = {
         "emblem_colors": {"#": (170, 30, 44)},
         "drips": [(7, 5, 3), (10, 16, 4), (5, 19, 3), (8, 21, 4)],
         "drip": (150, 30, 42), "drip_tip": (210, 60, 70),
+    },
+    "ascension": {
+        "body": {"E": (236, 228, 255), "F": (186, 170, 232), "G": (150, 134, 204), "H": (110, 96, 166)},
+        "emblem_bg": (250, 244, 214),
+        # wings
+        "emblem": ["#....#", "##..##", "######", "..##.."],
+        "emblem_colors": {"#": (214, 168, 60)},
+        "dots": {(6, 6): (255, 250, 220), (10, 5): (255, 250, 220), (8, 16): (255, 250, 220), (11, 20): (255, 250, 220),
+                 (5, 22): (255, 250, 220), (9, 24): (255, 250, 220)},
+    },
+    "singularity": {
+        "body": {"E": (110, 90, 200), "F": (44, 34, 90), "G": (32, 24, 68), "H": (20, 16, 44)},
+        "emblem_bg": (250, 170, 70),
+        # a black hole: a dark core inside a bright ring
+        "emblem": [".####.", "##..##", "##..##", ".####."],
+        "emblem_colors": {"#": (20, 16, 44)},
+        "dots": {(6, 6): (250, 170, 70), (10, 6): (200, 120, 220), (5, 17): (250, 170, 70), (10, 17): (200, 120, 220),
+                 (7, 21): (250, 170, 70), (11, 22): (200, 120, 220), (8, 24): (250, 170, 70)},
+    },
+    "recursion": {
+        "body": {"E": (70, 150, 90), "F": (24, 44, 32), "G": (18, 34, 24), "H": (12, 24, 18)},
+        "emblem_bg": (18, 30, 22),
+        # a loop arrow
+        "emblem": [".###..", "#...#.", "#..###", ".##.#."],
+        "emblem_colors": {"#": (90, 240, 120)},
+        "drips": [(5, 15, 5), (8, 5, 3), (10, 17, 6), (7, 20, 4)],
+        "drip": (60, 190, 90), "drip_tip": (160, 255, 170),
     },
 }
 

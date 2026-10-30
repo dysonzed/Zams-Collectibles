@@ -12,7 +12,7 @@ GLASS = (200, 225, 235, 70)
 LABEL = (214, 48, 78, 255)
 LABEL_HI = (255, 236, 230, 255)
 
-for colour in ("red", "blue", "rustwave", "doomed", "oxygen", "grace", "brood", "neural", "fates"):
+for colour in ("red", "blue", "rustwave", "doomed", "oxygen", "grace", "brood", "neural", "fates", "ascension", "singularity", "recursion"):
     back = Image.open(f"{root}/Textures/Items/card_back_{colour}.png").convert("RGBA")
     card = back.crop(back.getbbox()).resize((8, 9), Image.NEAREST)
     img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
