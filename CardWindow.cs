@@ -23,12 +23,24 @@ namespace ZamsCollectibles
         private static readonly Color FooterInk = new Color32(0xE8, 0xE4, 0xD6, 0xFF);
         private static readonly Color CostInk = new Color32(0xF4, 0xF1, 0xE4, 0xFF);
 
+        // A graded card is shown sealed in its slab: a plastic case around the card, with the grade
+        // label above it. In card pixels:
+        private const int SLAB_SIDE = 5, SLAB_TOP = 21;
+        private static readonly RectInt GradeText = new RectInt(-1, -17, CardLayout.WIDTH + 2, 12);   // on the label
+        private static readonly Color LabelInk = new Color32(0xFF, 0xF4, 0xEE, 0xFF);
+
+        // Where the card sits in the window, in card pixels: (0, 0) unless it's in a slab.
+        private static int offX, offY;
+
         public static void Open(GameItem item, CardDef card, string artKey)
         {
             if (!CardFace.TryBuild(item, card, artKey, out Sprite cardSprite, out Sprite wearSprite))
                 throw new InvalidOperationException($"card face could not be drawn ({artKey})");
 
-            GameObject body = BuildBody(cardSprite, wearSprite);
+            bool graded = CardItems.IsGraded(item);
+            offX = graded ? SLAB_SIDE : 0;
+            offY = graded ? SLAB_TOP : 0;
+            GameObject body = BuildBody(cardSprite, wearSprite, graded);
             CustomUIBuilder builder;
             try
             {
@@ -44,36 +56,45 @@ namespace ZamsCollectibles
             if (!string.IsNullOrEmpty(flavor))
                 rules = (string.IsNullOrEmpty(rules) ? "" : rules + "\n") + $"<i><color=#5f5a66>{flavor}</color></i>";
 
-            CustomUIWindow window = builder
+            builder
                 .SetDraggable(true)
                 .SetCloseOnEscape(true)
                 .AddLabel(Loc.CardTitle(card), "name")
                 .AddLabel(CardItems.GemText(card), "cost")
                 .AddLabel(CardItems.TypeLine(card), "type")
                 .AddLabel(rules, "rules")
-                .AddLabel(CardItems.SetNumber(card), "footer")
-                .Center()
-                .Show();
+                .AddLabel(CardItems.SetNumber(card), "footer");
+            float condition = CardItems.GetCondition(item);
+            if (graded) builder.AddLabel(Loc.Get("slab_label", CardCondition.GradeOf(condition).ToString("0.0"), CardCondition.Label(condition)), "grade");
+            CustomUIWindow window = builder.Center().Show();
 
             Place(window, "name", CardLayout.NameText, 18f, TextAlignmentOptions.MidlineLeft, Ink, FontStyles.Bold);
             Place(window, "cost", CardLayout.CostText, 16f, TextAlignmentOptions.Center, CostInk, FontStyles.Bold);
             Place(window, "type", CardLayout.TypeText, 12f, TextAlignmentOptions.MidlineLeft, Ink, FontStyles.Normal);
             Place(window, "rules", CardLayout.RulesText, 13f, TextAlignmentOptions.TopLeft, Ink, FontStyles.Normal);
             Place(window, "footer", CardLayout.FooterText, 10f, TextAlignmentOptions.MidlineLeft, FooterInk, FontStyles.Normal);
+            if (graded) Place(window, "grade", GradeText, 13f, TextAlignmentOptions.Center, LabelInk, FontStyles.Bold);
         }
 
         // ------------------------------------------------------------ window body
 
-        private static GameObject BuildBody(Sprite cardSprite, Sprite wearSprite)
+        private static GameObject BuildBody(Sprite cardSprite, Sprite wearSprite, bool graded)
         {
             int z = CardLayout.ZOOM;
             GameObject root = new GameObject("zams_card", typeof(RectTransform));
             root.SetActive(false);   // the copy stays hidden until the builder shows it
-            ((RectTransform)root.transform).sizeDelta = new Vector2(CardLayout.WIDTH * z, CardLayout.HEIGHT * z);
+            ((RectTransform)root.transform).sizeDelta = new Vector2((CardLayout.WIDTH + 2 * offX) * z, (CardLayout.HEIGHT + offY + offX) * z);
 
-            Image face = root.AddComponent<Image>();
-            face.sprite = cardSprite;
-            face.raycastTarget = true;
+            // In a slab the case is the window's background and the card sits inside it.
+            Image back = root.AddComponent<Image>();
+            back.sprite = graded ? SlabSprite() : cardSprite;
+            back.raycastTarget = true;
+            if (graded)
+            {
+                Image face = Child(root, "face", new RectInt(0, 0, CardLayout.WIDTH, CardLayout.HEIGHT)).gameObject.AddComponent<Image>();
+                face.sprite = cardSprite;
+                face.raycastTarget = false;
+            }
 
             // Clicking the card closes it; moving it does not.
             root.AddComponent<CloseOnClick>();
@@ -97,7 +118,66 @@ namespace ZamsCollectibles
             Image wear = Child(root, "wear", new RectInt(0, 0, CardLayout.WIDTH, CardLayout.HEIGHT)).gameObject.AddComponent<Image>();
             wear.sprite = wearSprite;
             wear.raycastTarget = false;
+
+            if (graded)
+            {
+                // glare on the plastic, over the card
+                Image glass = Child(root, "glass", new RectInt(0, 0, CardLayout.WIDTH, CardLayout.HEIGHT)).gameObject.AddComponent<Image>();
+                glass.sprite = GlassSprite();
+                glass.raycastTarget = false;
+                Child(root, "grade", GradeText);
+            }
             return root;
+        }
+
+        private static readonly Color32 SlabInk = new Color32(0x29, 0x22, 0x34, 0xFF);
+        private static readonly Color32 SlabPlastic = new Color32(0xC4, 0xD6, 0xDE, 0xFF);
+        private static readonly Color32 SlabPlasticHi = new Color32(0xF0, 0xF8, 0xFC, 0xFF);
+        private static readonly Color32 SlabPlasticLo = new Color32(0x98, 0xAC, 0xB8, 0xFF);
+        private static readonly Color32 SlabLabel = new Color32(0xD6, 0x30, 0x4E, 0xFF);
+        private static readonly Color32 SlabLabelHi = new Color32(0xFF, 0x78, 0x82, 0xFF);
+
+        // The slab around the card: an outlined plastic case with a red label at the top.
+        private static Sprite SlabSprite()
+        {
+            int w = CardLayout.WIDTH + 2 * SLAB_SIDE, h = CardLayout.HEIGHT + SLAB_TOP + SLAB_SIDE;
+            Color32[] px = new Color32[w * h];
+            void Rect(int x0, int y0, int rw, int rh, Color32 c)
+            {
+                // drawn top-down; Unity textures are bottom-up
+                for (int y = y0; y < y0 + rh; y++) for (int x = x0; x < x0 + rw; x++) px[(h - 1 - y) * w + x] = c;
+            }
+            Rect(0, 0, w, h, SlabInk);
+            Rect(1, 1, w - 2, h - 2, SlabPlastic);
+            Rect(1, 1, w - 2, 1, SlabPlasticHi); Rect(1, 1, 1, h - 2, SlabPlasticHi);
+            Rect(1, h - 2, w - 2, 1, SlabPlasticLo); Rect(w - 2, 1, 1, h - 2, SlabPlasticLo);
+            Rect(3, 3, w - 6, 15, SlabInk);                    // the grade label
+            Rect(4, 4, w - 8, 13, SlabLabel);
+            Rect(4, 4, w - 8, 1, SlabLabelHi);
+            Rect(SLAB_SIDE - 1, SLAB_TOP - 1, CardLayout.WIDTH + 2, CardLayout.HEIGHT + 2, SlabInk);   // the card's well
+            return MakeSprite(px, w, h);
+        }
+
+        // A faint diagonal glare across the card, as through plastic.
+        private static Sprite GlassSprite()
+        {
+            int w = CardLayout.WIDTH, h = CardLayout.HEIGHT;
+            Color32[] px = new Color32[w * h];
+            for (int y = 0; y < h; y++)
+                for (int x = 0; x < w; x++)
+                {
+                    int d = (x + (h - 1 - y)) % 60;
+                    if (d < 6 || (d > 9 && d < 11)) px[y * w + x] = new Color32(255, 255, 255, 38);
+                }
+            return MakeSprite(px, w, h);
+        }
+
+        private static Sprite MakeSprite(Color32[] px, int w, int h)
+        {
+            Texture2D tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+            tex.SetPixels32(px);
+            tex.Apply();
+            return Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 100f);
         }
 
         // A child rectangle placed in card pixels from the top-left corner.
@@ -108,7 +188,7 @@ namespace ZamsCollectibles
             rt.SetParent(parent.transform, false);
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
             rt.pivot = new Vector2(0f, 1f);
-            rt.anchoredPosition = new Vector2(r.x * z, -r.y * z);
+            rt.anchoredPosition = new Vector2((r.x + offX) * z, -(r.y + offY) * z);
             rt.sizeDelta = new Vector2(r.width * z, r.height * z);
             return rt;
         }

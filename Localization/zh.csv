@@ -269,7 +269,7 @@ challenge_draw,平局？行，改天再分高下。
 aug_table_opponent_hint,他们怎么打，你自己去发现吧。
 den_nobody_tonight,今晚后面那张桌子没人。
 certificate_name,Zamco 授权经销商证书
-certificate_desc,放进展示柜可吸引卡牌顾客：补充包贩子和组卡客。越久没来，几率越高。
+certificate_desc,放进展示柜可吸引卡牌顾客：补充包贩子、组卡客和评级师。越久没来，几率越高。
 certificate_flavor,获准销售 Zamco 收藏品。不可用作货币、身份证明或武器。
 certificate_odds,已在展示柜中。今天卡牌顾客几率：{0}%
 certificate_not_displayed,未展示：卡牌顾客很少会来。
@@ -351,3 +351,16 @@ guide_p7_2,把卡组盒放进卡组槽，然后选择赌注：
 guide_p7_3,- 信用点：赢家通吃。
 guide_p7_4,- 卡牌：赢了保留自己的卡，再得一张同稀有度的新卡（有时更好，常常是你还没有的）。输了卡归对手。
 guide_p7_5,也可以什么都不押，只为荣誉而战。
+client_grader,卡牌评级师
+grader_offer,晚上好。我做卡牌评级：仔细检查后封进评级盒，标上等级。每张 {0} 信用点，明天送回。有兴趣吗？
+grader_choice_yes,来评级吧
+grader_choice_no,今天算了
+grader_accepted,好。我的箱子今天能装 {0} 张卡。把要评级的放进来。
+grader_declined,没问题。下次吧。
+grader_submitted,{0} 张卡。明天一早给你送回来。
+grader_return,说到做到。你的卡，评好级封好了。
+grader_title,卡牌评级
+grader_case,评级箱（{0} 格）
+grader_cost,{0} 张卡：{1} 信用点
+grader_submit,提交评级
+slab_label,AUG WARRIORS · 等级 {0} · {1}

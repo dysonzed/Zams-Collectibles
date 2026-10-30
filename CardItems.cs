@@ -43,7 +43,7 @@ namespace ZamsCollectibles
                 foreach (CardDef card in set.cards)
                 {
                     dir.Add(CardId(card), () => CreateCard(card));
-                    textByItemId[CardId(card)] = item => SetCardText(item, card);
+                    textByItemId[CardId(card)] = item => { SetCardText(item, card); ApplyIcon(item); };
                 }
                 dir.Add(BoosterId(set), () => CreateBooster(set));
                 textByItemId[BoosterId(set)] = item => SetBoosterText(item, set);
@@ -106,9 +106,20 @@ namespace ZamsCollectibles
             if (card == null) return;
             item.ModifyTag(CARD_CONDITION_FLOAT, s => s.Enable().SetFloat(condition));
             UpdateCardValue(item);
+            ApplyIcon(item);
+        }
 
-            // Worn cards get a worn icon (card_back_red_worn...); sets without the variants keep the plain one.
-            string iconKey = card.set.cardSprite + CardCondition.IconSuffix(condition);
+        /// <summary>
+        /// The card's inventory icon: graded cards are sealed in a slab (card_back_red -> card_slab_red);
+        /// otherwise worn cards get a worn icon (card_back_red_worn...). Sets without the variants keep the plain one.
+        /// </summary>
+        public static void ApplyIcon(GameItem item)
+        {
+            CardDef card = GetCardDef(item);
+            if (card == null) return;
+            string iconKey = IsGraded(item)
+                ? card.set.cardSprite.Replace("card_back", "card_slab")
+                : card.set.cardSprite + CardCondition.IconSuffix(GetCondition(item));
             if (!HasModSprite(iconKey)) iconKey = card.set.cardSprite;
             item.SetSpriteAndShapeFromMod(ModEntry.MOD_ID, iconKey);
         }
@@ -194,6 +205,7 @@ namespace ZamsCollectibles
             if (!IsCard(item) || IsGraded(item)) return false;
             item.EnableTag(CARD_GRADED_TAG);
             UpdateCardValue(item);
+            ApplyIcon(item);
             return true;
         }
 

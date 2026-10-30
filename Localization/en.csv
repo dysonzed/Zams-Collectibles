@@ -269,7 +269,7 @@ challenge_draw,"A draw? Huh. We'll settle it another day."
 aug_table_opponent_hint,How they play is for you to find out.
 den_nobody_tonight,Nobody's at the back table tonight.
 certificate_name,Zamco Authorized Dealer Certificate
-certificate_desc,"Put it in your display case to draw card customers: pack flippers and deck builders. The longer one doesn't come, the better the odds."
+certificate_desc,"Put it in your display case to draw card customers: pack flippers, deck builders and card graders. The longer one doesn't come, the better the odds."
 certificate_flavor,"Licensed to sell Zamco collectibles. Not valid as currency, identification or a weapon."
 certificate_odds,"In the display case. Card customer odds today: {0}%"
 certificate_not_displayed,Not on display: card customers will rarely come.
@@ -351,3 +351,16 @@ guide_p7_2,"Put your deck box in the Deck slot, then choose your stakes:"
 guide_p7_3,- Credits: the winner takes the pot.
 guide_p7_4,"- A card: win and you keep it, plus a new card of the same rarity (sometimes better, often one you don't own yet). Lose and your opponent keeps it."
 guide_p7_5,"Or play for nothing at all, just for the glory."
+client_grader,Card Grader
+grader_offer,"Evening. I grade cards: I check them over properly and seal them in a slab with their grade. {0} credits a card, back tomorrow. Interested?"
+grader_choice_yes,Let's grade some cards
+grader_choice_no,Not today
+grader_accepted,"Great. My case holds {0} cards today. Put in the ones you want graded."
+grader_declined,"No problem. Another time."
+grader_submitted,"{0} cards. I'll have them back to you first thing tomorrow."
+grader_return,"Back as promised. Your cards, graded and slabbed."
+grader_title,Card Grading
+grader_case,Grading case ({0} slots)
+grader_cost,"{0} cards: {1} credits"
+grader_submit,Submit for grading
+slab_label,AUG WARRIORS · GRADE {0} · {1}

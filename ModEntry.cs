@@ -35,6 +35,8 @@ namespace ZamsCollectibles
             ModHook.OnCreateDevTooltipLate += OnCreateDevTooltip;
             ModHook.OnGenerateCustomerLate += Collectibles.OnGenerateCustomer;
             ModHook.OnGenerateCustomerNormal += DealerCertificate.OnGenerateCustomer;
+            ModHook.OnGenerateCustomerNormal += CardGrading.OnGenerateCustomer;
+            ModHook.OnGenerateCustomerVeryLate += CardGrading.OnGenerateCustomerLast;
             ModHook.OnPlaceInventorInventoryItemLate += Progression.OnInventorStock;
             Progression.Register();
             ModHook.OnGameLoadedInit += Progression.OnRunStarted;
@@ -53,6 +55,8 @@ namespace ZamsCollectibles
             ModHook.OnCreateDevTooltipLate -= OnCreateDevTooltip;
             ModHook.OnGenerateCustomerLate -= Collectibles.OnGenerateCustomer;
             ModHook.OnGenerateCustomerNormal -= DealerCertificate.OnGenerateCustomer;
+            ModHook.OnGenerateCustomerNormal -= CardGrading.OnGenerateCustomer;
+            ModHook.OnGenerateCustomerVeryLate -= CardGrading.OnGenerateCustomerLast;
             ModHook.OnPlaceInventorInventoryItemLate -= Progression.OnInventorStock;
             ModHook.OnGameLoadedInit -= Progression.OnRunStarted;
             ModHook.OnNewGameStarted -= Progression.OnRunStarted;
@@ -185,6 +189,8 @@ namespace ZamsCollectibles
                 .BeginColumn(4f)
                     .AddHeader("Store")
                     .AddButton("Unlock Downside Den", () => { ModHelper.GetNetworkUpgrade(Progression.DEN_UPGRADE)?.Unlock(); Log.Log("Downside Den unlocked."); })
+                    .AddButton("Next Customer: Card Grader", () => NextCustomer(CardGrading.CreateGrader()))
+                    .AddButton("Grader: Return Cards Now", () => { StoreClient back = CardGrading.DebugReturnNow(); if (back != null) NextCustomer(back); })
                     .AddButton("Next Customer: Deck Builder", () => NextCustomer(DeckOrders.CreateCustomer()))
                     .AddButton("Next Customer: Pack Flipper", () => NextCustomer(Progression.CreatePackFlipper()))
                     .AddButton("Next Customer: Flipper (asks for game)", () => NextCustomer(Progression.CreatePackFlipper(100)))

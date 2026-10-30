@@ -52,7 +52,10 @@ namespace ZamsCollectibles
         private static int DaysMissed => ModHelper.GetModDataInt(ModEntry.MOD_ID, MISSED_KEY, 0);
 
         /// <summary>Today's odds of a card customer, in percent.</summary>
-        public static int Chance() => IsDisplayed() ? Math.Min(MAX_CHANCE, BASE_CHANCE * (2 + DaysMissed) / 2) : BARE_CHANCE;
+        public static int Chance() => ChanceFor(DaysMissed);
+
+        /// <summary>The certificate's odds after this many days without the customer (other card customers use it too).</summary>
+        public static int ChanceFor(int daysMissed) => IsDisplayed() ? Math.Min(MAX_CHANCE, BASE_CHANCE * (2 + daysMissed) / 2) : BARE_CHANCE;
 
         /// <summary>Once a day: maybe a card customer, by the certificate's odds.</summary>
         public static void OnGenerateCustomer(StoreClientManager manager)
