@@ -3,6 +3,10 @@
 #   booster_pack_rustwave  rusted orange metal, green patina, a rising sun over a wave
 #   booster_pack_doomed    sickly purple with toxic drips, a radiation emblem on hazard yellow
 #   booster_pack_oxygen    pale icy blue with rising bubbles, a bubble emblem
+#   booster_pack_grace     white and gold with gold flecks, a halo emblem
+#   booster_pack_brood     olive chitin with egg spots, an egg cluster emblem
+#   booster_pack_neural    magenta with cyan circuit traces, a circuit emblem
+#   booster_pack_fates     near-black with crimson cracks, an hourglass emblem
 # Usage: python make-pack-art.py <repo root>
 import sys
 from PIL import Image
@@ -78,6 +82,42 @@ THEMES = {
         "dots": {(6, 6): (235, 250, 255), (10, 5): (200, 232, 245), (8, 7): (235, 250, 255), (5, 16): (200, 232, 245),
                  (9, 17): (235, 250, 255), (7, 20): (235, 250, 255), (11, 21): (200, 232, 245), (5, 23): (235, 250, 255),
                  (9, 24): (200, 232, 245)},
+    },
+    "grace": {
+        "body": {"E": (255, 252, 240), "F": (232, 226, 210), "G": (206, 196, 168), "H": (164, 150, 118)},
+        "emblem_bg": (200, 226, 242),
+        # a halo
+        "emblem": [".####.", "#....#", ".####.", "......"],
+        "emblem_colors": {"#": (226, 180, 60)},
+        "dots": {(6, 6): (232, 190, 80), (10, 5): (232, 190, 80), (9, 16): (232, 190, 80), (5, 20): (232, 190, 80),
+                 (11, 22): (232, 190, 80), (7, 24): (232, 190, 80)},
+    },
+    "brood": {
+        "body": {"E": (150, 170, 90), "F": (96, 110, 60), "G": (74, 86, 46), "H": (52, 60, 34)},
+        "emblem_bg": (64, 40, 52),
+        # a cluster of eggs
+        "emblem": [".#..#.", "##.###", "##.###", ".#..#."],
+        "emblem_colors": {"#": (232, 222, 172)},
+        "dots": {(6, 6): (232, 222, 172), (10, 6): (232, 222, 172), (5, 17): (232, 222, 172), (9, 16): (170, 210, 90),
+                 (11, 20): (232, 222, 172), (7, 21): (232, 222, 172), (6, 24): (170, 210, 90), (10, 24): (232, 222, 172)},
+    },
+    "neural": {
+        "body": {"E": (240, 120, 220), "F": (170, 60, 160), "G": (130, 40, 130), "H": (90, 30, 100)},
+        "emblem_bg": (30, 30, 52),
+        # circuit
+        "emblem": ["#.##.#", "######", "#.##.#", ".#..#."],
+        "emblem_colors": {"#": (80, 220, 230)},
+        "drips": [(6, 15, 4), (9, 19, 5), (11, 5, 3), (7, 5, 2)],
+        "drip": (80, 220, 230), "drip_tip": (200, 250, 255),
+    },
+    "fates": {
+        "body": {"E": (180, 44, 56), "F": (52, 32, 42), "G": (40, 26, 34), "H": (28, 18, 26)},
+        "emblem_bg": (214, 204, 180),
+        # an hourglass
+        "emblem": ["######", ".#..#.", "..##..", "######"],
+        "emblem_colors": {"#": (170, 30, 44)},
+        "drips": [(7, 5, 3), (10, 16, 4), (5, 19, 3), (8, 21, 4)],
+        "drip": (150, 30, 42), "drip_tip": (210, 60, 70),
     },
 }
 

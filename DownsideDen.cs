@@ -422,13 +422,13 @@ namespace ZamsCollectibles
             int packs = RNG.GetRandomInt(MIN_PACKS, MAX_PACKS);
             for (int i = 0; i < packs; i++)
             {
-                CardSetDef set = RNG.GetRandomElement(CardDatabase.Sets);
+                CardSetDef set = RNG.GetRandomElement(Progression.AvailableSets());
                 PackStock existing = s.packs.FirstOrDefault(p => p.set == set.id && !p.box);
                 if (existing != null) existing.count++;
                 else s.packs.Add(new PackStock { set = set.id, count = 1 });
             }
             if (RNG.Roll(BOX_CHANCE))
-                s.packs.Add(new PackStock { set = RNG.GetRandomElement(CardDatabase.Sets).id, count = 1, box = true });
+                s.packs.Add(new PackStock { set = RNG.GetRandomElement(Progression.AvailableSets()).id, count = 1, box = true });
 
             int singles = RNG.GetRandomInt(MIN_SINGLES, MAX_SINGLES);
             for (int i = 0; i < singles; i++)
@@ -460,8 +460,9 @@ namespace ZamsCollectibles
                 roll -= r.shopWeight;
                 if (roll <= 0f) { rarity = r.id; break; }
             }
-            List<CardDef> pool = CardDatabase.Sets.SelectMany(x => x.cards).Where(c => c.rarity == rarity).ToList();
-            if (pool.Count == 0) pool = CardDatabase.Sets.SelectMany(x => x.cards).ToList();
+            List<CardDef> available = Progression.AvailableCards();
+            List<CardDef> pool = available.Where(c => c.rarity == rarity).ToList();
+            if (pool.Count == 0) pool = available;
             return pool.Count > 0 ? RNG.GetRandomElement(pool) : null;
         }
 

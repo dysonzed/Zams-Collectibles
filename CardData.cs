@@ -34,6 +34,7 @@ namespace ZamsCollectibles
         public string cardSprite;   // Textures/Items key shared by every card of the set
         public string packSprite;   // Textures/Items key of the set's booster pack (default: booster_pack)
         public string frameColor;   // card face frame: red, teal, purple or slate
+        public int tier = 1;                 // power tier: higher tiers are licensed through Wild's Network
         public float priceMultiplier = 1f;   // scales the rarity values of this set's cards: later sets and tiers cost more
         public int packValue;
         public float sealedMarkup;  // sealed-set value = sum of the card values * (1 + this)

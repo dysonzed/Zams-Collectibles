@@ -26,12 +26,21 @@ namespace ZamsCollectibles.AugWarriors
         public int turnInstalled;   // the owner's turns taken before it went in
         public bool suffocated;     // gains no Power from mods
         public bool voided;         // counts 0 Power
+        public bool silenced;       // its augment's effect is gone
+        public bool zeroBase;       // its printed Power counts 0 (mods still count)
+
+        /// <summary>The augment's effect, unless it's been silenced.</summary>
+        public string Effect => silenced ? null : augment.effect;
 
         public int Glitch => Math.Max(0, augment.glitch + mods.Sum(m => m.glitch) + hackGlitch);
 
         public Installed Clone()
         {
-            Installed copy = new Installed { augment = augment, hackGlitch = hackGlitch, turnInstalled = turnInstalled, suffocated = suffocated, voided = voided };
+            Installed copy = new Installed
+            {
+                augment = augment, hackGlitch = hackGlitch, turnInstalled = turnInstalled,
+                suffocated = suffocated, voided = voided, silenced = silenced, zeroBase = zeroBase,
+            };
             copy.mods.AddRange(mods);
             return copy;
         }
@@ -47,6 +56,9 @@ namespace ZamsCollectibles.AugWarriors
         public int looseGlitch;     // Glitch not on any augment (backlash, siphons)
         public int stabilityLoss;   // Stability drained by hacks
         public int hackShields;     // hacks still to be blocked
+        public int droneSwarm;      // Glitch per empty slot at the showdown
+        public int scorePenalty;    // taken off the final score
+        public int modLock;         // turns left in which no mods can be played
 
         public AugPlayer(string name, IEnumerable<CardDef> deck)
         {
@@ -58,9 +70,11 @@ namespace ZamsCollectibles.AugWarriors
 
         public bool HackImmune => HasEffect(AugRules.HACK_IMMUNE);
 
-        public bool HasEffect(string effect) => body.Any(i => i != null && i.augment.effect == effect);
+        public bool HasEffect(string effect) => body.Any(i => i != null && i.Effect == effect);
 
-        public int EffectTotal(string effect) => body.Where(i => i != null && i.augment.effect == effect).Sum(i => i.augment.amount);
+        public int EffectTotal(string effect) => body.Where(i => i != null && i.Effect == effect).Sum(i => i.augment.amount);
+
+        public int ModCount => body.Where(i => i != null).Sum(i => i.mods.Count);
 
         /// <summary>A copy of the board state (body, counters), with the given draw pile.</summary>
         public AugPlayer CloneBody(IEnumerable<CardDef> withDeck = null)
@@ -68,6 +82,7 @@ namespace ZamsCollectibles.AugWarriors
             AugPlayer copy = new AugPlayer(name, withDeck ?? Enumerable.Empty<CardDef>())
             {
                 turnsTaken = turnsTaken, looseGlitch = looseGlitch, stabilityLoss = stabilityLoss, hackShields = hackShields,
+                droneSwarm = droneSwarm, scorePenalty = scorePenalty, modLock = modLock,
             };
             for (int i = 0; i < body.Length; i++) copy.body[i] = body[i]?.Clone();
             return copy;
@@ -214,6 +229,7 @@ namespace ZamsCollectibles.AugWarriors
         private void EndTurn()
         {
             Current.turnsTaken++;
+            if (Current.modLock > 0) Current.modLock--;
             if (finalTurn) { Showdown(); return; }
 
             if (caller.HasValue)
@@ -233,7 +249,7 @@ namespace ZamsCollectibles.AugWarriors
         private void Showdown()
         {
             over = true;
-            for (int i = 0; i < 2; i++) scores[i] = AugRules.Score(players[i], caller == i, players[1 - i]);
+            for (int i = 0; i < 2; i++) scores[i] = AugRules.Score(players[i], caller == i, players[1 - i], caller.HasValue);
             int a = scores[0].final, b = scores[1].final;
             if (a != b) winner = a > b ? 0 : 1;
             else if (caller.HasValue) winner = 1 - caller.Value;   // ties go to whoever didn't call
@@ -305,6 +321,29 @@ namespace ZamsCollectibles.AugWarriors
         public const string VOID = "void";                          // hack: a target with no mods counts 0 Power
         public const string DOUBLE_BASE = "double_base";            // mod: its augment's printed Power counts twice
         public const string HACK_AMP = "hack_amp";                  // augment: your Glitch hacks add N more
+        public const string AEGIS = "aegis";                        // augment: never Compromised; lose the overflow instead
+        public const string EXTRA_MODS_SELF = "extra_mods_self";    // augment: holds N more mods itself
+        public const string SWARM = "swarm";                        // augment: +N per other card of its set you have in play
+        public const string FULL_TERM = "full_term";                // augment: +N if nobody called the showdown
+        public const string DISCARD = "discard";                    // augment: the opponent discards a card
+        public const string RELAY = "relay";                        // augment: your mods' Glitch counts against the opponent
+        public const string POWER_PER_ANY_MOD = "power_per_any_mod";      // augment: +N per mod you have in play
+        public const string LAST_WORD = "last_word";                // augment: +N if installed on your 6th turn or later
+        public const string PURIFY = "purify";                      // mod: clears its augment's hack Glitch
+        public const string WARD = "ward";                          // mod: its augment can't be hacked
+        public const string TORSO_BONUS = "torso_bonus";            // mod: +N Power on a torso
+        public const string VOID_ARM = "void_arm";                  // hack: an arm counts 0 Power
+        public const string BROOD_DRAIN = "brood_drain";            // hack: drain 1 Stability, plus 1 per card of its set you have in play
+        public const string STRIP_BEST = "strip_best";              // hack: remove the opponent's N best mods
+        public const string DRONE_SWARM = "drone_swarm";            // hack: +N Glitch per empty slot of theirs at the showdown
+        public const string GLITCH_PER_MOD = "glitch_per_mod";      // hack: +1 Glitch, plus N per mod they have
+        public const string SILENCE = "silence";                    // hack: the target loses its effect
+        public const string SWAP_HEADS = "swap_heads";              // hack: swap heads with the opponent
+        public const string MOD_LOCK = "mod_lock";                  // hack: no mods for their next N turns
+        public const string LOGIC_BOMB = "logic_bomb";              // hack: +N Glitch if they have none, else +1
+        public const string WIPE_MODS = "wipe_mods";                // hack: every mod in play is destroyed
+        public const string SCORE_PENALTY = "score_penalty";        // hack: -N off their final score
+        public const string ZERO_BASE = "zero_base";                // hack: the target's printed Power counts 0
 
         public static Slot[] SlotsFor(string slot)
         {
@@ -326,8 +365,10 @@ namespace ZamsCollectibles.AugWarriors
             switch (card.kind)
             {
                 case AUGMENT:
+                    if (card.effect == LATE_ONLY && me.turnsTaken + 1 < card.amount) return new List<Slot>();
                     return SlotsFor(card.slot).ToList();
                 case MOD:
+                    if (me.modLock > 0) return new List<Slot>();
                     if (card.effect == LATE_ONLY && me.turnsTaken + 1 < card.amount) return new List<Slot>();
                     return Enumerable.Range(0, SLOTS).Select(i => (Slot)i).Where(s =>
                     {
@@ -340,10 +381,17 @@ namespace ZamsCollectibles.AugWarriors
                     return Enumerable.Range(0, SLOTS).Select(i => (Slot)i).Where(s =>
                     {
                         Installed victim = opponent[s];
-                        if (victim == null) return false;
-                        if (card.effect == STRIP_MODS) return victim.mods.Count > 0;
-                        if (card.effect == VOID) return victim.mods.Count == 0 && !victim.voided;
-                        return true;
+                        if (victim == null || victim.mods.Any(m => m.effect == WARD)) return false;
+                        switch (card.effect)
+                        {
+                            case STRIP_MODS: return victim.mods.Count > 0;
+                            case VOID: return victim.mods.Count == 0 && !victim.voided;
+                            case VOID_ARM: return SlotKind(s) == "arm" && !victim.voided;
+                            case SWAP_HEADS: return s == Slot.Head;
+                            case ZERO_BASE: return !victim.zeroBase;
+                            case SILENCE: return victim.Effect != null;
+                            default: return true;
+                        }
                     }).ToList();
                 default:
                     return new List<Slot>();
@@ -351,7 +399,12 @@ namespace ZamsCollectibles.AugWarriors
         }
 
         public static int MaxMods(AugPlayer me, Slot slot) =>
-            MAX_MODS + (slot == Slot.Torso ? me.EffectTotal(EXTRA_TORSO_MOD) : 0);
+            MAX_MODS + (slot == Slot.Torso ? me.EffectTotal(EXTRA_TORSO_MOD) : 0)
+            + (me[slot]?.Effect == EXTRA_MODS_SELF ? me[slot].augment.amount : 0);
+
+        // Cards of a set a player has in play: augments and mods.
+        private static int InPlayFrom(AugPlayer p, CardSetDef set) =>
+            p.body.Where(i => i != null).Sum(i => (i.augment.set == set ? 1 : 0) + i.mods.Count(m => m.set == set));
 
         /// <summary>
         /// Plays a card onto the board: installs an augment, attaches a mod or runs a hack, with
@@ -370,12 +423,15 @@ namespace ZamsCollectibles.AugWarriors
                     log?.Add(old == null ? new AugEvent("aug_log_install", me.name, card) : new AugEvent("aug_log_replace", me.name, card, old.augment));
                     if (card.effect == HACK_SHIELD) me.hackShields += Math.Max(1, card.amount);
                     if (card.effect == STEAL_MOD) StealMod(me, opponent, installed, log);
+                    if (card.effect == DISCARD && opponent.hand.Count > 0)
+                        opponent.hand.RemoveAt((opponent.hand.Count * 7 + me.turnsTaken * 3) % opponent.hand.Count);
                     break;
                 }
                 case MOD:
                     me[target].mods.Add(card);
                     log?.Add(new AugEvent("aug_log_mod", me.name, card, me[target].augment));
                     if (card.effect == SIPHON) opponent.looseGlitch += card.amount;
+                    if (card.effect == PURIFY) me[target].hackGlitch = 0;
                     break;
                 case HACK:
                 {
@@ -423,8 +479,54 @@ namespace ZamsCollectibles.AugWarriors
                             log?.Add(new AugEvent("aug_log_hack", me.name, card, victim.augment, card.amount + moved + amp));
                             return;
                         }
+                        case GLITCH_PER_MOD:
+                        case LOGIC_BOMB:
+                        {
+                            int amount = card.effect == GLITCH_PER_MOD ? 1 + card.amount * opponent.ModCount
+                                : Score(opponent, false, me).glitch == 0 ? card.amount : 1;
+                            victim.hackGlitch += amount + amp;
+                            log?.Add(new AugEvent("aug_log_hack", me.name, card, victim.augment, amount + amp));
+                            return;
+                        }
                         case STABILITY_DRAIN:
                             opponent.stabilityLoss += card.amount;
+                            break;
+                        case BROOD_DRAIN:
+                            opponent.stabilityLoss += 1 + InPlayFrom(me, card.set);
+                            break;
+                        case STRIP_BEST:
+                            for (int n = 0; n < card.amount; n++)
+                            {
+                                Installed from = opponent.body.Where(i => i != null && i.mods.Count > 0)
+                                    .OrderByDescending(i => i.mods.Max(m => m.power - m.glitch)).FirstOrDefault();
+                                if (from == null) break;
+                                from.mods.Remove(from.mods.OrderByDescending(m => m.power - m.glitch).First());
+                            }
+                            break;
+                        case DRONE_SWARM:
+                            opponent.droneSwarm += card.amount;
+                            break;
+                        case SILENCE:
+                            victim.silenced = true;
+                            break;
+                        case SWAP_HEADS:
+                        {
+                            Installed mine = me.body[(int)Slot.Head];
+                            me.body[(int)Slot.Head] = victim;
+                            opponent.body[(int)Slot.Head] = mine;
+                            break;
+                        }
+                        case MOD_LOCK:
+                            opponent.modLock = Math.Max(opponent.modLock, Math.Max(1, card.amount));
+                            break;
+                        case WIPE_MODS:
+                            foreach (Installed i in me.body.Concat(opponent.body).Where(i => i != null)) i.mods.Clear();
+                            break;
+                        case SCORE_PENALTY:
+                            opponent.scorePenalty += card.amount;
+                            break;
+                        case ZERO_BASE:
+                            victim.zeroBase = true;
                             break;
                         case STRIP_MODS:
                             victim.mods.Clear();
@@ -433,6 +535,7 @@ namespace ZamsCollectibles.AugWarriors
                             victim.suffocated = true;
                             break;
                         case VOID:
+                        case VOID_ARM:
                             victim.voided = true;
                             break;
                     }
@@ -456,42 +559,73 @@ namespace ZamsCollectibles.AugWarriors
             log?.Add(new AugEvent("aug_log_steal", me.name, onto.augment, best));
         }
 
-        /// <summary>A player's showdown score. The opponent is needed for effects that look at them.</summary>
-        public static AugScore Score(AugPlayer p, bool called, AugPlayer opponent = null)
+        // An augment's Glitch for its owner: with Bypass Relay, its mods' Glitch goes to the opponent.
+        private static int SlotGlitch(AugPlayer owner, Installed slot) =>
+            Math.Max(0, slot.augment.glitch + slot.hackGlitch
+                + slot.mods.Sum(m => owner.HasEffect(RELAY) ? Math.Min(0, m.glitch) : m.glitch));
+
+        /// <summary>
+        /// A player's showdown score. The opponent is needed for effects that look at them;
+        /// anyCalled says whether someone called the showdown (the match knows; elsewhere assume not).
+        /// </summary>
+        public static AugScore Score(AugPlayer p, bool called, AugPlayer opponent = null, bool anyCalled = false)
         {
             AugScore s = new AugScore { stability = BASE_STABILITY - (p.HasEffect(IRONCLAD) ? 0 : p.stabilityLoss) };
-            s.glitch = p.looseGlitch;
+            s.glitch = p.looseGlitch + p.droneSwarm * p.body.Count(i => i == null);
+            if (opponent != null && opponent.HasEffect(RELAY))
+                s.glitch += opponent.body.Where(i => i != null).Sum(i => i.mods.Sum(m => Math.Max(0, m.glitch)));
             int softPenalty = -1, protectedPower = 0;
             for (int i = 0; i < SLOTS; i++)
             {
                 Installed slot = p.body[i];
                 if (slot == null) continue;
                 CardDef aug = slot.augment;
-                s.glitch += slot.Glitch;
+                int glitch = SlotGlitch(p, slot);
+                s.glitch += glitch;
                 s.stability += aug.stability + slot.mods.Sum(m => m.stability);
                 if (slot.voided) continue;
 
-                int part = aug.power + slot.mods.Sum(m => slot.suffocated ? Math.Min(0, m.power) : m.power);
-                if (slot.Glitch == 0) part += slot.mods.Where(m => m.effect == CLEAN_BONUS).Sum(m => m.amount);
-                if (!slot.suffocated) part += aug.power * slot.mods.Count(m => m.effect == DOUBLE_BASE);
-                switch (aug.effect)
+                int printed = slot.zeroBase ? 0 : aug.power;
+                int part = printed + slot.mods.Sum(m => slot.suffocated ? Math.Min(0, m.power) : m.power);
+                if (glitch == 0) part += slot.mods.Where(m => m.effect == CLEAN_BONUS).Sum(m => m.amount);
+                if (!slot.suffocated)
+                {
+                    part += printed * slot.mods.Count(m => m.effect == DOUBLE_BASE);
+                    if (i == (int)Slot.Torso) part += slot.mods.Where(m => m.effect == TORSO_BONUS).Sum(m => m.amount);
+                }
+                switch (slot.Effect)
                 {
                     case POWER_PER_MOD: part += aug.amount * slot.mods.Count; break;
                     case POWER_PER_OTHER_MOD: part += aug.amount * p.body.Where(o => o != null && o != slot).Sum(o => o.mods.Count); break;
+                    case POWER_PER_ANY_MOD: part += aug.amount * p.ModCount; break;
                     case POWER_IF_CALLED: if (called) part += aug.amount; break;
-                    case POWER_PER_STABLE: part += aug.amount * p.body.Count(o => o != null && o != slot && o.Glitch == 0); break;
+                    case POWER_PER_STABLE: part += aug.amount * p.body.Count(o => o != null && o != slot && SlotGlitch(p, o) == 0); break;
                     case LATE_BLOOMER: part += aug.amount * slot.turnInstalled; break;
+                    case LAST_WORD: if (slot.turnInstalled >= 5) part += aug.amount; break;
+                    case FULL_TERM: if (!anyCalled) part += aug.amount; break;
+                    case SWARM: part += aug.amount * (InPlayFrom(p, aug.set) - 1); break;
                     case PUNISH_COMPROMISED: if (opponent != null && Score(opponent, false).compromised) part += aug.amount; break;
                     case SOFT_COMPROMISE: softPenalty = aug.amount; break;
                 }
-                if (aug.effect == COMPROMISE_PROOF) protectedPower += Math.Max(0, part);
+                if (slot.Effect == COMPROMISE_PROOF) protectedPower += Math.Max(0, part);
                 s.power += part;
             }
             s.stability = Math.Max(0, s.stability);
-            s.compromised = s.glitch > s.stability;
-            int exposed = s.power - protectedPower;
-            s.final = !s.compromised ? s.power
-                : (softPenalty >= 0 ? Math.Max(0, exposed - softPenalty) : exposed / 2) + protectedPower;
+            bool over = s.glitch > s.stability;
+            if (over && p.HasEffect(AEGIS))
+            {
+                // Aegis Halo: never Compromised; the Glitch over the limit comes off the Power instead
+                s.compromised = false;
+                s.final = Math.Max(0, s.power - (s.glitch - s.stability));
+            }
+            else
+            {
+                s.compromised = over;
+                int exposed = s.power - protectedPower;
+                s.final = !over ? s.power
+                    : (softPenalty >= 0 ? Math.Max(0, exposed - softPenalty) : exposed / 2) + protectedPower;
+            }
+            s.final = Math.Max(0, s.final - p.scorePenalty);
             return s;
         }
 

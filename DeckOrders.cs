@@ -94,10 +94,10 @@ namespace ZamsCollectibles
         // Distinct requirements from the list, each fillable from the card pool.
         private static List<Requirement> PickRequirements(int wanted)
         {
-            List<CardDef> pool = CardDatabase.Sets.SelectMany(s => s.cards).ToList();
+            List<CardDef> pool = Progression.AvailableCards();
             var candidates = new List<Func<Requirement>>
             {
-                () => new Requirement { kind = "set", value = RNG.GetRandomElement(CardDatabase.Sets).id, count = RNG.GetRandomInt(2, 4) },
+                () => new Requirement { kind = "set", value = RNG.GetRandomElement(Progression.AvailableSets()).id, count = RNG.GetRandomInt(2, 4) },
                 () => new Requirement { kind = "power", power = RNG.GetRandomInt(3, 5), count = RNG.GetRandomInt(1, 2) },
                 () => new Requirement { kind = "slot", value = "arm", count = RNG.GetRandomInt(2, 4) },
                 () => new Requirement { kind = "slot", value = "torso", count = 1 },

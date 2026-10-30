@@ -212,7 +212,7 @@ namespace ZamsCollectibles.AugWarriors
             if (RNG.Roll(RARITY_UP_CHANCE) && rank < order.Count - 1) rank++;
             string rarity = order[rank];
 
-            List<CardDef> pool = CardDatabase.Sets.SelectMany(s => s.cards).Where(c => c.rarity == rarity).ToList();
+            List<CardDef> pool = Progression.AvailableCards().Where(c => c.rarity == rarity).ToList();
             if (pool.Count == 0) return null;
             if (RNG.Roll(NEW_CARD_CHANCE))
             {

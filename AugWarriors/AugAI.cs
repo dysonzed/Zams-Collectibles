@@ -225,6 +225,10 @@ namespace ZamsCollectibles.AugWarriors
                     case AugRules.STRIP_MODS: case AugRules.SACRIFICE_GLITCH: return 2.5f;
                     case AugRules.SUFFOCATE: case AugRules.STABILITY_DRAIN: case AugRules.MOVE_HACK_GLITCH: return 2f;
                     case AugRules.GLITCH_MODDED: return 1.2f * c.amount + 0.6f;
+                    case AugRules.WIPE_MODS: case AugRules.ZERO_BASE: case AugRules.SWAP_HEADS: return 3f;
+                    case AugRules.STRIP_BEST: case AugRules.SILENCE: case AugRules.VOID_ARM: case AugRules.BROOD_DRAIN: return 2.5f;
+                    case AugRules.SCORE_PENALTY: return 1f * c.amount;
+                    case AugRules.GLITCH_PER_MOD: case AugRules.LOGIC_BOMB: case AugRules.DRONE_SWARM: case AugRules.MOD_LOCK: return 2f;
                     default: return 1.2f * c.amount;
                 }
             }
@@ -246,6 +250,15 @@ namespace ZamsCollectibles.AugWarriors
                 case AugRules.SIPHON: worth += c.amount; break;
                 case AugRules.DOUBLE_BASE: worth += 3f; break;
                 case AugRules.HACK_AMP: worth += 1.5f * c.amount; break;
+                case AugRules.AEGIS: worth += 3f; break;
+                case AugRules.EXTRA_MODS_SELF: worth += 1.5f * c.amount; break;
+                case AugRules.SWARM: worth += 2f * c.amount; break;
+                case AugRules.FULL_TERM: worth += 0.5f * c.amount; break;
+                case AugRules.DISCARD: case AugRules.PURIFY: case AugRules.TORSO_BONUS: worth += 1f; break;
+                case AugRules.RELAY: worth += 3f; break;
+                case AugRules.POWER_PER_ANY_MOD: worth += 2f * c.amount; break;
+                case AugRules.LAST_WORD: worth += 0.5f * c.amount; break;
+                case AugRules.WARD: worth += 1.5f; break;
                 case AugRules.POWER_IF_CALLED: worth += 0.5f * c.amount; break;
                 case AugRules.SOFT_COMPROMISE: worth += 1f; break;
             }

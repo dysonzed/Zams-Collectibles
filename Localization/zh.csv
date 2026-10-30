@@ -367,3 +367,6 @@ aug_log_blocked,{0} 的 {1} 被挡下了。
 aug_log_blocked_you,你的 {1} 被挡下了。
 aug_log_steal,{0} 的 {1} 抢走了 {2}。
 aug_log_steal_you,你的 {1} 抢走了 {2}。
+upgrade_card_zamco,Zamco 经销
+upgrade_tier2_title,Zamco 二级授权
+upgrade_tier2_desc,Zamco 的高级系列：Restored Grace、Broodmother's Clutch、Neural Tap 和 Fate's End。卡牌更强、价格更高，在 Downside Den 有售，卡牌顾客也会带来。附赠一包样品。

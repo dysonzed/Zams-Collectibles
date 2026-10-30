@@ -31,7 +31,7 @@ namespace ZamsCollectibles
         private static void OnStart()
         {
             for (int i = 0; i < STARTING_PACKS; i++)
-                ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardItems.BoosterId(RNG.GetRandomElement(CardDatabase.Sets))));
+                ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardItems.BoosterId(RNG.GetRandomElement(Progression.AvailableSets()))));
             ModHelper.MoveItemToInventory(ModHelper.SpawnItem(AugWarriors.DeckBox.DECKBOX_ID));
             ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardBinder.BINDER_ID));
             UnlockDen();

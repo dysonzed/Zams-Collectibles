@@ -34,7 +34,7 @@ namespace ZamsCollectibles.AugWarriors
         {
             onFinished = finished;
             System.Random rng = new System.Random(RNG.random.Next());
-            List<CardDef> pool = CardDatabase.Sets.SelectMany(s => s.cards).ToList();
+            List<CardDef> pool = Progression.AvailableCards();
             AugPlayer you = new AugPlayer(Loc.Get("aug_you"), deck ?? AugAI.BuildDeck(pool, AugPersonality.Cautious, rng));
             AugPlayer them = new AugPlayer(opponentName, AugAI.BuildDeck(pool, style, rng));
             match = new AugMatch(you, them, rng.Next());

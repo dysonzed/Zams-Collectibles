@@ -367,3 +367,6 @@ aug_log_blocked,{0}'s {1} is blocked.
 aug_log_blocked_you,Your {1} is blocked.
 aug_log_steal,{0}'s {1} steals {2}.
 aug_log_steal_you,Your {1} steals {2}.
+upgrade_card_zamco,Zamco Distribution
+upgrade_tier2_title,Zamco Tier 2 License
+upgrade_tier2_desc,"Zamco's premium lines: Restored Grace, Broodmother's Clutch, Neural Tap and Fate's End. Stronger cards at higher prices, stocked at the Downside Den and carried by your card customers. Comes with a sample pack."

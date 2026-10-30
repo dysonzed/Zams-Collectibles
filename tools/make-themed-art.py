@@ -16,6 +16,10 @@ THEMES = {
     "rustwave": {"hue": 0.065, "sat": 1.0, "val": 1.05, "detail": (84, 150, 130), "kind": "specks"},
     "doomed": {"hue": 0.78, "sat": 0.55, "val": 0.75, "detail": (150, 200, 70), "kind": "drips"},
     "oxygen": {"hue": 0.56, "sat": 0.55, "val": 1.3, "detail": (235, 250, 255), "kind": "bubbles"},
+    "grace": {"hue": 0.12, "sat": 0.7, "val": 1.3, "detail": (255, 244, 200), "kind": "specks"},
+    "brood": {"hue": 0.24, "sat": 0.75, "val": 0.85, "detail": (232, 222, 172), "kind": "specks"},
+    "neural": {"hue": 0.85, "sat": 1.0, "val": 1.05, "detail": (80, 220, 230), "kind": "drips"},
+    "fates": {"hue": 0.98, "sat": 0.9, "val": 0.5, "detail": (210, 60, 70), "kind": "drips"},
 }
 
 

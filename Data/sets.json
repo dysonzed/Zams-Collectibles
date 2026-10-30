@@ -41,6 +41,7 @@
       "cardSprite": "card_back_rustwave",
       "packSprite": "booster_pack_rustwave",
       "frameColor": "red",
+      "tier": 1,
       "priceMultiplier": 1.0,
       "packValue": 34,
       "boxPacks": 18,
@@ -246,6 +247,7 @@
       "cardSprite": "card_back_doomed",
       "packSprite": "booster_pack_doomed",
       "frameColor": "purple",
+      "tier": 1,
       "priceMultiplier": 1.1,
       "packValue": 39,
       "boxPacks": 20,
@@ -455,6 +457,7 @@
       "cardSprite": "card_back_oxygen",
       "packSprite": "booster_pack_oxygen",
       "frameColor": "teal",
+      "tier": 1,
       "priceMultiplier": 1.2,
       "packValue": 43,
       "boxPacks": 16,
@@ -649,6 +652,788 @@
           "amount": 1,
           "text": "+1 Glitch on the target.",
           "flavor": "Ears pop. Systems stutter."
+        }
+      ]
+    },
+    {
+      "id": "grace",
+      "name": "Restored Grace",
+      "code": "RSG",
+      "cardSprite": "card_back_grace",
+      "packSprite": "booster_pack_grace",
+      "frameColor": "slate",
+      "tier": 2,
+      "priceMultiplier": 2.0,
+      "packValue": 64,
+      "boxPacks": 18,
+      "boxValue": 1066,
+      "sealedMarkup": 0.2,
+      "packSlots": [
+        {
+          "count": 3,
+          "rarities": [
+            "common"
+          ],
+          "weights": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "rarities": [
+            "uncommon"
+          ],
+          "weights": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "rarities": [
+            "rare",
+            "uncommon"
+          ],
+          "weights": [
+            70,
+            30
+          ]
+        }
+      ],
+      "cards": [
+        {
+          "number": 1,
+          "name": "Aegis Halo",
+          "rarity": "rare",
+          "kind": "augment",
+          "slot": "head",
+          "power": 2,
+          "glitch": 0,
+          "effect": "aegis",
+          "amount": 0,
+          "text": "You're never Compromised: Glitch over your Stability costs 1 Power each instead.",
+          "flavor": "Grace isn't the absence of sin. It's the price paid gently."
+        },
+        {
+          "number": 2,
+          "name": "Purifying Light",
+          "rarity": "uncommon",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 1,
+          "glitch": -2,
+          "effect": "purify",
+          "amount": 0,
+          "text": "When attached, clears all hack Glitch from its augment.",
+          "flavor": "Let it all wash out."
+        },
+        {
+          "number": 3,
+          "name": "Seraph Engine",
+          "rarity": "uncommon",
+          "kind": "augment",
+          "slot": "torso",
+          "power": 4,
+          "glitch": 1,
+          "stability": 3,
+          "text": "",
+          "flavor": "Six wings of cooling fins."
+        },
+        {
+          "number": 4,
+          "name": "Pristine Plating",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "torso",
+          "power": 3,
+          "glitch": 0,
+          "stability": 5,
+          "text": "",
+          "flavor": "Not a scratch. Not yet."
+        },
+        {
+          "number": 5,
+          "name": "Holy Conduit",
+          "rarity": "rare",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 3,
+          "glitch": 0,
+          "effect": "clean_bonus",
+          "amount": 2,
+          "text": "+2 more Power if its augment has no Glitch.",
+          "flavor": "Pure signal."
+        },
+        {
+          "number": 6,
+          "name": "Blessed Greaves",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "legs",
+          "power": 3,
+          "glitch": 0,
+          "text": "",
+          "flavor": "They never seem to wear."
+        },
+        {
+          "number": 7,
+          "name": "Graceful Strike",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "arm",
+          "power": 4,
+          "glitch": 1,
+          "text": "",
+          "flavor": "Every motion, intended."
+        },
+        {
+          "number": 8,
+          "name": "Mending Nanites",
+          "rarity": "common",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 1,
+          "glitch": -2,
+          "text": "",
+          "flavor": "Tiny hands, endless patience."
+        },
+        {
+          "number": 9,
+          "name": "Restoration Field",
+          "rarity": "uncommon",
+          "kind": "augment",
+          "slot": "head",
+          "power": 2,
+          "glitch": 0,
+          "stability": 2,
+          "text": "",
+          "flavor": "A hum that settles everything."
+        },
+        {
+          "number": 10,
+          "name": "Pacifist Protocol",
+          "rarity": "rare",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "void_arm",
+          "amount": 0,
+          "text": "Target an arm: it counts 0 Power.",
+          "flavor": "Lay down your arms. Literally."
+        },
+        {
+          "number": 11,
+          "name": "Sanctified Grip",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "arm",
+          "power": 3,
+          "glitch": 0,
+          "text": "",
+          "flavor": "Steady as prayer."
+        },
+        {
+          "number": 12,
+          "name": "Halo Generator",
+          "rarity": "rare",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 2,
+          "glitch": 0,
+          "effect": "ward",
+          "amount": 0,
+          "text": "Its augment can't be targeted by hacks.",
+          "flavor": "Nothing touches what it shines on."
+        }
+      ]
+    },
+    {
+      "id": "brood",
+      "name": "Broodmother's Clutch",
+      "code": "BMC",
+      "cardSprite": "card_back_brood",
+      "packSprite": "booster_pack_brood",
+      "frameColor": "teal",
+      "tier": 2,
+      "priceMultiplier": 2.2,
+      "packValue": 78,
+      "boxPacks": 20,
+      "boxValue": 1443,
+      "sealedMarkup": 0.2,
+      "packSlots": [
+        {
+          "count": 2,
+          "rarities": [
+            "common"
+          ],
+          "weights": [
+            1
+          ]
+        },
+        {
+          "count": 2,
+          "rarities": [
+            "common",
+            "uncommon"
+          ],
+          "weights": [
+            60,
+            40
+          ]
+        },
+        {
+          "count": 1,
+          "rarities": [
+            "ultra",
+            "rare",
+            "uncommon"
+          ],
+          "weights": [
+            1,
+            74,
+            25
+          ]
+        }
+      ],
+      "cards": [
+        {
+          "number": 1,
+          "name": "Hive Core",
+          "rarity": "rare",
+          "kind": "augment",
+          "slot": "torso",
+          "power": 2,
+          "glitch": 2,
+          "stability": 3,
+          "effect": "extra_mods_self",
+          "amount": 2,
+          "text": "Holds 4 mods instead of 2.",
+          "flavor": "Every cell a cradle."
+        },
+        {
+          "number": 2,
+          "name": "Parasitic Infection",
+          "rarity": "rare",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "brood_drain",
+          "amount": 0,
+          "text": "The opponent loses 1 Stability, plus 1 for each Broodmother's Clutch card you have in play.",
+          "flavor": "One becomes many becomes all."
+        },
+        {
+          "number": 3,
+          "name": "Chitinous Legs",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "legs",
+          "power": 4,
+          "glitch": 1,
+          "text": "",
+          "flavor": "Clicks on metal floors."
+        },
+        {
+          "number": 4,
+          "name": "Swarm Arm",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "arm",
+          "power": 3,
+          "glitch": 1,
+          "effect": "swarm",
+          "amount": 1,
+          "text": "+1 Power for each other Broodmother's Clutch card you have in play.",
+          "flavor": "Never alone."
+        },
+        {
+          "number": 5,
+          "name": "Bio-Rally",
+          "rarity": "uncommon",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 2,
+          "glitch": 1,
+          "effect": "torso_bonus",
+          "amount": 1,
+          "text": "+1 more Power on a torso.",
+          "flavor": "The heart beats for the hive."
+        },
+        {
+          "number": 6,
+          "name": "Venom Sac",
+          "rarity": "uncommon",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 3,
+          "glitch": 2,
+          "text": "",
+          "flavor": "Handle from the back."
+        },
+        {
+          "number": 7,
+          "name": "Brood Visor",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "head",
+          "power": 2,
+          "glitch": 1,
+          "text": "",
+          "flavor": "Compound eyes, singular purpose."
+        },
+        {
+          "number": 8,
+          "name": "Acid Spit",
+          "rarity": "uncommon",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "strip_best",
+          "amount": 2,
+          "text": "Destroy the opponent's 2 best mods.",
+          "flavor": "Melts through anything bolted on."
+        },
+        {
+          "number": 9,
+          "name": "Gestation Pod",
+          "rarity": "rare",
+          "kind": "augment",
+          "slot": "legs",
+          "power": 1,
+          "glitch": 1,
+          "effect": "full_term",
+          "amount": 6,
+          "text": "+6 Power if nobody called the showdown.",
+          "flavor": "Don't rush it."
+        },
+        {
+          "number": 10,
+          "name": "Symbiotic Link",
+          "rarity": "common",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 1,
+          "glitch": -1,
+          "text": "",
+          "flavor": "It helps. It wants to help."
+        },
+        {
+          "number": 11,
+          "name": "Carapace Shield",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "arm",
+          "power": 2,
+          "glitch": 0,
+          "stability": 1,
+          "text": "",
+          "flavor": "Grown, not forged."
+        },
+        {
+          "number": 12,
+          "name": "Drone Swarm",
+          "rarity": "rare",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "drone_swarm",
+          "amount": 1,
+          "text": "At the showdown, the opponent gains 1 Glitch for each empty part slot.",
+          "flavor": "They fill every gap."
+        },
+        {
+          "number": 13,
+          "name": "The Broodmother",
+          "rarity": "ultra",
+          "kind": "augment",
+          "slot": "torso",
+          "power": 4,
+          "glitch": 2,
+          "stability": 4,
+          "effect": "swarm",
+          "amount": 2,
+          "text": "+2 Power for each other Broodmother's Clutch card you have in play.",
+          "flavor": "All of them are hers."
+        }
+      ]
+    },
+    {
+      "id": "neural",
+      "name": "Neural Tap",
+      "code": "NRT",
+      "cardSprite": "card_back_neural",
+      "packSprite": "booster_pack_neural",
+      "frameColor": "purple",
+      "tier": 2,
+      "priceMultiplier": 2.4,
+      "packValue": 82,
+      "boxPacks": 16,
+      "boxValue": 1214,
+      "sealedMarkup": 0.2,
+      "packSlots": [
+        {
+          "count": 3,
+          "rarities": [
+            "common"
+          ],
+          "weights": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "rarities": [
+            "uncommon"
+          ],
+          "weights": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "rarities": [
+            "rare",
+            "uncommon"
+          ],
+          "weights": [
+            80,
+            20
+          ]
+        }
+      ],
+      "cards": [
+        {
+          "number": 1,
+          "name": "Mind-Hack Transmitter",
+          "rarity": "rare",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "glitch_per_mod",
+          "amount": 1,
+          "text": "+1 Glitch on the target, plus 1 for each mod the opponent has.",
+          "flavor": "Every upgrade is a door."
+        },
+        {
+          "number": 2,
+          "name": "Synaptic Overdrive",
+          "rarity": "uncommon",
+          "kind": "augment",
+          "slot": "head",
+          "power": 3,
+          "glitch": 2,
+          "effect": "discard",
+          "amount": 0,
+          "text": "When installed, the opponent discards a random card.",
+          "flavor": "It thinks faster than you."
+        },
+        {
+          "number": 3,
+          "name": "Memory Wipe",
+          "rarity": "uncommon",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "silence",
+          "amount": 0,
+          "text": "The target augment loses its effect.",
+          "flavor": "What was it for again?"
+        },
+        {
+          "number": 4,
+          "name": "Cortical Spike",
+          "rarity": "common",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 2,
+          "glitch": 1,
+          "text": "",
+          "flavor": "Straight into the cortex."
+        },
+        {
+          "number": 5,
+          "name": "Nerve Splicer",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "arm",
+          "power": 4,
+          "glitch": 2,
+          "text": "",
+          "flavor": "Faster than reflex."
+        },
+        {
+          "number": 6,
+          "name": "Bypass Relay",
+          "rarity": "rare",
+          "kind": "augment",
+          "slot": "head",
+          "power": 3,
+          "glitch": 1,
+          "effect": "relay",
+          "amount": 0,
+          "text": "Glitch from your mods counts against the opponent instead of you.",
+          "flavor": "Your problem now."
+        },
+        {
+          "number": 7,
+          "name": "Corrupted Data",
+          "rarity": "common",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 4,
+          "glitch": 3,
+          "text": "",
+          "flavor": "Do not open."
+        },
+        {
+          "number": 8,
+          "name": "Hijacked Feed",
+          "rarity": "rare",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "swap_heads",
+          "amount": 0,
+          "text": "Swap heads with the opponent, mods and all.",
+          "flavor": "Who's thinking now?"
+        },
+        {
+          "number": 9,
+          "name": "Sensory Deprivation",
+          "rarity": "uncommon",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "mod_lock",
+          "amount": 2,
+          "text": "The opponent can't play mods for their next 2 turns.",
+          "flavor": "Static, then silence."
+        },
+        {
+          "number": 10,
+          "name": "Neural Mesh",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "torso",
+          "power": 3,
+          "glitch": 1,
+          "stability": 4,
+          "text": "",
+          "flavor": "Wired through every nerve."
+        },
+        {
+          "number": 11,
+          "name": "Phantom Limb",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "legs",
+          "power": 3,
+          "glitch": 1,
+          "text": "",
+          "flavor": "It moves before you do."
+        },
+        {
+          "number": 12,
+          "name": "Logic Bomb",
+          "rarity": "rare",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "logic_bomb",
+          "amount": 4,
+          "text": "+4 Glitch on the target if the opponent has no Glitch, otherwise +1.",
+          "flavor": "Perfect systems fail perfectly."
+        }
+      ]
+    },
+    {
+      "id": "fates",
+      "name": "Fate's End",
+      "code": "FTE",
+      "cardSprite": "card_back_fates",
+      "packSprite": "booster_pack_fates",
+      "frameColor": "red",
+      "tier": 2,
+      "priceMultiplier": 2.6,
+      "packValue": 91,
+      "boxPacks": 18,
+      "boxValue": 1515,
+      "sealedMarkup": 0.2,
+      "packSlots": [
+        {
+          "count": 2,
+          "rarities": [
+            "common"
+          ],
+          "weights": [
+            1
+          ]
+        },
+        {
+          "count": 2,
+          "rarities": [
+            "uncommon",
+            "common"
+          ],
+          "weights": [
+            70,
+            30
+          ]
+        },
+        {
+          "count": 1,
+          "rarities": [
+            "rare",
+            "uncommon"
+          ],
+          "weights": [
+            75,
+            25
+          ]
+        }
+      ],
+      "cards": [
+        {
+          "number": 1,
+          "name": "Doomsday Engine",
+          "rarity": "rare",
+          "kind": "augment",
+          "slot": "torso",
+          "power": 10,
+          "glitch": 6,
+          "stability": 3,
+          "text": "",
+          "flavor": "It will end everything. Including you."
+        },
+        {
+          "number": 2,
+          "name": "Omega Protocol",
+          "rarity": "rare",
+          "kind": "augment",
+          "slot": "head",
+          "power": 2,
+          "glitch": 1,
+          "effect": "power_per_any_mod",
+          "amount": 2,
+          "text": "+2 Power for each mod you have in play.",
+          "flavor": "Everything converges."
+        },
+        {
+          "number": 3,
+          "name": "Final Countdown",
+          "rarity": "uncommon",
+          "kind": "augment",
+          "slot": "arm",
+          "power": 5,
+          "glitch": 3,
+          "effect": "late_only",
+          "amount": 6,
+          "text": "Only on your 6th turn.",
+          "flavor": "Three. Two."
+        },
+        {
+          "number": 4,
+          "name": "Apocalyptic Stride",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "legs",
+          "power": 5,
+          "glitch": 2,
+          "text": "",
+          "flavor": "Each step, a tremor."
+        },
+        {
+          "number": 5,
+          "name": "Void Claw",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "arm",
+          "power": 5,
+          "glitch": 2,
+          "text": "",
+          "flavor": "Reaches through nothing."
+        },
+        {
+          "number": 6,
+          "name": "Event Horizon",
+          "rarity": "rare",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "wipe_mods",
+          "amount": 0,
+          "text": "Destroy every mod in play, yours too.",
+          "flavor": "Nothing escapes."
+        },
+        {
+          "number": 7,
+          "name": "Entropy Generator",
+          "rarity": "uncommon",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 4,
+          "glitch": 2,
+          "text": "",
+          "flavor": "Order, undone."
+        },
+        {
+          "number": 8,
+          "name": "Fatal Strike",
+          "rarity": "uncommon",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "score_penalty",
+          "amount": 2,
+          "text": "The opponent loses 2 from their final score.",
+          "flavor": "It was always going to end like this."
+        },
+        {
+          "number": 9,
+          "name": "Oblivion Plating",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "torso",
+          "power": 4,
+          "glitch": 1,
+          "stability": 4,
+          "text": "",
+          "flavor": "Black as the end."
+        },
+        {
+          "number": 10,
+          "name": "Null Field",
+          "rarity": "rare",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "zero_base",
+          "amount": 0,
+          "text": "The target's printed Power counts 0. Its mods still count.",
+          "flavor": "Unmade."
+        },
+        {
+          "number": 11,
+          "name": "Destiny Weaver",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "head",
+          "power": 3,
+          "glitch": 1,
+          "text": "",
+          "flavor": "It has seen how this ends."
+        },
+        {
+          "number": 12,
+          "name": "The Last Word",
+          "rarity": "uncommon",
+          "kind": "augment",
+          "slot": "arm",
+          "power": 2,
+          "glitch": 0,
+          "effect": "last_word",
+          "amount": 3,
+          "text": "+3 Power if installed on your 6th turn or later.",
+          "flavor": "Saved for last."
         }
       ]
     }
