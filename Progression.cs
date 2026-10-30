@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace ZamsCollectibles
@@ -19,14 +20,31 @@ namespace ZamsCollectibles
 
         public static bool DenUnlocked => ModHelper.IsNetworkUpgradeUnlocked(DEN_UPGRADE);
 
+        /// <summary>
+        /// Registers the Wild's Network upgrade. At the main menu the game's registration stores
+        /// the definition and then touches the player store, which can't be built yet and throws;
+        /// the definition is kept, so that error is caught. Called again once a run exists (a save
+        /// loads or a new game starts), which adds the upgrade to the run; repeating it is safe.
+        /// </summary>
         public static void Register()
         {
-            ModHelper.AddNetworkUpgrade(ModEntry.MOD_ID, DEN_UPGRADE, DEN_UPGRADE_COST, "Referral",
-                title: () => Loc.Get("upgrade_den_title"),
-                description: () => Loc.Get("upgrade_den_desc"),
-                onUnlock: () => { },
-                iconKey: $"{ModEntry.MOD_ID}:booster_box_red");
+            try
+            {
+                ModHelper.AddNetworkUpgrade(ModEntry.MOD_ID, DEN_UPGRADE, DEN_UPGRADE_COST, "Referral",
+                    title: () => Loc.Get("upgrade_den_title"),
+                    description: () => Loc.Get("upgrade_den_desc"),
+                    onUnlock: () => { },
+                    iconKey: $"{ModEntry.MOD_ID}:booster_box_red");
+            }
+            catch (NullReferenceException)
+            {
+                // main menu: no player store yet; registered again when a run starts
+            }
         }
+
+        public static void OnRunStarted() => Register();
+
+        public static void OnRunStarted(string _) => Register();
 
         /// <summary>Dr. Jackson sometimes has a booster pack on his table.</summary>
         public static void OnInventorStock(List<GameItem> ownedItems)

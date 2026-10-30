@@ -37,6 +37,8 @@ namespace ZamsCollectibles
             ModHook.OnGenerateCustomerNormal += Progression.OnGenerateCustomer;
             ModHook.OnPlaceInventorInventoryItemLate += Progression.OnInventorStock;
             Progression.Register();
+            ModHook.OnGameLoadedInit += Progression.OnRunStarted;
+            ModHook.OnNewGameStarted += Progression.OnRunStarted;
             ModHook.OnGameLoadedLate += OnGameLoaded;
             DownsideDen.Register();
             RegisterDebugButtons();
@@ -51,6 +53,8 @@ namespace ZamsCollectibles
             ModHook.OnGenerateCustomerLate -= Collectibles.OnGenerateCustomer;
             ModHook.OnGenerateCustomerNormal -= Progression.OnGenerateCustomer;
             ModHook.OnPlaceInventorInventoryItemLate -= Progression.OnInventorStock;
+            ModHook.OnGameLoadedInit -= Progression.OnRunStarted;
+            ModHook.OnNewGameStarted -= Progression.OnRunStarted;
             ModHelper.RemoveNetworkUpgrades(MOD_ID);
             ModHook.OnGameLoadedLate -= OnGameLoaded;
             ModHelper.RemoveAfterhourLocations(MOD_ID);
