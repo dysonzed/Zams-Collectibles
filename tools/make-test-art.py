@@ -1,4 +1,4 @@
-# Test-pattern placeholder art for the first card (Junkyard Arm), to check how card art crops:
+# Test-pattern placeholder art for the first card (Scrap-Iron Chassis), to check how card art crops:
 #   - the card face (viewer) shows the centre 63 x 46: inside the green line
 #   - the board's mini cards show the centre 52 x 44, halved: inside the yellow line
 #   - red stripes: never shown on the face
@@ -78,5 +78,5 @@ cx, cy = W // 2, H // 2
 for d in range(-2, 3):
     p[cx + d, cy] = (255, 255, 255, 255); p[cx, cy + d] = (255, 255, 255, 255)
 
-img.save(f"{root}/Textures/Items/art_scrapyard_01.png")
+img.save(f"{root}/Textures/Items/art_rustwave_01.png")
 print("ok", img.size)

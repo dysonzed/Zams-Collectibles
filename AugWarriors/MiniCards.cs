@@ -143,14 +143,16 @@ namespace ZamsCollectibles.AugWarriors
             Fill(px, 2, 27, 28, 18, Cream);
             Box(px, 2, 27, 28, 18);
             Icon(px, KindIcon(card), 4, 30, Ink);
-            int glitch = card.kind == AugRules.HACK && card.effect == AugRules.GLITCH ? card.amount : card.glitch;
+            bool glitchHack = card.kind == AugRules.HACK && (card.effect == AugRules.GLITCH || card.effect == AugRules.GLITCH_MODDED
+                || card.effect == AugRules.SACRIFICE_GLITCH || card.effect == AugRules.MOVE_HACK_GLITCH);
+            int glitch = glitchHack ? card.amount : card.glitch;
             int row = 29;
             if (card.stability != 0)
             {
                 Stat(px, "shield", card.stability, 17, row, StableTeal);
                 row += 8;
             }
-            if (card.kind == AugRules.HACK && card.effect == AugRules.SCRAP)
+            if (card.kind == AugRules.HACK && (card.effect == AugRules.SCRAP || card.effect == AugRules.VOID))
                 Glyph(px, 'X', 21, row, GlitchRed);   // scraps the part outright
             else if (card.kind == AugRules.AUGMENT || glitch != 0)
                 Stat(px, "bolt", glitch, 17, row, GlitchRed);

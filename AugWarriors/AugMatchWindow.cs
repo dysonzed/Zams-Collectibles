@@ -131,7 +131,7 @@ namespace ZamsCollectibles.AugWarriors
         // One player's five slots and totals. hackTargets/installTargets: slots that take the selected card.
         private static void BodyRow(CustomUIBuilder b, AugPlayer p, int who, List<Slot> targets)
         {
-            AugScore s = AugRules.Score(p, match.caller == who);
+            AugScore s = AugRules.Score(p, match.caller == who, match.players[1 - who]);
             b.AddLabel(Loc.Get("aug_totals", p.name, s.power, s.glitch, s.stability, p.hand.Count, p.deck.Count));
             if (s.glitch > s.stability) b.Last.SetTextColor(Warning);
 

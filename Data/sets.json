@@ -11,7 +11,7 @@
     {
       "id": "uncommon",
       "name": "Uncommon",
-      "value": 2,
+      "value": 4,
       "color": "Green",
       "gem": "#67aaa5",
       "shopWeight": 22
@@ -19,7 +19,7 @@
     {
       "id": "rare",
       "name": "Rare",
-      "value": 8,
+      "value": 28,
       "color": "Turquoise",
       "gem": "#6f93d9",
       "shopWeight": 7
@@ -27,7 +27,7 @@
     {
       "id": "ultra",
       "name": "Ultra Rare",
-      "value": 100,
+      "value": 250,
       "color": "Yellow",
       "gem": "#e0b050",
       "shopWeight": 1
@@ -35,16 +35,17 @@
   ],
   "sets": [
     {
-      "id": "scrapyard",
-      "name": "Scrapyard Legends",
-      "code": "SCR",
-      "cardSprite": "card_back_red",
-      "packSprite": "booster_pack_red",
+      "id": "rustwave",
+      "name": "Rustwave Rising",
+      "code": "RWR",
+      "cardSprite": "card_back_rustwave",
+      "packSprite": "booster_pack_rustwave",
       "frameColor": "red",
-      "packValue": 30,
-      "boxValue": 470,
-      "sealedMarkup": 0.2,
+      "priceMultiplier": 1.0,
+      "packValue": 34,
       "boxPacks": 18,
+      "boxValue": 566,
+      "sealedMarkup": 0.2,
       "packSlots": [
         {
           "count": 3,
@@ -68,174 +69,400 @@
           "count": 1,
           "rarities": [
             "rare",
-            "ultra"
+            "uncommon"
           ],
           "weights": [
-            93,
-            7
+            75,
+            25
           ]
         }
       ],
       "cards": [
         {
           "number": 1,
-          "name": "Junkyard Arm",
-          "rarity": "common",
-          "kind": "augment",
-          "slot": "arm",
-          "power": 2,
-          "glitch": 0,
-          "text": "",
-          "flavor": "Salvaged, straightened, mostly attached."
-        },
-        {
-          "number": 2,
-          "name": "Scrap Plating",
+          "name": "Scrap-Iron Chassis",
           "rarity": "common",
           "kind": "augment",
           "slot": "torso",
-          "power": 1,
+          "power": 2,
           "glitch": 0,
-          "stability": 3,
+          "stability": 4,
           "text": "",
-          "flavor": "Bolted on. Bolted in. Bolted, anyway."
+          "flavor": "Heavy, ugly, and still standing."
+        },
+        {
+          "number": 2,
+          "name": "Oxidized Piston",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "arm",
+          "power": 3,
+          "glitch": 1,
+          "text": "",
+          "flavor": "Squeals on every swing."
         },
         {
           "number": 3,
-          "name": "Salvaged Optics",
+          "name": "Tetanus Spike",
+          "rarity": "common",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 2,
+          "glitch": 2,
+          "text": "",
+          "flavor": "Get your shots first."
+        },
+        {
+          "number": 4,
+          "name": "Rusty Greaves",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "legs",
+          "power": 2,
+          "glitch": 0,
+          "text": "",
+          "flavor": "They creak. They hold."
+        },
+        {
+          "number": 5,
+          "name": "Patchwork Visor",
           "rarity": "common",
           "kind": "augment",
           "slot": "head",
           "power": 1,
           "glitch": 0,
-          "text": "",
-          "flavor": "Twenty-twenty, give or take a pixel."
-        },
-        {
-          "number": 4,
-          "name": "Pipe Legs",
-          "rarity": "common",
-          "kind": "augment",
-          "slot": "legs",
-          "power": 2,
-          "glitch": 1,
-          "text": "",
-          "flavor": "Plumbing grade. Rated for running."
-        },
-        {
-          "number": 5,
-          "name": "Rust Patch",
-          "rarity": "common",
-          "kind": "mod",
-          "modFor": "any",
-          "power": 0,
-          "glitch": -1,
-          "text": "Attach to any augment.",
-          "flavor": "Duct tape for the soul."
+          "effect": "draw",
+          "amount": 1,
+          "text": "When installed, draw a card.",
+          "flavor": "Six lenses, none of them matching."
         },
         {
           "number": 6,
-          "name": "Static Burst",
+          "name": "Ironclad Will",
+          "rarity": "uncommon",
+          "kind": "augment",
+          "slot": "head",
+          "power": 1,
+          "glitch": 0,
+          "effect": "ironclad",
+          "amount": 0,
+          "text": "Hacks can't lower your Stability.",
+          "flavor": "Some minds rust shut."
+        },
+        {
+          "number": 7,
+          "name": "Feedback Loop",
+          "rarity": "uncommon",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "glitch_modded",
+          "amount": 2,
+          "text": "+2 Glitch on the target, +3 if it has a mod.",
+          "flavor": "Turn it up until it screams."
+        },
+        {
+          "number": 8,
+          "name": "Overclocked Furnace",
+          "rarity": "uncommon",
+          "kind": "mod",
+          "modFor": "torso",
+          "power": 3,
+          "glitch": 2,
+          "text": "",
+          "flavor": "Runs hot. Runs hotter."
+        },
+        {
+          "number": 9,
+          "name": "Magnetic Grapple",
+          "rarity": "uncommon",
+          "kind": "augment",
+          "slot": "arm",
+          "power": 2,
+          "glitch": 1,
+          "effect": "power_per_mod",
+          "amount": 1,
+          "text": "+1 Power for each mod attached to it.",
+          "flavor": "Everything sticks eventually."
+        },
+        {
+          "number": 10,
+          "name": "Shunt Wire",
+          "rarity": "uncommon",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 0,
+          "glitch": -2,
+          "effect": "clean_bonus",
+          "amount": 1,
+          "text": "+1 Power if the augment it's on has no Glitch.",
+          "flavor": "Ground it. Then ground it again."
+        },
+        {
+          "number": 11,
+          "name": "Corrosive Emitter",
+          "rarity": "rare",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "sacrifice_glitch",
+          "amount": 4,
+          "text": "Scrap your weakest mod to give the target +4 Glitch.",
+          "flavor": "Eats through everything. Even yours."
+        },
+        {
+          "number": 12,
+          "name": "The Red Menace",
+          "rarity": "rare",
+          "kind": "augment",
+          "slot": "torso",
+          "power": 3,
+          "glitch": 2,
+          "stability": 5,
+          "effect": "power_per_other_mod",
+          "amount": 1,
+          "text": "+1 Power for each mod on your other augments.",
+          "flavor": "The whole rig answers to it."
+        },
+        {
+          "number": 13,
+          "name": "Overdrive Coil",
+          "rarity": "rare",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 0,
+          "glitch": 2,
+          "effect": "double_base",
+          "amount": 0,
+          "text": "Doubles the Power printed on its augment.",
+          "flavor": "Rated for twice the load. Briefly."
+        }
+      ]
+    },
+    {
+      "id": "doomed",
+      "name": "Doomed Decay",
+      "code": "DDC",
+      "cardSprite": "card_back_doomed",
+      "packSprite": "booster_pack_doomed",
+      "frameColor": "purple",
+      "priceMultiplier": 1.1,
+      "packValue": 39,
+      "boxPacks": 20,
+      "boxValue": 722,
+      "sealedMarkup": 0.2,
+      "packSlots": [
+        {
+          "count": 2,
+          "rarities": [
+            "common"
+          ],
+          "weights": [
+            1
+          ]
+        },
+        {
+          "count": 2,
+          "rarities": [
+            "uncommon",
+            "common"
+          ],
+          "weights": [
+            80,
+            20
+          ]
+        },
+        {
+          "count": 1,
+          "rarities": [
+            "rare",
+            "uncommon"
+          ],
+          "weights": [
+            75,
+            25
+          ]
+        }
+      ],
+      "cards": [
+        {
+          "number": 1,
+          "name": "Lead-Lined Boots",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "legs",
+          "power": 1,
+          "glitch": 0,
+          "stability": 2,
+          "text": "",
+          "flavor": "Walk through the fallout. Slowly."
+        },
+        {
+          "number": 2,
+          "name": "Rotting Framework",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "torso",
+          "power": 4,
+          "glitch": 2,
+          "stability": 2,
+          "text": "",
+          "flavor": "Strong today. Ask again tomorrow."
+        },
+        {
+          "number": 3,
+          "name": "Decay Spores",
           "rarity": "common",
           "kind": "hack",
           "power": 0,
           "glitch": 0,
-          "effect": "glitch",
+          "effect": "stability_drain",
           "amount": 2,
-          "text": "Give an opponent's augment +2 Glitch.",
-          "flavor": "Zap first. Apologise never."
+          "text": "The opponent loses 2 Stability.",
+          "flavor": "It gets into the joints."
         },
         {
-          "number": 7,
-          "name": "Hydraulic Fist",
-          "rarity": "uncommon",
+          "number": 4,
+          "name": "Brittle Blades",
+          "rarity": "common",
           "kind": "augment",
           "slot": "arm",
           "power": 4,
           "glitch": 2,
           "text": "",
-          "flavor": "Opens doors. Usually through the wall."
+          "flavor": "Sharp enough. Once."
+        },
+        {
+          "number": 5,
+          "name": "Siphon Tube",
+          "rarity": "common",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 0,
+          "glitch": -1,
+          "effect": "siphon",
+          "amount": 1,
+          "text": "When attached, the opponent gains 1 Glitch.",
+          "flavor": "Your problem now."
+        },
+        {
+          "number": 6,
+          "name": "Toxic Filter",
+          "rarity": "uncommon",
+          "kind": "augment",
+          "slot": "head",
+          "power": 1,
+          "glitch": 0,
+          "effect": "hack_backlash",
+          "amount": 2,
+          "text": "When the opponent hacks you, they gain 2 Glitch.",
+          "flavor": "Breathe in. They choke."
+        },
+        {
+          "number": 7,
+          "name": "Isotope Battery",
+          "rarity": "uncommon",
+          "kind": "mod",
+          "modFor": "any",
+          "power": 2,
+          "glitch": 1,
+          "text": "",
+          "flavor": "Glows a little. That's normal."
         },
         {
           "number": 8,
-          "name": "Reinforced Spine",
+          "name": "Radiation Leak",
           "rarity": "uncommon",
-          "kind": "augment",
-          "slot": "torso",
-          "power": 1,
+          "kind": "hack",
+          "power": 0,
           "glitch": 0,
-          "stability": 5,
-          "text": "",
-          "flavor": "Stands up straight under any load."
+          "effect": "strip_mods",
+          "amount": 0,
+          "text": "Remove all mods from the target.",
+          "flavor": "Everything bolted on falls off."
         },
         {
           "number": 9,
-          "name": "Blood Filter",
+          "name": "Hazmat Visor",
           "rarity": "uncommon",
-          "kind": "mod",
-          "modFor": "torso",
-          "power": 0,
-          "glitch": -2,
-          "stability": 1,
-          "text": "Attach to a torso augment.",
-          "flavor": "Keeps the bad code out of the bloodstream."
-        },
-        {
-          "number": 10,
-          "name": "Mantis Blades",
-          "rarity": "rare",
-          "kind": "augment",
-          "slot": "arm",
-          "power": 5,
-          "glitch": 3,
-          "effect": "power_per_mod",
-          "amount": 1,
-          "text": "+1 Power for each mod attached to it.",
-          "flavor": "Fold away. Unfold faster."
-        },
-        {
-          "number": 11,
-          "name": "Scavenger's Eye",
-          "rarity": "rare",
           "kind": "augment",
           "slot": "head",
           "power": 2,
           "glitch": 1,
-          "effect": "draw",
+          "effect": "hack_shield",
           "amount": 1,
-          "text": "When installed, draw a card.",
-          "flavor": "Spots the good junk first."
+          "text": "Blocks the next hack played on you.",
+          "flavor": "Rated for one bad day."
+        },
+        {
+          "number": 10,
+          "name": "Malignant Code",
+          "rarity": "rare",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "move_hack_glitch",
+          "amount": 2,
+          "text": "+2 Glitch on the target, and move all hack Glitch from your augments onto it.",
+          "flavor": "Pass it on."
+        },
+        {
+          "number": 11,
+          "name": "Half-Life Generator",
+          "rarity": "rare",
+          "kind": "augment",
+          "slot": "torso",
+          "power": 3,
+          "glitch": 1,
+          "stability": 5,
+          "effect": "punish_compromised",
+          "amount": 4,
+          "text": "+4 Power at the showdown if the opponent is Compromised.",
+          "flavor": "Patient. Inevitable."
         },
         {
           "number": 12,
-          "name": "Junk King Frame",
-          "rarity": "ultra",
+          "name": "Fission Fist",
+          "rarity": "rare",
           "kind": "augment",
-          "slot": "torso",
+          "slot": "arm",
+          "power": 4,
+          "glitch": 3,
+          "effect": "compromise_proof",
+          "amount": 0,
+          "text": "Its Power is never halved when you're Compromised.",
+          "flavor": "It hits just as hard on fire."
+        },
+        {
+          "number": 13,
+          "name": "Plague Walker",
+          "rarity": "rare",
+          "kind": "augment",
+          "slot": "legs",
           "power": 2,
           "glitch": 1,
-          "stability": 4,
-          "effect": "power_per_stable",
+          "effect": "hack_amp",
           "amount": 1,
-          "text": "+1 Power for each of your other augments with 0 Glitch.",
-          "flavor": "Every heap has a throne."
+          "text": "Your hacks that add Glitch add 1 more.",
+          "flavor": "Leaves a trail. Everyone gets sick."
         }
       ]
     },
     {
-      "id": "neon",
-      "name": "Neon Nights",
-      "code": "NEO",
-      "cardSprite": "card_back_blue",
-      "packSprite": "booster_pack_blue",
+      "id": "oxygen",
+      "name": "Oxygen Leak",
+      "code": "OXL",
+      "cardSprite": "card_back_oxygen",
+      "packSprite": "booster_pack_oxygen",
       "frameColor": "teal",
-      "packValue": 35,
-      "boxValue": 550,
+      "priceMultiplier": 1.2,
+      "packValue": 43,
+      "boxPacks": 16,
+      "boxValue": 636,
       "sealedMarkup": 0.2,
-      "boxPacks": 18,
       "packSlots": [
         {
-          "count": 2,
+          "count": 4,
           "rarities": [
             "common"
           ],
@@ -256,88 +483,172 @@
           "count": 1,
           "rarities": [
             "rare",
-            "ultra"
+            "uncommon"
           ],
           "weights": [
-            92,
-            8
+            80,
+            20
           ]
         }
       ],
       "cards": [
         {
           "number": 1,
-          "name": "Neon Optics",
+          "name": "Emergency Tank",
           "rarity": "common",
           "kind": "augment",
-          "slot": "head",
-          "power": 3,
-          "glitch": 2,
+          "slot": "torso",
+          "power": 2,
+          "glitch": 0,
+          "stability": 3,
           "text": "",
-          "flavor": "See everything. Sleep never."
+          "flavor": "Break glass. Breathe."
         },
         {
           "number": 2,
-          "name": "Overclocked Legs",
-          "rarity": "common",
-          "kind": "augment",
-          "slot": "legs",
-          "power": 4,
-          "glitch": 2,
-          "effect": "power_if_called",
-          "amount": 2,
-          "text": "+2 Power if you called the showdown.",
-          "flavor": "Built for the last sprint."
-        },
-        {
-          "number": 3,
-          "name": "Chrome Plating",
+          "name": "Vacuum Seals",
           "rarity": "common",
           "kind": "mod",
           "modFor": "any",
           "power": 1,
-          "glitch": 1,
-          "text": "Attach to any augment.",
-          "flavor": "Shiny is a stat."
+          "glitch": 0,
+          "text": "",
+          "flavor": "Nothing in, nothing out."
+        },
+        {
+          "number": 3,
+          "name": "Pressurized Struts",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "legs",
+          "power": 1,
+          "glitch": 0,
+          "effect": "late_bloomer",
+          "amount": 1,
+          "text": "+1 Power for each of your turns before it was installed.",
+          "flavor": "Pressure builds."
         },
         {
           "number": 4,
-          "name": "Firewall",
+          "name": "Airtight Helmet",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "head",
+          "power": 2,
+          "glitch": 1,
+          "text": "",
+          "flavor": "Fogs up when you panic."
+        },
+        {
+          "number": 5,
+          "name": "Pneumatic Punch",
+          "rarity": "common",
+          "kind": "augment",
+          "slot": "arm",
+          "power": 2,
+          "glitch": 0,
+          "text": "",
+          "flavor": "Clean, quiet, and very fast."
+        },
+        {
+          "number": 6,
+          "name": "Thruster Pack",
+          "rarity": "common",
+          "kind": "mod",
+          "modFor": "legs",
+          "power": 3,
+          "glitch": 1,
+          "effect": "late_only",
+          "amount": 5,
+          "text": "Only from your 5th turn.",
+          "flavor": "For the last push."
+        },
+        {
+          "number": 7,
+          "name": "Suffocate",
+          "rarity": "uncommon",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "suffocate",
+          "amount": 0,
+          "text": "The target gains no Power from mods.",
+          "flavor": "Cut the air. Watch it stall."
+        },
+        {
+          "number": 8,
+          "name": "Oxygen Recycler",
+          "rarity": "uncommon",
+          "kind": "mod",
+          "modFor": "torso",
+          "power": 1,
+          "glitch": -2,
+          "text": "",
+          "flavor": "Every breath, twice."
+        },
+        {
+          "number": 9,
+          "name": "Zero-G Calibration",
           "rarity": "uncommon",
           "kind": "augment",
           "slot": "head",
           "power": 1,
           "glitch": 0,
-          "effect": "hack_immune",
-          "amount": 0,
-          "text": "Hacks can't target you.",
-          "flavor": "Nobody gets in. Nobody."
+          "effect": "extra_torso_mod",
+          "amount": 1,
+          "text": "Your torso can hold 3 mods.",
+          "flavor": "Room to float. Room to build."
         },
         {
-          "number": 5,
-          "name": "System Wipe",
+          "number": 10,
+          "name": "Airlock Override",
           "rarity": "rare",
           "kind": "hack",
           "power": 0,
           "glitch": 0,
-          "effect": "scrap",
+          "effect": "void",
           "amount": 0,
-          "text": "Scrap an opponent's augment and its mods.",
-          "flavor": "Have you tried turning them off?"
+          "text": "Target an augment with no mods: it counts 0 Power.",
+          "flavor": "Cycling. Goodbye."
         },
         {
-          "number": 6,
-          "name": "Ghost Protocol",
-          "rarity": "ultra",
+          "number": 11,
+          "name": "Cryo-Sleep Chamber",
+          "rarity": "rare",
           "kind": "augment",
           "slot": "torso",
+          "power": 0,
+          "glitch": 0,
+          "stability": 5,
+          "effect": "power_per_stable",
+          "amount": 2,
+          "text": "+2 Power for each of your other augments with no Glitch.",
+          "flavor": "Cold, still, perfect."
+        },
+        {
+          "number": 12,
+          "name": "Kinetic Harpoon",
+          "rarity": "rare",
+          "kind": "augment",
+          "slot": "arm",
           "power": 2,
-          "glitch": 3,
-          "stability": 6,
-          "effect": "soft_compromise",
-          "amount": 3,
-          "text": "If you're Compromised, lose 3 Power instead of half.",
-          "flavor": "The AI doesn't know you're in here."
+          "glitch": 1,
+          "effect": "steal_mod",
+          "amount": 0,
+          "text": "When installed, steals the opponent's best mod onto this arm.",
+          "flavor": "Reel it in."
+        },
+        {
+          "number": 13,
+          "name": "Pressure Drop",
+          "rarity": "common",
+          "kind": "hack",
+          "power": 0,
+          "glitch": 0,
+          "effect": "glitch",
+          "amount": 1,
+          "text": "+1 Glitch on the target.",
+          "flavor": "Ears pop. Systems stutter."
         }
       ]
     }

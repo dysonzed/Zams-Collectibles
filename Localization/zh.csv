@@ -30,7 +30,6 @@ stat_stability,稳定 {0}
 # 提示
 tooltip_card_set,{0} · {1} {2}/{3}
 tooltip_graded,已评级 {0}（{1}）
-tooltip_ungraded,品相：{0}（未评级）
 tooltip_sealed_condition,平均品相：{0}
 tooltip_booster_set,系列：{0}（{1}，共 {2} 张）
 tooltip_booster_contents,内含 {0}
@@ -67,7 +66,6 @@ sealed_desc,{1} 全部 {0} 张卡牌，封装在展示盒中。
 
 # 卡牌查看器（备用窗口）
 viewer_title,Aug Warriors
-viewer_ungraded,{0}，未评级
 
 # 下城据点（夜间卡牌店）
 den_name,下城据点
@@ -76,7 +74,6 @@ den_credits,你的信用点：{0}
 den_packs,补充包
 den_singles,单卡
 den_pack_row,{0} ×{1}
-den_single_detail,{0} · {1}
 den_buy,购买
 den_view,查看
 den_sold,已售出
@@ -193,7 +190,7 @@ aug_table_play,开打
 aug_table_rules,规则
 aug_table_no_deck,把卡组盒放在这里。
 aug_table_no_card,可选：放一张卡作为赌注。
-aug_table_card_ante,以一张{0}卡作赌注。
+aug_table_card_ante,押上：{0}。
 aug_table_need_deck,把卡组盒放进卡组槽。
 aug_table_fix_deck,你的卡组不合规：打开卡组盒并检查。
 aug_table_ready,准备就绪。
@@ -364,3 +361,9 @@ grader_case,评级箱（{0} 格）
 grader_cost,{0} 张卡：{1} 信用点
 grader_submit,提交评级
 slab_label,AUG WARRIORS · 等级 {0} · {1}
+aug_log_hack_on,{0} 对 {2} 打出 {1}。
+aug_log_hack_on_you,你对 {2} 打出 {1}。
+aug_log_blocked,{0} 的 {1} 被挡下了。
+aug_log_blocked_you,你的 {1} 被挡下了。
+aug_log_steal,{0} 的 {1} 抢走了 {2}。
+aug_log_steal_you,你的 {1} 抢走了 {2}。

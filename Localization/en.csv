@@ -30,7 +30,6 @@ stat_stability,Stability {0}
 # Tooltips
 tooltip_card_set,{0} · {1} {2}/{3}
 tooltip_graded,Graded {0} ({1})
-tooltip_ungraded,Condition: {0} (ungraded)
 tooltip_sealed_condition,Average condition: {0}
 tooltip_booster_set,"Set: {0} ({1}, {2} cards)"
 tooltip_booster_contents,Contains {0}
@@ -67,7 +66,6 @@ sealed_desc,"All {0} cards of {1}, sealed in a display box."
 
 # Card viewer (plain fallback window)
 viewer_title,Aug Warriors
-viewer_ungraded,"{0}, ungraded"
 
 # Downside Den (afterhour game store)
 den_name,Downside Den
@@ -76,7 +74,6 @@ den_credits,Your credits: {0}
 den_packs,Booster Packs
 den_singles,Singles
 den_pack_row,{0} ×{1}
-den_single_detail,{0} · {1}
 den_buy,Buy
 den_view,View
 den_sold,Sold
@@ -193,7 +190,7 @@ aug_table_play,Play
 aug_table_rules,Rules
 aug_table_no_deck,Drop your deck box here.
 aug_table_no_card,"Optional: drop a card to ante."
-aug_table_card_ante,Anteing a {0} card.
+aug_table_card_ante,Anteing {0}.
 aug_table_need_deck,Put your deck box in the deck slot.
 aug_table_fix_deck,Your deck isn't legal: open the deck box and Validate.
 aug_table_ready,Ready.
@@ -364,3 +361,9 @@ grader_case,Grading case ({0} slots)
 grader_cost,"{0} cards: {1} credits"
 grader_submit,Submit for grading
 slab_label,AUG WARRIORS · GRADE {0} · {1}
+aug_log_hack_on,{0} plays {1} on {2}.
+aug_log_hack_on_you,You play {1} on {2}.
+aug_log_blocked,{0}'s {1} is blocked.
+aug_log_blocked_you,Your {1} is blocked.
+aug_log_steal,{0}'s {1} steals {2}.
+aug_log_steal_you,Your {1} steals {2}.

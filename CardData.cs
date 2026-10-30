@@ -34,6 +34,7 @@ namespace ZamsCollectibles
         public string cardSprite;   // Textures/Items key shared by every card of the set
         public string packSprite;   // Textures/Items key of the set's booster pack (default: booster_pack)
         public string frameColor;   // card face frame: red, teal, purple or slate
+        public float priceMultiplier = 1f;   // scales the rarity values of this set's cards: later sets and tiers cost more
         public int packValue;
         public float sealedMarkup;  // sealed-set value = sum of the card values * (1 + this)
         public int boxPacks;        // booster packs in a booster box
@@ -144,7 +145,8 @@ namespace ZamsCollectibles
         public static int BaseValue(CardDef card)
         {
             if (card.value > 0) return card.value;
-            return GetRarity(card.rarity)?.value ?? 1;
+            float multiplier = card.set != null && card.set.priceMultiplier > 0f ? card.set.priceMultiplier : 1f;
+            return Math.Max(1, (int)Math.Round((GetRarity(card.rarity)?.value ?? 1) * multiplier));
         }
 
         public static CardDef RollCard(CardSetDef set, PackSlotDef slot)

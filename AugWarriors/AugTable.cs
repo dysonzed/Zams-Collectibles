@@ -147,7 +147,7 @@ namespace ZamsCollectibles.AugWarriors
                 : Loc.Get("deckbox_status_errors", deck.Count, errors.Count));
 
             CardDef ante = CardItems.GetCardDef(anteSlot.childItem);
-            anteText.SetText(ante == null ? Loc.Get("aug_table_no_card") : Loc.Get("aug_table_card_ante", Loc.RarityName(ante.rarity)));
+            anteText.SetText(ante == null ? Loc.Get("aug_table_no_card") : Loc.Get("aug_table_card_ante", Loc.CardTitle(ante)));
             // how they play is for the player to find out
             opponentText.SetText(opponents.Count > 1 ? Loc.Get("aug_table_opponent_hint") : Opponent.name);
 

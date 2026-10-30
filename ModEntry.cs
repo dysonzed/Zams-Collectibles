@@ -93,16 +93,13 @@ namespace ZamsCollectibles
             CardDef card = CardItems.GetCardDef(item);
             if (card == null) return;
 
-            RarityDef rarity = CardDatabase.GetRarity(card.rarity);
+            // Rarity and condition are for the player to read off the card itself (the rarity gem,
+            // the wear); only a grade, once paid for, is spelled out.
             builder.AddLine(Loc.Get("tooltip_card_set", Loc.SetName(card.set), card.set.code, card.number.ToString("000"), card.set.cards.Length.ToString("000")));
-            builder.AddLine(Loc.RarityName(card.rarity), color: ParseColor(rarity?.color), bold: true);
-            if (AugWarriors.AugBoard.IsMatchCard(item)) return;   // a card in play: its condition doesn't matter
+            if (AugWarriors.AugBoard.IsMatchCard(item) || !CardItems.IsGraded(item)) return;
 
             float condition = CardItems.GetCondition(item);
-            if (CardItems.IsGraded(item))
-                builder.AddLine(Loc.Get("tooltip_graded", CardCondition.GradeOf(condition).ToString("0.0"), CardCondition.Label(condition)), color: RenderHandler.ColorPalette.Yellow);
-            else
-                builder.AddLine(Loc.Get("tooltip_ungraded", CardCondition.Label(condition)));
+            builder.AddLine(Loc.Get("tooltip_graded", CardCondition.GradeOf(condition).ToString("0.0"), CardCondition.Label(condition)), color: RenderHandler.ColorPalette.Yellow);
         }
 
         // Item names and descriptions are saved with the items, in the language they were made in:
@@ -219,8 +216,5 @@ namespace ZamsCollectibles
             manager.clientStack.Insert(0, client);
             Log.Log($"Next customer: {client.displayName}.");
         }
-
-        private static RenderHandler.ColorPalette ParseColor(string name) =>
-            Enum.TryParse(name, out RenderHandler.ColorPalette color) ? color : RenderHandler.ColorPalette.None;
     }
 }

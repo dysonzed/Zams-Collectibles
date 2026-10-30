@@ -52,8 +52,8 @@ namespace ZamsCollectibles.AugWarriors
         {
             if (style.lookahead > 0) return Search(match, style);
             AugPlayer me = match.Current, opponent = match.Opponent;
-            float now = Value(me, style, called: false);
-            float theirs = AugRules.Score(opponent, false).final;
+            float now = Value(me, opponent, style);
+            float theirs = AugRules.Score(opponent, false, me).final;
 
             // The best play, even if it hurts: holding is only allowed with nothing playable.
             AugAction best = AugAction.Hold;
@@ -70,7 +70,7 @@ namespace ZamsCollectibles.AugWarriors
             // Call when comfortably ahead and the hand has little left to add, or on the last turn when ahead.
             if (!match.finalTurn)
             {
-                float lead = AugRules.Score(me, true).final - theirs;
+                float lead = AugRules.Score(me, true, opponent).final - theirs;
                 bool lastTurn = me.turnsTaken >= AugRules.MAX_TURNS - 1;
                 if (lead >= style.callLead && bestGain < style.callGain) return AugAction.Call;
                 if (lastTurn && lead > 0 && bestGain < 1f) return AugAction.Call;
@@ -127,31 +127,23 @@ namespace ZamsCollectibles.AugWarriors
             return options.GroupBy(o => (o.kind, o.card, o.target)).Select(g => g.First()).ToList();
         }
 
-        // How much a play improves my position: my value up, plus (weighted) their score down.
+        // How much a play improves my position: my value up, plus (weighted) their score down. The
+        // play is tried on copies of both bodies with the real rules, so every effect counts.
         private static float Gain(AugPlayer me, AugPlayer opponent, CardDef card, Slot target, AugPersonality style, float now, float theirs)
         {
-            if (card.kind == AugRules.HACK)
-            {
-                AugPlayer them = opponent.CloneBody();
-                Installed victim = them[target];
-                if (card.effect == AugRules.SCRAP) them.body[(int)target] = null;
-                else victim.hackGlitch += card.amount;
-                return (theirs - AugRules.Score(them, false).final) * style.hackWeight;
-            }
-
-            AugPlayer after = me.CloneBody();
-            if (card.kind == AugRules.AUGMENT) after.body[(int)target] = new Installed { augment = card };
-            else after[target].mods.Add(card);
-            float gain = Value(after, style, called: false) - now;
-            if (card.effect == AugRules.DRAW) gain += 1f;
+            AugPlayer meAfter = me.CloneBody(), themAfter = opponent.CloneBody();
+            AugRules.Resolve(meAfter, themAfter, card, target, null);
+            float gain = Value(meAfter, themAfter, style) - now;
+            gain += (theirs - AugRules.Score(themAfter, false, meAfter).final) * style.hackWeight;
+            if (card.effect == AugRules.DRAW) gain += card.amount;
             if (card.kind == AugRules.MOD) gain += style.modBonus;
             return gain;
         }
 
         // My score, but treating getting close to the glitch limit as risky, by personality.
-        private static float Value(AugPlayer p, AugPersonality style, bool called)
+        private static float Value(AugPlayer p, AugPlayer opponent, AugPersonality style)
         {
-            AugScore s = AugRules.Score(p, called);
+            AugScore s = AugRules.Score(p, false, opponent);
             int headroom = s.stability - s.glitch;
             if (headroom < style.glitchBuffer) return s.final - (style.glitchBuffer - headroom) * 1.5f;
             return s.final;
@@ -224,7 +216,18 @@ namespace ZamsCollectibles.AugWarriors
         // A rough worth for deck building: Power and Stability are good, Glitch is bad, effects add.
         private static float CardStrength(CardDef c)
         {
-            if (c.kind == AugRules.HACK) return c.effect == AugRules.SCRAP ? 4f : 1.2f * c.amount;
+            if (c.kind == AugRules.HACK)
+            {
+                switch (c.effect)
+                {
+                    case AugRules.SCRAP: return 4f;
+                    case AugRules.VOID: return 3f;
+                    case AugRules.STRIP_MODS: case AugRules.SACRIFICE_GLITCH: return 2.5f;
+                    case AugRules.SUFFOCATE: case AugRules.STABILITY_DRAIN: case AugRules.MOVE_HACK_GLITCH: return 2f;
+                    case AugRules.GLITCH_MODDED: return 1.2f * c.amount + 0.6f;
+                    default: return 1.2f * c.amount;
+                }
+            }
             float worth = c.power + 0.6f * c.stability - 0.8f * c.glitch;
             switch (c.effect)
             {
@@ -232,6 +235,17 @@ namespace ZamsCollectibles.AugWarriors
                 case AugRules.HACK_IMMUNE: worth += 2f; break;
                 case AugRules.POWER_PER_MOD: worth += c.amount; break;
                 case AugRules.POWER_PER_STABLE: worth += 2f * c.amount; break;
+                case AugRules.POWER_PER_OTHER_MOD: worth += 1.5f * c.amount; break;
+                case AugRules.IRONCLAD: case AugRules.HACK_SHIELD: case AugRules.HACK_BACKLASH: worth += 1f; break;
+                case AugRules.PUNISH_COMPROMISED: worth += 0.3f * c.amount; break;
+                case AugRules.COMPROMISE_PROOF: worth += 1.5f; break;
+                case AugRules.LATE_BLOOMER: worth += 2f * c.amount; break;
+                case AugRules.EXTRA_TORSO_MOD: worth += 1f; break;
+                case AugRules.STEAL_MOD: worth += 2f; break;
+                case AugRules.CLEAN_BONUS: worth += 0.5f * c.amount; break;
+                case AugRules.SIPHON: worth += c.amount; break;
+                case AugRules.DOUBLE_BASE: worth += 3f; break;
+                case AugRules.HACK_AMP: worth += 1.5f * c.amount; break;
                 case AugRules.POWER_IF_CALLED: worth += 0.5f * c.amount; break;
                 case AugRules.SOFT_COMPROMISE: worth += 1f; break;
             }

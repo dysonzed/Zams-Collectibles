@@ -43,7 +43,8 @@ namespace ZamsCollectibles
                 foreach (CardDef card in set.cards)
                 {
                     dir.Add(CardId(card), () => CreateCard(card));
-                    textByItemId[CardId(card)] = item => { SetCardText(item, card); ApplyIcon(item); };
+                    // on load, also bring the icon and value up to date (slabs, price changes)
+                    textByItemId[CardId(card)] = item => { SetCardText(item, card); ApplyIcon(item); UpdateCardValue(item); };
                 }
                 dir.Add(BoosterId(set), () => CreateBooster(set));
                 textByItemId[BoosterId(set)] = item => SetBoosterText(item, set);
@@ -193,10 +194,10 @@ namespace ZamsCollectibles
 
         public static long ValueFor(CardDef card, float condition, bool graded)
         {
-            float multiplier = graded
-                ? CardCondition.GradedMultiplier(CardCondition.GradeOf(condition))
-                : CardCondition.RawMultiplier(condition);
-            return Math.Max(1L, (long)Math.Round(CardDatabase.BaseValue(card) * multiplier));
+            float grade = CardCondition.GradeOf(condition);
+            float multiplier = graded ? CardCondition.GradedMultiplier(grade) : CardCondition.RawMultiplier(condition);
+            long premium = graded ? CardCondition.GradePremium(grade) : 0;
+            return Math.Max(1L, (long)Math.Round(CardDatabase.BaseValue(card) * multiplier) + premium);
         }
 
         /// <summary>Reveals the exact condition. Returns false when the card was already graded.</summary>
@@ -264,8 +265,11 @@ namespace ZamsCollectibles
 
         private static string BoxSprite(CardSetDef set, bool opened)
         {
-            string key = $"booster_box{(opened ? "_open" : "")}_{set.frameColor}";
-            return HasModSprite(key) ? key : (opened ? "booster_box_open_purple" : "booster_box_purple");
+            // the set's own box art (booster_box_rustwave), else one by frame colour, else the purple one
+            string open = opened ? "_open" : "";
+            foreach (string key in new[] { $"booster_box{open}_{set.id}", $"booster_box{open}_{set.frameColor}" })
+                if (HasModSprite(key)) return key;
+            return opened ? "booster_box_open_purple" : "booster_box_purple";
         }
 
         /// <summary>A sealed booster box: activating it (after a confirmation) turns it into an opened box full of packs.</summary>

@@ -1,5 +1,5 @@
 # Inventory icons for graded cards: the card sealed in a clear plastic slab with a red grade label
-# on top, one per card back (card_back_red -> card_slab_red, ...). 16 x 16, like the card icons.
+# on top, one per card back (card_back_rustwave -> card_slab_rustwave, ...). 16 x 16, like the card icons.
 # Usage: python make-slab-art.py <repo root>
 import sys
 from PIL import Image
@@ -12,7 +12,7 @@ GLASS = (200, 225, 235, 70)
 LABEL = (214, 48, 78, 255)
 LABEL_HI = (255, 236, 230, 255)
 
-for colour in ("red", "blue"):
+for colour in ("red", "blue", "rustwave", "doomed", "oxygen"):
     back = Image.open(f"{root}/Textures/Items/card_back_{colour}.png").convert("RGBA")
     card = back.crop(back.getbbox()).resize((8, 9), Image.NEAREST)
     img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))

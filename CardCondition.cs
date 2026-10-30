@@ -22,14 +22,19 @@ namespace ZamsCollectibles
         };
 
         /// <summary>Condition of a card fresh out of a pack: mostly 8 to 10, occasionally worse.</summary>
+        // A perfect 10.0 is its own jackpot roll; every other fresh card tops out just under it.
+        public const float GEM_CHANCE = 0.005f;
+        private const float BEST_ORDINARY = 9.94f;   // grades 9.9 at best
+
         public static float RollFreshCondition()
         {
-            // half-normal below 10, sigma 1.2
+            if (RNG.random.NextDouble() < GEM_CHANCE) return 10f;
+            // half-normal below the cap, sigma 1.2
             double u1 = 1.0 - RNG.random.NextDouble();
             double u2 = RNG.random.NextDouble();
             double gaussian = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2);
-            float condition = 10f - (float)Math.Abs(gaussian) * 1.2f;
-            return (float)Math.Round(Clamp(condition, 1f, 10f), 2);
+            float condition = BEST_ORDINARY - (float)Math.Abs(gaussian) * 1.2f;
+            return (float)Math.Round(Clamp(condition, 1f, BEST_ORDINARY), 2);
         }
 
         public static string Label(float condition)
@@ -55,6 +60,18 @@ namespace ZamsCollectibles
             if (grade >= 8f) return 1.5f;
             if (grade >= 7f) return 1.1f;
             return RawMultiplier(grade) * 0.9f;
+        }
+
+        /// <summary>
+        /// What a high grade adds to any card, on top of the multiplier: collectors pay for the slab
+        /// itself, so a gem 10 common is worth more than the grading fee, and a low grade isn't.
+        /// </summary>
+        public static int GradePremium(float grade)
+        {
+            if (grade >= 10f) return 60;
+            if (grade >= 9.5f) return 10;
+            if (grade >= 9f) return 3;
+            return 0;
         }
 
         /// <summary>The grade a grader prints on the slab: the exact condition to one decimal.</summary>

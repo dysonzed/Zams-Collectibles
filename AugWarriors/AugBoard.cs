@@ -526,7 +526,7 @@ namespace ZamsCollectibles.AugWarriors
 
         private static void Stats(int who)
         {
-            AugScore s = AugRules.Score(match.players[who], match.caller == who);
+            AugScore s = AugRules.Score(match.players[who], match.caller == who, match.players[1 - who]);
             statText[who].SetStatus(match.players[who].name, Loc.Get("aug_board_power", s.power));
             powerBar[who].SetValue(Mathf.Clamp01(s.power / POWER_BAR_MAX));
             stabilityText[who].SetText(s.compromised ? Loc.Get("aug_board_compromised", s.glitch, s.stability) : Loc.Get("aug_board_stability", s.glitch, s.stability));

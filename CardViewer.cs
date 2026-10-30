@@ -50,7 +50,7 @@ namespace ZamsCollectibles
             float condition = CardItems.GetCondition(item);
             string conditionLine = CardItems.IsGraded(item)
                 ? Loc.Get("tooltip_graded", CardCondition.GradeOf(condition).ToString("0.0"), CardCondition.Label(condition))
-                : Loc.Get("viewer_ungraded", CardCondition.Label(condition));
+                : "";   // ungraded: the condition is for the player to judge
             string flavor = Loc.CardFlavor(card);
 
             CustomUIBuilder builder = CustomUIManager.Window(CardWindow.WINDOW_ID, Loc.Get("viewer_title"), CustomUIManager.LAYER_PAPER)
@@ -62,7 +62,6 @@ namespace ZamsCollectibles
                     .AddHeader(CardItems.CardName(card))
                     .AddImage(artKey, ART_WIDTH * ZOOM, ART_HEIGHT * ZOOM)
                     .AddLabel(Loc.Get("tooltip_card_set", Loc.SetName(card.set), card.set.code, card.number.ToString("000"), card.set.cards.Length.ToString("000")))
-                    .AddLabel(Loc.RarityName(card.rarity))
                     .AddLabel(CardItems.CardText(card));
             if (!string.IsNullOrEmpty(flavor))
                 builder.AddLabel($"<i>{flavor}</i>");

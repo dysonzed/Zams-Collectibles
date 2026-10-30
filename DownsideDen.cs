@@ -316,7 +316,7 @@ namespace ZamsCollectibles
 
                 builder.BeginRow(6f, TextAnchor.MiddleLeft);
                 builder.AddImage($"{ModEntry.MOD_ID}:{icon}", 32f, 32f);
-                builder.AddLabel($"{CardItems.CardName(card)}\n{Loc.Get("den_single_detail", Loc.RarityName(card.rarity), CardCondition.Label(single.condition))}");
+                builder.AddLabel(CardItems.CardName(card));   // rarity and condition: judge them in the viewer
                 builder.AddFlexibleSpace();
                 builder.AddLabel(Price(price));
                 builder.AddButton(Loc.Get("den_view"), () => CardViewer.Open(MakeCard(single, card)));
@@ -471,8 +471,8 @@ namespace ZamsCollectibles
             double u1 = 1.0 - RNG.random.NextDouble();
             double u2 = RNG.random.NextDouble();
             double gaussian = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2);
-            float condition = 10f - (float)Math.Abs(gaussian) * 2.4f;
-            return (float)Math.Round(Math.Max(1f, Math.Min(10f, condition)), 2);
+            float condition = 9.94f - (float)Math.Abs(gaussian) * 2.4f;   // second-hand: never a gem 10
+            return (float)Math.Round(Math.Max(1f, Math.Min(9.94f, condition)), 2);
         }
 
         private static CardDef CardOf(SingleStock s) =>
