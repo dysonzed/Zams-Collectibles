@@ -21,10 +21,12 @@
 [h2]Collect[/h2]
 [list]
 [*]Booster packs and booster boxes; boxes are the better buy
-[*]Every card has a hidden condition you judge by its wear. A perfect gem 10 is a true jackpot
+[*]Every card has a hidden condition you judge by its wear. Most packs are well travelled: clean cards are a real find, and a perfect gem 10 is a true jackpot
+[*]Playing wears your cards down. Sleeve your best ones with card sleeves from the Den
 [*]The Card Grader seals your cards in graded slabs, with a big premium for top grades
 [*]Seal a complete set in a Collector's Box for a bonus; include the ultra rare for a Master Set
 [*]Collection binders, deck boxes, and a Collectible item category only the right customers buy
+[*]Double-click any card to see it full size, and open as many as you like side by side
 [*]The economy is tuned per tier: Tier 1 is a gamble, Tier 3 pays back the investment
 [/list]
 
@@ -54,7 +56,7 @@
 Begin with the Den open, three booster packs, a deck box and a binder.
 
 [h2]Notes[/h2]
-This is an early version: expect rough edges and placeholder card art. Text is in English and Simplified Chinese.
+This is an early version: expect rough edges. The Tier 1 sets have their full card art; the other sets still use placeholder art. Text is in English and Simplified Chinese.
 
 Save warning: cards, packs, boxes and the other items from this mod disappear from your store if you disable or remove it.
 
@@ -64,18 +66,36 @@ Zamco 电子把 Aug Warriors 集换式卡牌游戏带到了空间站。拆补充
 [*]十个系列，分三个强度等级；高等级系列需通过 Wild 的网络向 Zamco 购买授权
 [*]超过 120 张卡牌，每个系列都有自己的主题、补充包和补充盒；超稀有卡约每 100 包出一张
 [*]每张卡都有隐藏品相，满分 10 分是真正的大奖；评级师会把卡封进评级盒
+[*]打牌会磨损卡牌，用卡套保护你最好的卡
 [*]用收藏盒封装完整套装获得加成，加入超稀有卡即为大师套装
 [*]Downside Den 卡牌店：每晚进货的补充包、补充盒和单卡，以及后桌的常客对手
 [*]完整的 Aug Warriors 卡牌对战：常客各有隐藏的打法风格，其中 Oracle 极其难缠
 [*]新顾客：补充包贩子、组卡客和卡牌评级师；新开局：卡牌经销商
 [/list]
 支持简体中文。注意：停用或移除本模组后，其物品会从你的商店中消失。"
-	"changenote"		"Version 0.2.2: smarter deck builders.
+	"changenote"		"Version 0.3.0: card art, sleeves and a condition rebalance.
 
-- Order pay now scales with the tier of the cards involved
-- Power requests rise as you license higher tiers
-- Some orders ask for a real, legal Aug Warriors deck
-- A much larger pool of optional extras: graded cards, grade 9+ slabs, Near Mint cards, single-set and multi-set decks, pairs, a full body, budget decks, no-hack decks and more
+Card art
+- Full card art for all three Tier 1 sets: Rustwave Rising, Doomed Decay and Oxygen Leak
+- Open as many full-size card views as you like at once (double-click a card); the guide and card tooltips now mention it
 
-版本 0.2.2：组卡客更聪明了。订单报酬随卡牌等级提高；力量要求随授权等级上升；部分订单要求一副合规的 Aug Warriors 卡组；新增大量可选额外要求。"
+Condition and grading
+- Fresh packs now roll the whole condition scale, mostly Moderately Played: this is a run-down station. Clean cards are rare and worth much more
+- Raw and graded prices rebalanced around the new spread: grading a card that looks Near Mint or better pays well, grading blind does not
+- Deck builder orders that ask for clean cards now accept Lightly Played or better
+- Existing saves: cards keep their condition, so collections from earlier versions are worth noticeably more
+
+Card sleeves and wear
+- Every Aug Warriors game wears the unsleeved cards in your deck box a little
+- Downside Dan sells Card Sleeves, 10 to a pack: open the pack, put cards in its tray and press Sleeve. Sleeved and graded cards take no wear
+
+Aug Warriors
+- The match window shows the turn (Turn 3 of 6)
+- Mods installed on an augment show as small gems under its slot: hover one for the mod's tooltip, double-click it to view the card
+
+版本 0.3.0：卡图、卡套与品相重新平衡。
+- 第一等级的三个系列现已拥有完整卡图；可同时打开任意多张大图
+- 新补充包的品相覆盖整个范围，多为中度使用；品相好的卡更稀有、更值钱；评级收益随之调整
+- 每局 Aug Warriors 都会让卡盒里没套卡套的卡略有磨损；Downside Dan 出售卡套，每包 10 个
+- 对战窗口显示回合数；增强件上安装的改装以小宝石显示，悬停查看说明，双击查看卡牌"
 }

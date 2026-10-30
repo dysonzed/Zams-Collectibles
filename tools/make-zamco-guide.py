@@ -86,7 +86,9 @@ pages = [
   ("p7_3", "body", "- Credits: the winner takes the pot.", "- 信用点：赢家通吃。"),
   ("p7_4", "body", "- A card: win and you keep it, plus a new card of the same rarity (sometimes better, often one you don't own yet). Lose and your opponent keeps it.",
    "- 卡牌：赢了保留自己的卡，再得一张同稀有度的新卡（有时更好，常常是你还没有的）。输了卡归对手。"),
-  ("p7_5", "body", "Or play for nothing at all, just for the glory.", "也可以什么都不押，只为荣誉而战。")],
+  ("p7_5", "body", "Or play for nothing at all, just for the glory.", "也可以什么都不押，只为荣誉而战。"),
+  ("p7_6", "body", "Every game is hard on your cards: anything in your deck box that isn't sleeved picks up a little wear. Dan sells sleeves in packs of 10. Save them for your best-looking cards.",
+   "每局对战都会磨损卡牌：卡组盒里没套卡套的卡都会多一点磨损。Dan 卖 10 个一包的卡套，留给你品相最好的卡吧。")],
 ]
 chrome = [
     # this game build can't resolve the vanilla paper art by name, so the book ships its own copies
@@ -137,10 +139,13 @@ def legend_page():
 def example_page():
     strings.append(("guide_example_title", "Reading a Card", "读懂一张卡"))
     strings.append(("guide_example_caption", "A torso augment: Power 1, Stability 3, Glitch 0.", "一个躯干义体：力量 1，稳定度 3，故障 0。"))
+    strings.append(("guide_example_view", "Double-click any card to see it full size. Open as many as you like; click one to close it.",
+                    "双击任意卡牌可查看大图。想开几张都行；单击卡牌即可关闭。"))
     return {"name": "Reading a Card", "elements": [
         {"type": "text", "x": 40, "y": 26, "w": 254, "h": 16, "loc": "guide_example_title", "style": "title", "align": "center"},
-        {"type": "image", "x": 74, "y": 48, "w": 187, "h": 290, "sprite": "guide_example_card", "fit": "fit"},
-        {"type": "text", "x": 40, "y": 342, "w": 254, "h": 20, "loc": "guide_example_caption", "style": "caption", "align": "center", "wrap": True},
+        {"type": "image", "x": 80, "y": 46, "w": 174, "h": 270, "sprite": "guide_example_card", "fit": "fit"},
+        {"type": "text", "x": 40, "y": 318, "w": 254, "h": 18, "loc": "guide_example_caption", "style": "caption", "align": "center", "wrap": True},
+        {"type": "text", "x": 40, "y": 338, "w": 254, "h": 28, "loc": "guide_example_view", "style": "caption", "align": "center", "wrap": True},
     ]}
 
 

@@ -41,7 +41,6 @@ list_separator,、
 booster_name,{0} 补充包
 booster_desc,一包未拆封的 {1} 卡牌，共 {0} 张。使用即可拆开。
 booster_flavor,未拆封的卡包更受收藏家青睐。大概吧。
-booster_open_confirm,要拆开 {0} 补充包吗？\n拆开后无法复原。
 
 # 收藏盒
 box_name,收藏盒
@@ -197,6 +196,7 @@ aug_table_ready,准备就绪。
 
 # Aug Warriors 对战板
 aug_title_vs,Aug Warriors 对阵 {0}
+aug_title_vs_turn,Aug Warriors 对阵 {0} · 第 {1}/{2} 回合
 aug_board_them,对手
 aug_board_you,你的义体人
 aug_board_stats,力量 {0} · 故障 {1} / {2}
@@ -718,7 +718,7 @@ guide_p7_3,- 信用点：赢家通吃。
 guide_p7_4,- 卡牌：赢了保留自己的卡，再得一张同稀有度的新卡（有时更好，常常是你还没有的）。输了卡归对手。
 guide_p7_5,也可以什么都不押，只为荣誉而战。
 order_req_graded,{0}+ 张评级卡
-order_req_condition,{0}+ 张近全新或更好的卡
+order_req_condition,{0}+ 张轻度使用或更好的卡
 order_req_legal,一副合规的 Aug Warriors 卡组（至少 10 张，同名最多 2 张）
 order_req_grade9,一张等级 9 或以上的评级卡
 order_req_effect,{0}+ 张带特殊能力的卡
@@ -732,3 +732,13 @@ order_req_full_body,完整身体：头部、躯干、两条手臂和腿部
 order_req_mono_set,只用同一个系列的卡（任选一个系列）
 order_req_no_hacks,没有骇入卡
 order_req_budget,只有普通和非普通卡
+guide_example_view,双击任意卡牌可查看大图。想开几张都行；单击卡牌即可关闭。
+tooltip_card_view,双击查看卡牌
+sleeves_name,卡套（剩 {0} 个）
+sleeves_desc,一包 {0} 个透明卡套。套上卡套的卡在 Aug Warriors 对战中不会磨损。打开卡套包，把卡放进托盘，再按“套卡”。
+sleeves_panel,套卡托盘
+sleeves_button,套卡
+sleeves_button_desc,给托盘里的每张卡套上卡套。卡套套上后不会取下。
+sleeves_status,剩 {0} 个卡套，{1} 张卡待套
+tooltip_sleeved,已套卡套
+guide_p7_6,每局对战都会磨损卡牌：卡组盒里没套卡套的卡都会多一点磨损。Dan 卖 10 个一包的卡套，留给你品相最好的卡吧。

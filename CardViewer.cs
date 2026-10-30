@@ -7,7 +7,7 @@ namespace ZamsCollectibles
     /// Opens a card when it is activated (double-click by default). The card is shown as a
     /// worn card face (CardWindow); if that ever fails, for example after a game update changes
     /// the UI, the viewer logs why and falls back to a plain window with the art and text.
-    /// One viewer at a time: opening another card replaces it.
+    /// Any number of cards can be open at once; opening one that is already open brings it to the front.
     /// </summary>
     public static class CardViewer
     {
@@ -33,19 +33,21 @@ namespace ZamsCollectibles
             if (CustomUIManager.Instance.GetSprite(artKey, true) == null)
                 artKey = $"{ModEntry.MOD_ID}:{PLACEHOLDER_ART}";
 
+            if (CardWindow.Focus(item)) return;
+            string id = CardWindow.NextId();
             try
             {
-                CardWindow.Open(item, card, artKey);
+                CardWindow.Open(item, card, artKey, id);
             }
             catch (Exception e)
             {
                 ModEntry.Instance.Log.Warning($"Card viewer: {e.GetType().Name}: {e.Message}. Showing the plain viewer.");
-                CustomUIManager.Instance.CloseWindow(CardWindow.WINDOW_ID);
-                OpenPlain(item, card, artKey);
+                CustomUIManager.Instance.CloseWindow(id);
+                OpenPlain(item, card, artKey, id);
             }
         }
 
-        private static void OpenPlain(GameItem item, CardDef card, string artKey)
+        private static void OpenPlain(GameItem item, CardDef card, string artKey, string id)
         {
             float condition = CardItems.GetCondition(item);
             string conditionLine = CardItems.IsGraded(item)
@@ -53,7 +55,7 @@ namespace ZamsCollectibles
                 : "";   // ungraded: the condition is for the player to judge
             string flavor = Loc.CardFlavor(card);
 
-            CustomUIBuilder builder = CustomUIManager.Window(CardWindow.WINDOW_ID, Loc.Get("viewer_title"), CustomUIManager.LAYER_PAPER)
+            CustomUIBuilder builder = CustomUIManager.Window(id, Loc.Get("viewer_title"), CustomUIManager.LAYER_PAPER)
                 .UseMachineryStyle()
                 .SetSize(FALLBACK_WIDTH, FALLBACK_HEIGHT)
                 .SetDraggable(true)
@@ -68,8 +70,8 @@ namespace ZamsCollectibles
             builder
                     .AddLabel(conditionLine)
                 .End()
-                .Center()
-                .Show();
+                .Center();
+            CardWindow.Track(item, builder.Show());
         }
     }
 }

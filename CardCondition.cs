@@ -10,31 +10,46 @@ namespace ZamsCollectibles
     /// </summary>
     public static class CardCondition
     {
-        // The standard TCG condition scale; labels are localization keys.
+        // The standard TCG condition scale; labels are localization keys. Fresh cards are mostly
+        // played-looking (this is the station), so the multipliers center on Moderately Played
+        // and climb steeply: a clean card is a real find. Tuned with tools/economy.py.
         private static readonly (float min, string key, float multiplier)[] Labels =
         {
-            (9.5f, "condition_mint",              1.5f),
-            (8.5f, "condition_near_mint",         1.25f),
-            (7.0f, "condition_lightly_played",    1.0f),
-            (5.0f, "condition_moderately_played", 0.75f),
-            (3.0f, "condition_heavily_played",    0.5f),
-            (0.0f, "condition_damaged",           0.25f),
+            (9.5f, "condition_mint",              3.8f),
+            (8.5f, "condition_near_mint",         2.5f),
+            (7.0f, "condition_lightly_played",    1.6f),
+            (5.0f, "condition_moderately_played", 1.15f),
+            (3.0f, "condition_heavily_played",    0.8f),
+            (0.0f, "condition_damaged",           0.5f),
         };
 
-        /// <summary>Condition of a card fresh out of a pack: mostly 8 to 10, occasionally worse.</summary>
-        // A perfect 10.0 is its own jackpot roll; every other fresh card tops out just under it.
+        // A perfect 10.0 is its own jackpot roll; every other card tops out just under it.
         public const float GEM_CHANCE = 0.005f;
         private const float BEST_ORDINARY = 9.94f;   // grades 9.9 at best
 
+        // Packs sit on shelves, in cargo holds and in pockets before they're opened: fresh cards
+        // spread across the whole scale, most of them 5s and 6s (about 2% Mint, 5% Near Mint,
+        // 20% Lightly Played, 43% Moderately Played, 25% Heavily Played, 5% Damaged).
+        private const float FRESH_MEAN = 5.9f, FRESH_SD = 1.75f;
+        // Second-hand singles have been played with: a little worse.
+        private const float USED_MEAN = 5.2f, USED_SD = 2.0f;
+
+        /// <summary>Condition of a card fresh out of a pack.</summary>
         public static float RollFreshCondition()
         {
             if (RNG.random.NextDouble() < GEM_CHANCE) return 10f;
-            // half-normal below the cap, sigma 1.2
+            return RollNormal(FRESH_MEAN, FRESH_SD);
+        }
+
+        /// <summary>Condition of a second-hand card: never a gem 10.</summary>
+        public static float RollUsedCondition() => RollNormal(USED_MEAN, USED_SD);
+
+        private static float RollNormal(float mean, float sd)
+        {
             double u1 = 1.0 - RNG.random.NextDouble();
             double u2 = RNG.random.NextDouble();
             double gaussian = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2);
-            float condition = BEST_ORDINARY - (float)Math.Abs(gaussian) * 1.2f;
-            return (float)Math.Round(Clamp(condition, 1f, BEST_ORDINARY), 2);
+            return (float)Math.Round(Clamp(mean + (float)gaussian * sd, 1f, BEST_ORDINARY), 2);
         }
 
         public static string Label(float condition)
@@ -51,26 +66,32 @@ namespace ZamsCollectibles
             return Labels[Labels.Length - 1].multiplier;
         }
 
-        /// <summary>Graded cards sell on the exact number: a gem 10 is worth far more than a 9.</summary>
+        /// <summary>
+        /// Graded cards sell on the exact number: a gem 10 is worth far more than a 9. From 7 up a
+        /// slab beats the raw price, so grading a card that looks clean pays (a rare that looks
+        /// Near Mint gains about 70 at Tier 1); grading blind, or a common that only looks played,
+        /// loses the fee. Below 7 the slab only proves the wear.
+        /// </summary>
         public static float GradedMultiplier(float grade)
         {
-            if (grade >= 10f) return 6f;
-            if (grade >= 9.5f) return 3.5f;
-            if (grade >= 9f) return 2.25f;
-            if (grade >= 8f) return 1.5f;
-            if (grade >= 7f) return 1.1f;
-            return RawMultiplier(grade) * 0.9f;
+            if (grade >= 10f) return 16f;
+            if (grade >= 9.5f) return 7f;
+            if (grade >= 9f) return 4.5f;
+            if (grade >= 8.5f) return 3.2f;
+            if (grade >= 8f) return 2.4f;
+            if (grade >= 7f) return 1.85f;
+            return RawMultiplier(grade) * 0.95f;
         }
 
         /// <summary>
         /// What a high grade adds to any card, on top of the multiplier: collectors pay for the slab
-        /// itself, so a gem 10 common is worth more than the grading fee, and a low grade isn't.
+        /// itself, so a gem 10 common is a jackpot (over 100), and a low grade isn't worth the fee.
         /// </summary>
         public static int GradePremium(float grade)
         {
-            if (grade >= 10f) return 60;
-            if (grade >= 9.5f) return 10;
-            if (grade >= 9f) return 3;
+            if (grade >= 10f) return 100;
+            if (grade >= 9.5f) return 20;
+            if (grade >= 9f) return 6;
             return 0;
         }
 

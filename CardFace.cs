@@ -64,10 +64,10 @@ namespace ZamsCollectibles
         };
         private static readonly Color32[] CostGemRamp = { Hex("#2f756f"), Hex("#45918b"), Hex("#67aaa5") };
 
-        // The viewer shows one card at a time; the previous textures are freed when a new card is drawn.
-        private static readonly List<UnityEngine.Object> lastObjects = new List<UnityEngine.Object>();
-
-        /// <summary>Draws a card's base and wear sprites. Returns false when the art can't be read.</summary>
+        /// <summary>
+        /// Draws a card's base and wear sprites. Returns false when the art can't be read.
+        /// The caller owns the new textures, since several cards can be open at once (see CardWindow).
+        /// </summary>
         public static bool TryBuild(GameItem item, CardDef card, string artKey, out Sprite cardSprite, out Sprite wearSprite)
         {
             cardSprite = wearSprite = null;
@@ -87,8 +87,6 @@ namespace ZamsCollectibles
             int seed = item.uniqueId != 0 ? item.uniqueId * 7919 + card.number : card.number;
             Render(artPx, aw, ah, card.set.frameColor, gem, severity, seed, out Color32[] basePx, out Color32[] wearPx);
 
-            foreach (UnityEngine.Object o in lastObjects) if (o != null) UnityEngine.Object.Destroy(o);
-            lastObjects.Clear();
             cardSprite = ToSprite(basePx);
             wearSprite = ToSprite(wearPx);
             return true;
@@ -373,8 +371,6 @@ namespace ZamsCollectibles
             tex.SetPixels32(flipped);
             tex.Apply();
             Sprite sprite = Sprite.Create(tex, new Rect(0, 0, W, H), new Vector2(0.5f, 0.5f), 100f);
-            lastObjects.Add(tex);
-            lastObjects.Add(sprite);
             return sprite;
         }
 

@@ -26,6 +26,7 @@ namespace ZamsCollectibles
         private const string PANEL_WINDOW_ID = "afterhour_location";   // the game's id for location panels
 
         private const int MIN_PACKS = 2, MAX_PACKS = 5;
+        private const int SLEEVE_PACKS = 2;             // sleeve packs on the table every night
         private const int BOX_CHANCE = 20;              // percent of nights with a booster box in stock
         private const int MIN_SINGLES = 6, MAX_SINGLES = 9;
         private const int MARKUP_PERCENT = 25;          // Dan's markup on what he sells
@@ -177,9 +178,11 @@ namespace ZamsCollectibles
                     if (PlayerStore.Instance.TryAddDirectSellingItemToTable(item)) onBoard.Add((item, pack, null));
                 }
             }
-            // A binder and a deck box are always in stock: supplies, not collectibles, so they are not tracked.
+            // A binder, a deck box and sleeves are always in stock: supplies, not collectibles, so they are not tracked.
             PlayerStore.Instance.TryAddDirectSellingItemToTable(DirectoryMaster.Item(CardBinder.BINDER_ID));
             PlayerStore.Instance.TryAddDirectSellingItemToTable(DirectoryMaster.Item(AugWarriors.DeckBox.DECKBOX_ID));
+            for (int i = 0; i < SLEEVE_PACKS; i++)
+                PlayerStore.Instance.TryAddDirectSellingItemToTable(DirectoryMaster.Item(CardSleeves.PACK_ID));
 
             foreach (SingleStock single in stock.singles)
             {
@@ -466,15 +469,7 @@ namespace ZamsCollectibles
             return pool.Count > 0 ? RNG.GetRandomElement(pool) : null;
         }
 
-        // Second-hand cards: mostly decent, sometimes rough.
-        private static float RollUsedCondition()
-        {
-            double u1 = 1.0 - RNG.random.NextDouble();
-            double u2 = RNG.random.NextDouble();
-            double gaussian = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2);
-            float condition = 9.94f - (float)Math.Abs(gaussian) * 2.4f;   // second-hand: never a gem 10
-            return (float)Math.Round(Math.Max(1f, Math.Min(9.94f, condition)), 2);
-        }
+        private static float RollUsedCondition() => CardCondition.RollUsedCondition();
 
         private static CardDef CardOf(SingleStock s) =>
             CardDatabase.SetsById.TryGetValue(s.set, out CardSetDef set) ? set.cards.FirstOrDefault(c => c.number == s.number) : null;

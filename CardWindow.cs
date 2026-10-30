@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,7 +19,16 @@ namespace ZamsCollectibles
     /// </summary>
     public static class CardWindow
     {
+        // Each open card is its own window: WINDOW_ID.<n>.
         public const string WINDOW_ID = ModEntry.MOD_ID + ".card_viewer";
+
+        // Open cards by item, so opening one twice brings it forward instead.
+        private static readonly Dictionary<GameItem, CustomUIWindow> open = new Dictionary<GameItem, CustomUIWindow>();
+        private static int serial;
+
+        // New cards open staggered down and to the right, so a card never hides under the last one.
+        private const float CASCADE_STEP = 28f;
+        private const int CASCADE_STEPS = 8;
 
         private static readonly Color Ink = new Color32(0x29, 0x22, 0x34, 0xFF);
         private static readonly Color FooterInk = new Color32(0xE8, 0xE4, 0xD6, 0xFF);
@@ -32,7 +43,38 @@ namespace ZamsCollectibles
         // Where the card sits in the window, in card pixels: (0, 0) unless it's in a slab.
         private static int offX, offY;
 
-        public static void Open(GameItem item, CardDef card, string artKey)
+        /// <summary>The open card's body (the card, or its slab), for capturing renders.</summary>
+        public static RectTransform Body { get; internal set; }
+
+        public static string NextId() => $"{WINDOW_ID}.{++serial}";
+
+        /// <summary>Brings the item's card to the front if it is open; false if it isn't.</summary>
+        public static bool Focus(GameItem item)
+        {
+            if (!open.TryGetValue(item, out CustomUIWindow window)) return false;
+            if (window == null || !window.IsAlive) { open.Remove(item); return false; }
+            window.BringToFront();
+            return true;
+        }
+
+        /// <summary>Closes the item's card, if it is open.</summary>
+        public static void Close(GameItem item)
+        {
+            if (open.TryGetValue(item, out CustomUIWindow window) && window != null && window.IsAlive) window.Close();
+            open.Remove(item);
+        }
+
+        /// <summary>Tracks a newly opened card window and staggers it from the cards already open.</summary>
+        public static void Track(GameItem item, CustomUIWindow window)
+        {
+            foreach (GameItem gone in open.Where(kv => kv.Value == null || !kv.Value.IsAlive).Select(kv => kv.Key).ToList())
+                open.Remove(gone);
+            int step = open.Count % CASCADE_STEPS;
+            window.SetPosition(window.Rect.anchoredPosition + new Vector2(step * CASCADE_STEP, -step * CASCADE_STEP));
+            open[item] = window;   // closed windows drop out on the next Focus or Track
+        }
+
+        public static void Open(GameItem item, CardDef card, string artKey, string windowId)
         {
             if (!CardFace.TryBuild(item, card, artKey, out Sprite cardSprite, out Sprite wearSprite))
                 throw new InvalidOperationException($"card face could not be drawn ({artKey})");
@@ -40,11 +82,17 @@ namespace ZamsCollectibles
             bool graded = CardItems.IsGraded(item);
             offX = graded ? SLAB_SIDE : 0;
             offY = graded ? SLAB_TOP : 0;
-            GameObject body = BuildBody(cardSprite, wearSprite, graded);
+            List<Sprite> sprites = new List<Sprite> { cardSprite, wearSprite };
+            GameObject body = BuildBody(cardSprite, wearSprite, graded, sprites);
             CustomUIBuilder builder;
             try
             {
-                builder = CustomUIManager.Instance.CreateWindow(WINDOW_ID, null, CustomUIManager.LAYER_PAPER, body);
+                builder = CustomUIManager.Instance.CreateWindow(windowId, null, CustomUIManager.LAYER_PAPER, body);
+            }
+            catch
+            {
+                FreeSprites.Free(sprites);
+                throw;
             }
             finally
             {
@@ -67,6 +115,11 @@ namespace ZamsCollectibles
             float condition = CardItems.GetCondition(item);
             if (graded) builder.AddLabel(Loc.Get("slab_label", CardCondition.GradeOf(condition).ToString("0.0"), CardCondition.Label(condition)), "grade");
             CustomUIWindow window = builder.Center().Show();
+            Body = window.root.transform as RectTransform;
+            window.root.GetComponent<CloseOnClick>().windowId = windowId;
+            // each card owns its textures, freed with its window (other open cards keep theirs)
+            window.root.AddComponent<FreeSprites>().sprites = sprites;
+            Track(item, window);
 
             Place(window, "name", CardLayout.NameText, 18f, TextAlignmentOptions.MidlineLeft, Ink, FontStyles.Bold);
             Place(window, "cost", CardLayout.CostText, 16f, TextAlignmentOptions.Center, CostInk, FontStyles.Bold);
@@ -78,7 +131,7 @@ namespace ZamsCollectibles
 
         // ------------------------------------------------------------ window body
 
-        private static GameObject BuildBody(Sprite cardSprite, Sprite wearSprite, bool graded)
+        private static GameObject BuildBody(Sprite cardSprite, Sprite wearSprite, bool graded, List<Sprite> sprites)
         {
             int z = CardLayout.ZOOM;
             GameObject root = new GameObject("zams_card", typeof(RectTransform));
@@ -87,7 +140,8 @@ namespace ZamsCollectibles
 
             // In a slab the case is the window's background and the card sits inside it.
             Image back = root.AddComponent<Image>();
-            back.sprite = graded ? SlabSprite() : cardSprite;
+            if (graded) sprites.Add(SlabSprite());
+            back.sprite = graded ? sprites[sprites.Count - 1] : cardSprite;
             back.raycastTarget = true;
             if (graded)
             {
@@ -124,6 +178,7 @@ namespace ZamsCollectibles
                 // glare on the plastic, over the card
                 Image glass = Child(root, "glass", new RectInt(0, 0, CardLayout.WIDTH, CardLayout.HEIGHT)).gameObject.AddComponent<Image>();
                 glass.sprite = GlassSprite();
+                sprites.Add(glass.sprite);
                 glass.raycastTarget = false;
                 Child(root, "grade", GradeText);
             }
@@ -230,11 +285,33 @@ namespace ZamsCollectibles
             // Screen pixels the pointer may move between press and release and still count as a click.
             private const float CLICK_SLOP = 6f;
 
+            public string windowId;
+
             public void OnPointerClick(PointerEventData eventData)
             {
                 if (eventData.button != PointerEventData.InputButton.Left) return;
                 if (eventData.dragging || (eventData.position - eventData.pressPosition).sqrMagnitude > CLICK_SLOP * CLICK_SLOP) return;
-                CustomUIManager.Instance?.CloseWindow(WINDOW_ID);
+                CustomUIManager.Instance?.CloseWindow(windowId);
+            }
+        }
+
+        /// <summary>Frees a card window's own sprites and their textures when the window goes.</summary>
+        private class FreeSprites : MonoBehaviour
+        {
+            public List<Sprite> sprites;
+
+            private void OnDestroy() => Free(sprites);
+
+            public static void Free(List<Sprite> sprites)
+            {
+                if (sprites == null) return;
+                foreach (Sprite sprite in sprites)
+                {
+                    if (sprite == null) continue;
+                    if (sprite.texture != null) Destroy(sprite.texture);
+                    Destroy(sprite);
+                }
+                sprites.Clear();
             }
         }
 

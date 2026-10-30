@@ -96,10 +96,14 @@ namespace ZamsCollectibles
             // Rarity and condition are for the player to read off the card itself (the rarity gem,
             // the wear); only a grade, once paid for, is spelled out.
             builder.AddLine(Loc.Get("tooltip_card_set", Loc.SetName(card.set), card.set.code, card.number.ToString("000"), card.set.cards.Length.ToString("000")));
-            if (AugWarriors.AugBoard.IsMatchCard(item) || !CardItems.IsGraded(item)) return;
-
-            float condition = CardItems.GetCondition(item);
-            builder.AddLine(Loc.Get("tooltip_graded", CardCondition.GradeOf(condition).ToString("0.0"), CardCondition.Label(condition)), color: RenderHandler.ColorPalette.Yellow);
+            if (!AugWarriors.AugBoard.IsMatchCard(item) && CardItems.IsGraded(item))
+            {
+                float condition = CardItems.GetCondition(item);
+                builder.AddLine(Loc.Get("tooltip_graded", CardCondition.GradeOf(condition).ToString("0.0"), CardCondition.Label(condition)), color: RenderHandler.ColorPalette.Yellow);
+            }
+            else if (CardSleeves.IsSleeved(item))
+                builder.AddLine(Loc.Get("tooltip_sleeved"), color: RenderHandler.ColorPalette.LightBlue);
+            builder.AddLine(Loc.Get("tooltip_card_view"), color: RenderHandler.ColorPalette.Gray);
         }
 
         // Item names and descriptions are saved with the items, in the language they were made in:
@@ -166,6 +170,8 @@ namespace ZamsCollectibles
                         ModHelper.MoveItemToInventory(ModHelper.SpawnItem(DealerCertificate.ID)))
                     .AddButton("Deck Box", () =>
                         ModHelper.MoveItemToInventory(ModHelper.SpawnItem(AugWarriors.DeckBox.DECKBOX_ID)))
+                    .AddButton("Card Sleeves", () =>
+                        ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardSleeves.PACK_ID)))
                     .AddButton("Full Card Set (first set)", () =>
                     {
                         CardSetDef set = CardDatabase.Sets.Count > 0 ? CardDatabase.Sets[0] : null;
@@ -182,6 +188,23 @@ namespace ZamsCollectibles
                         AugWarriors.AugBoard.Start(null, "Oracle", AugWarriors.AugPersonality.Oracle, 0))
                     .AddButton("Den Regulars: Log Pool", () => Log.Log("Den regulars " + AugWarriors.DenRegulars.Describe()))
                     .AddButton("Den Regulars: Someone In", () => { AugWarriors.DenRegulars.ForceSomeoneTonight(); Log.Log("Den regulars " + AugWarriors.DenRegulars.Describe()); })
+                    // card images for the Workshop page; the debug window closes so it isn't in the shot
+                    .AddHeader("Workshop")
+                    .AddButton("Capture Card Renders", () =>
+                    {
+                        CustomUIManager.Instance.CloseWindow(DEBUG_WINDOW_ID);
+                        CardRenders.CaptureAll(false);
+                    })
+                    .AddButton("Capture Graded Renders (rares, ultras)", () =>
+                    {
+                        CustomUIManager.Instance.CloseWindow(DEBUG_WINDOW_ID);
+                        CardRenders.CaptureAll(true);
+                    })
+                    .AddButton("Open Renders Folder", () =>
+                    {
+                        System.IO.Directory.CreateDirectory(CardRenders.Folder);
+                        Application.OpenURL("file:///" + CardRenders.Folder.Replace('\\', '/'));
+                    })
                 .End()
                 .BeginColumn(4f)
                     .AddHeader("Store")

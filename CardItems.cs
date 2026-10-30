@@ -61,6 +61,7 @@ namespace ZamsCollectibles
             AugWarriors.DeckBox.Register(dir, textByItemId);
             DeckOrders.Register(dir, textByItemId);
             DealerCertificate.Register(dir, textByItemId);
+            CardSleeves.Register(dir, textByItemId);
         }
 
         /// <summary>Re-applies an item's name and descriptions in the current language; false if it isn't ours.</summary>
@@ -224,13 +225,10 @@ namespace ZamsCollectibles
             item.mayActivateSlotItemFunc = (s, _, _) => GeneralHelper.IsItemOwned(s);
             item.onActivateSlotItemFunc = (_, curInv, _) =>
             {
-                Confirm(Loc.Get("booster_open_confirm", Loc.SetName(set)), () =>
-                {
-                    item.Destroy();
-                    foreach (PackSlotDef slot in set.packSlots)
-                        for (int i = 0; i < slot.count; i++)
-                            GraphUtils.EmporiumTryAdd(curInv, DirectoryMaster.Item(CardId(CardDatabase.RollCard(set, slot))));
-                });
+                item.Destroy();
+                foreach (PackSlotDef slot in set.packSlots)
+                    for (int i = 0; i < slot.count; i++)
+                        GraphUtils.EmporiumTryAdd(curInv, DirectoryMaster.Item(CardId(CardDatabase.RollCard(set, slot))));
             };
             return item;
         }

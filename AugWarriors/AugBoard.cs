@@ -176,6 +176,7 @@ namespace ZamsCollectibles.AugWarriors
             }
             match = null;
             pending.Clear();
+            ModPips.ClearAll();
             Sweep();
             Action<int?> finished = onFinished;
             onFinished = null;
@@ -283,7 +284,8 @@ namespace ZamsCollectibles.AugWarriors
             foreach (var cell in AugArt.Skeleton(BOARD_WIDTH, BoardShape.Length / BOARD_WIDTH))
                 if (BoardShape[cell.Key.y * BOARD_WIDTH + cell.Key.x] == '0') board.SetCellBackdrop(cell.Key.x, cell.Key.y, cell.Value);
 
-            List<PixelElement> rows = new List<PixelElement> { board };
+            // room under the bottom pocket for its mod pips (the others sit in the gaps between pockets)
+            List<PixelElement> rows = new List<PixelElement> { board, new MachineryText(" ") };
             for (int s = 0; s < AugRules.SLOTS; s++)
             {
                 partText[who, s] = new MachineryText(null, 5, TMPro.HorizontalAlignmentOptions.Left, false);
@@ -346,6 +348,7 @@ namespace ZamsCollectibles.AugWarriors
                             if (it != null) PlaceInPocket(who, (Slot)s, it.augment);
                         }
                         partText[who, s].SetText(PartText((Slot)s, it));
+                        ModPips.Show(who, (Slot)s, boards[who], it == null ? null : InPocket(who, (Slot)s), it?.mods, MakeCard);
                     }
                     Stats(who);
                 }
@@ -357,6 +360,9 @@ namespace ZamsCollectibles.AugWarriors
                 for (int i = 0; i < logText.Length; i++)
                     logText[i].SetText(i < recent.Count ? AugMatchWindow.LogLine(recent[i]) : "");
 
+                window.SetTitle(toss == Toss.Done
+                    ? Loc.Get("aug_title_vs_turn", npcName, Math.Min(match.Round, AugRules.MAX_TURNS), AugRules.MAX_TURNS)
+                    : Loc.Get("aug_title_vs", npcName));
                 ShowToss();
                 if (toss != Toss.Done)
                 {

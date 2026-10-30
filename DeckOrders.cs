@@ -52,7 +52,7 @@ namespace ZamsCollectibles
                 {
                     case "graded": return items.Count(CardItems.IsGraded);
                     case "grade9": return items.Count(i => CardItems.IsGraded(i) && CardCondition.GradeOf(CardItems.GetCondition(i)) >= 9f);
-                    case "condition": return items.Count(i => CardItems.GetCondition(i) >= NEAR_MINT);
+                    case "condition": return items.Count(i => CardItems.GetCondition(i) >= CLEAN);
                     case "legal": return AugWarriors.AugRules.IsLegalDeck(cards) ? 1 : 0;
                     default: return CountCards(cards);
                 }
@@ -116,7 +116,7 @@ namespace ZamsCollectibles
             }
         }
 
-        private const float NEAR_MINT = 8.5f;
+        private const float CLEAN = 7f;   // Lightly Played or better: about a third of fresh cards
         private const int LEGAL_DECK_CHANCE = 30;      // percent of orders that want a real, playable deck
         private const int COLLECTOR_EXTRA_CHANCE = 65; // percent of orders with one or two special extras
 

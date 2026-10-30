@@ -41,7 +41,6 @@ list_separator,", "
 booster_name,{0} Booster Pack
 booster_desc,A sealed pack of {0} {1} cards. Activate to open it.
 booster_flavor,Sealed packs are worth more to collectors. Probably.
-booster_open_confirm,Open the {0} booster pack?\nIt can't be resealed.
 
 # Collector's Box
 box_name,Collector's Box
@@ -197,6 +196,7 @@ aug_table_ready,Ready.
 
 # Aug Warriors board
 aug_title_vs,Aug Warriors vs {0}
+aug_title_vs_turn,Aug Warriors vs {0} · Turn {1} of {2}
 aug_board_them,Opponent
 aug_board_you,Your Aug
 aug_board_stats,Power {0} · Glitch {1} / {2}
@@ -374,7 +374,7 @@ guide_p7_3,- Credits: the winner takes the pot.
 guide_p7_4,"- A card: win and you keep it, plus a new card of the same rarity (sometimes better, often one you don't own yet). Lose and your opponent keeps it."
 guide_p7_5,"Or play for nothing at all, just for the glory."
 order_req_graded,{0}+ graded cards
-order_req_condition,{0}+ cards in Near Mint or better
+order_req_condition,{0}+ cards in Lightly Played condition or better
 order_req_legal,"A legal Aug Warriors deck (10+ cards, at most 2 of each)"
 order_req_grade9,A graded card of grade 9 or better
 order_req_effect,{0}+ cards with special abilities
@@ -388,3 +388,13 @@ order_req_full_body,"A full body: head, torso, two arms and legs"
 order_req_mono_set,Only cards from one set (any one)
 order_req_no_hacks,No hacks
 order_req_budget,Only commons and uncommons
+guide_example_view,Double-click any card to see it full size. Open as many as you like; click one to close it.
+tooltip_card_view,Double-click to view the card
+sleeves_name,Card Sleeves ({0} left)
+sleeves_desc,"A pack of {0} clear card sleeves. Sleeved cards don't wear when you play Aug Warriors. Open the pack, put cards in the tray and press Sleeve."
+sleeves_panel,Sleeve tray
+sleeves_button,Sleeve
+sleeves_button_desc,Puts a sleeve on each card in the tray. Sleeves stay on for good.
+sleeves_status,"{0} sleeves left, {1} card(s) to sleeve"
+tooltip_sleeved,In a sleeve
+guide_p7_6,Every game is hard on your cards: anything in your deck box that isn't sleeved picks up a little wear. Dan sells sleeves in packs of 10. Save them for your best-looking cards.

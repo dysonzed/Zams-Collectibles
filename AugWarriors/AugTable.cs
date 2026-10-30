@@ -183,6 +183,8 @@ namespace ZamsCollectibles.AugWarriors
         private static void Finished(int? winner)
         {
             inMatch = false;
+            int worn = CardSleeves.WearDeck(deckSlot.childItem);   // every game handles the cards
+            if (worn > 0) ModEntry.Instance.Log.Log($"Aug Warriors: {worn} unsleeved card(s) took some wear.");
             GameItem anted = anteSlot.childItem;
             CardDef anteCard = CardItems.GetCardDef(anted);
             if (anteCard != null && winner == 1)
