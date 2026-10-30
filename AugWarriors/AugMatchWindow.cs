@@ -123,7 +123,7 @@ namespace ZamsCollectibles.AugWarriors
 
             b.AddHeader(Loc.Get("aug_log"));
             foreach (AugEvent e in match.log.Skip(Math.Max(0, match.log.Count - 4)))
-                b.AddLabel(Loc.Get(e.key, Localize(e.args)));
+                b.AddLabel(LogLine(e));
 
             b.End().Center().Show();
         }
@@ -208,6 +208,15 @@ namespace ZamsCollectibles.AugWarriors
             s.compromised ? Loc.Get("aug_score_compromised", s.final, s.power) : s.final.ToString();
 
         // Log and message arguments: cards in the player's language, everything else as is.
+        /// <summary>A log line, using the "you" form (key_you) when the player is the one acting.</summary>
+        public static string LogLine(AugEvent e)
+        {
+            object[] args = Localize(e.args);
+            bool you = args.Length > 0 && args[0] as string == Loc.Get("aug_you");
+            string template = you ? Loc.Optional(e.key + "_you", null) : null;
+            return template != null ? string.Format(template, args) : Loc.Get(e.key, args);
+        }
+
         public static object[] Localize(object[] args) =>
             args.Select(a => a is CardDef c ? (object)Loc.CardTitle(c) : a).ToArray();
     }

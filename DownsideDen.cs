@@ -82,6 +82,7 @@ namespace ZamsCollectibles
         public override void Leave()
         {
             // Walking out concedes a match in progress; the table hands back its deck and ante.
+            AugWarriors.AugBoard.CloseIfOpen();
             AugWarriors.AugMatchWindow.CloseIfOpen();
             AugWarriors.AugTable.Close();
             if (!boardOpen) return;

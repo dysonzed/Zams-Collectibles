@@ -55,7 +55,7 @@ namespace ZamsCollectibles
         private static readonly Color32 Wash = Hex("#b5ab94");
 
         // Frame ramps, dark to light, named by the set's "frameColor".
-        private static readonly Dictionary<string, Color32[]> Frames = new Dictionary<string, Color32[]>
+        internal static readonly Dictionary<string, Color32[]> Frames = new Dictionary<string, Color32[]>
         {
             ["red"] = new[] { Hex("#64343b"), Hex("#853737"), Hex("#9c3738"), Hex("#cc7755") },
             ["teal"] = new[] { Hex("#275654"), Hex("#2f756f"), Hex("#45918b"), Hex("#67aaa5") },

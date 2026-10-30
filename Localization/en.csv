@@ -202,3 +202,24 @@ aug_table_need_deck,Put your deck box in the deck slot.
 aug_table_fix_deck,Your deck isn't legal: open the deck box and Validate.
 aug_table_ready,Ready.
 aug_table_ante_rules,"Card ante: win and you keep your card and win another of the same rarity (sometimes better, and often one you don't have yet). Lose or concede and your opponent keeps it."
+
+# Aug Warriors board
+aug_title_vs,Aug Warriors vs {0}
+aug_board_them,Opponent
+aug_board_you,Your Aug
+aug_board_stats,Power {0} · Glitch {1} / {2}
+aug_board_your_turn,"Your turn: drag a card onto your Aug, or Hold."
+aug_board_final_turn,"Last turn! Drag a card onto your Aug, or Hold."
+aug_board_their_turn,{0} is thinking…
+aug_hold_desc,Play nothing this turn.
+aug_call_desc,"End the game: your opponent gets one last turn, then the showdown."
+aug_board_part,"{0}: {1} · P {2} · G {3}"
+aug_board_part_empty,{0}: empty
+aug_board_bounced,"That card doesn't go there: try another part, or Hold."
+aug_log_hold_you,You hold.
+aug_log_call_you,You call the showdown!
+aug_log_install_you,You install {1}.
+aug_log_replace_you,You install {1} over {2}.
+aug_log_mod_you,You attach {1} to {2}.
+aug_log_hack_you,"You hack {2} with {1}: +{3} Glitch."
+aug_log_scrap_you,You scrap {2} with {1}.

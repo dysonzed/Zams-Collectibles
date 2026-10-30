@@ -202,3 +202,24 @@ aug_table_need_deck,把卡组盒放进卡组槽。
 aug_table_fix_deck,你的卡组不合规：打开卡组盒并检查。
 aug_table_ready,准备就绪。
 aug_table_ante_rules,卡牌赌注：赢了保留你的卡，并赢得一张同稀有度的卡（有时更好，常常是你还没有的）。输了或认输，卡归对手。
+
+# Aug Warriors 对战板
+aug_title_vs,Aug Warriors 对阵 {0}
+aug_board_them,对手
+aug_board_you,你的义体人
+aug_board_stats,力量 {0} · 故障 {1} / {2}
+aug_board_your_turn,你的回合：把卡拖到你的义体人上，或跳过。
+aug_board_final_turn,最后一回合！把卡拖到你的义体人上，或跳过。
+aug_board_their_turn,{0} 正在思考……
+aug_hold_desc,本回合不出牌。
+aug_call_desc,结束对局：对手还有最后一回合，然后对决。
+aug_board_part,{0}：{1} · 力 {2} · 障 {3}
+aug_board_part_empty,{0}：空
+aug_board_bounced,这张卡不能放在那里：换个部位，或跳过。
+aug_log_hold_you,你跳过。
+aug_log_call_you,你发起对决！
+aug_log_install_you,你安装了 {1}。
+aug_log_replace_you,你用 {1} 替换了 {2}。
+aug_log_mod_you,你把 {1} 装到 {2} 上。
+aug_log_hack_you,你用 {1} 骇入 {2}：故障 +{3}。
+aug_log_scrap_you,你用 {1} 废掉了 {2}。

@@ -116,7 +116,17 @@ namespace ZamsCollectibles.AugWarriors
             inMatch = true;
             window.Hide();
             var (name, style) = Regulars[regular];
-            AugMatchWindow.Start(deck, name, style, creditAnte, Finished);
+            try
+            {
+                AugBoard.Start(deck, name, style, creditAnte, Finished);
+            }
+            catch (Exception e)
+            {
+                // The board drives the game's own widgets; if a game update breaks it, play in the plain window.
+                ModEntry.Instance.Log.Warning($"Aug Warriors: the board could not open ({e.GetType().Name}: {e.Message}). Using the plain match window.");
+                AugBoard.CloseIfOpen();
+                AugMatchWindow.Start(deck, name, style, creditAnte, Finished);
+            }
         }
 
         // winner: 0 the player, 1 the opponent, null a draw. Settles the card ante and brings the table back.

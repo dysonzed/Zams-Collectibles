@@ -77,6 +77,7 @@ namespace ZamsCollectibles
             RarityDef rarity = CardDatabase.GetRarity(card.rarity);
             builder.AddLine(Loc.Get("tooltip_card_set", Loc.SetName(card.set), card.set.code, card.number.ToString("000"), card.set.cards.Length.ToString("000")));
             builder.AddLine(Loc.RarityName(card.rarity), color: ParseColor(rarity?.color), bold: true);
+            if (AugWarriors.AugBoard.IsMatchCard(item)) return;   // a card in play: its condition doesn't matter
 
             float condition = CardItems.GetCondition(item);
             if (CardItems.IsGraded(item))
@@ -143,7 +144,7 @@ namespace ZamsCollectibles
                     .AddButton("Deck Box", () =>
                         ModHelper.MoveItemToInventory(ModHelper.SpawnItem(AugWarriors.DeckBox.DECKBOX_ID)))
                     .AddButton("Test Match (random deck, no stakes)", () =>
-                        AugWarriors.AugMatchWindow.Start(null, "Rook", AugWarriors.AugPersonality.Cautious, 0))
+                        AugWarriors.AugBoard.Start(null, "Rook", AugWarriors.AugPersonality.Cautious, 0))
                     .AddButton("Full Card Set (first set)", () =>
                     {
                         CardSetDef set = CardDatabase.Sets.Count > 0 ? CardDatabase.Sets[0] : null;
