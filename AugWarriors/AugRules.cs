@@ -52,9 +52,9 @@ namespace ZamsCollectibles.AugWarriors
 
         public bool HackImmune => body.Any(i => i != null && i.augment.effect == AugRules.HACK_IMMUNE);
 
-        public AugPlayer CloneBody()
+        public AugPlayer CloneBody(IEnumerable<CardDef> withDeck = null)
         {
-            AugPlayer copy = new AugPlayer(name, Enumerable.Empty<CardDef>());
+            AugPlayer copy = new AugPlayer(name, withDeck ?? Enumerable.Empty<CardDef>());
             for (int i = 0; i < body.Length; i++) copy.body[i] = body[i]?.Clone();
             return copy;
         }
@@ -109,6 +109,33 @@ namespace ZamsCollectibles.AugWarriors
                 for (int i = 0; i < AugRules.START_HAND; i++) Draw(p);
             }
             StartTurn();
+        }
+
+        private AugMatch(AugPlayer[] players, int seed)
+        {
+            this.players = players;
+            rng = new Random(seed);
+        }
+
+        /// <summary>
+        /// A copy to play ahead in, for the AI's lookahead. Both draw piles are reshuffled: the
+        /// copy knows what's left in them but not the order.
+        /// </summary>
+        public AugMatch Clone(int seed)
+        {
+            AugPlayer[] copies = players.Select(p =>
+            {
+                AugPlayer c = p.CloneBody(p.deck);
+                c.hand.AddRange(p.hand);
+                c.turnsTaken = p.turnsTaken;
+                return c;
+            }).ToArray();
+            AugMatch copy = new AugMatch(copies, seed)
+            {
+                current = current, caller = caller, finalTurn = finalTurn, over = over, winner = winner,
+            };
+            foreach (AugPlayer p in copies) copy.Shuffle(p.deck);
+            return copy;
         }
 
         public AugPlayer Current => players[current];

@@ -122,9 +122,6 @@ aug_deck_too_small,卡组至少需要 {0} 张卡；你的卡组盒里只有 {1} 
 aug_deck_too_big,卡组最多 {0} 张卡；你的卡组盒里有 {1} 张。
 aug_deck_copies,{1} 有 {2} 张：卡组中最多只能放 {0} 张。
 aug_challenge_opponent,对手
-aug_regular_cautious,稳扎稳打，从不冒故障的险。
-aug_regular_reckless,只要力量，不踩刹车。经常失控。
-aug_regular_hacker,最爱用骇入搞垮你的配置。
 aug_challenge_ante,赌注
 aug_challenge_start,开打
 aug_close,关闭
@@ -269,6 +266,8 @@ challenge_declined,可惜。下次吧。
 challenge_they_won,打得好！下次好运。
 challenge_they_lost,唉，被你赢了。打得好。
 challenge_draw,平局？行，改天再分高下。
+aug_table_opponent_hint,他们怎么打，你自己去发现吧。
+den_nobody_tonight,今晚后面那张桌子没人。
 guide_item_name,Zamco 经销商指南
 guide_item_desc,Zamco 电子的欢迎资料：Downside Den 的位置，以及 Aug Warriors 的玩法和组卡。
 guide_p1_title,致尊贵的经销商
@@ -319,7 +318,7 @@ guide_p6_6,- 带几张骇入卡，让贪心的对手老实点。
 guide_p6_7,- 注意故障。大数字的一半往往是个小数字。
 guide_p6_8,组卡客也可能带着卡组盒和需求清单来你的店。按要求装好，他们会付个好价钱。
 guide_p7_title,下注对战
-guide_p7_1,在 Den 后面的桌子上你可以挑战常客：Rook 打法稳健，Vex 全力进攻，Patch 最爱骇入。喜欢这游戏的顾客也可能在你的柜台邀你来一局。
+guide_p7_1,有些晚上，Den 的常客会坐在后面那张桌子旁等人来一局。谁会来、怎么打，得你自己去发现。喜欢这游戏的顾客也可能在你的柜台邀你来一局。
 guide_p7_2,把卡组盒放进卡组槽，然后选择赌注：
 guide_p7_3,- 信用点：赢家通吃。
 guide_p7_4,- 卡牌：赢了保留自己的卡，再得一张同稀有度的新卡（有时更好，常常是你还没有的）。输了卡归对手。

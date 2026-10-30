@@ -9,8 +9,6 @@ namespace ZamsCollectibles.AugWarriors
     /// </summary>
     public static class StoreChallenge
     {
-        private static readonly AugPersonality[] Styles = { AugPersonality.Cautious, AugPersonality.Reckless, AugPersonality.Hacker };
-
         /// <summary>Gives the customer a chance (percent) to ask for a game when dismissed.</summary>
         public static void Offer(StoreClient client, int chance)
         {
@@ -23,7 +21,7 @@ namespace ZamsCollectibles.AugWarriors
         private static bool Ask(StoreClient client)
         {
             if (!PlayerHasDeck() || DialogUIManager.Instance == null) return false;
-            AugPersonality style = RNG.GetRandomElement(Styles);
+            AugPersonality style = RNG.GetRandomElement(AugPersonality.All);
 
             // A choice's dialogue is the player's answer: its text labels the choice and the game moves
             // straight on to the line after it, so the customer's reply (and its action) goes there.

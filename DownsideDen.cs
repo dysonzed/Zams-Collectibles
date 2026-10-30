@@ -261,9 +261,11 @@ namespace ZamsCollectibles
                 BuildShopList(builder);
             }
 
-            // An Aug Warriors match against one of the regulars, for an ante.
+            // An Aug Warriors match against one of the regulars, for an ante, on nights someone's in.
             builder.AddSeparator();
             builder.AddButton(Loc.Get("den_challenge"), AugWarriors.AugTable.Open);
+            if (AugWarriors.DenRegulars.Tonight().Count == 0)
+                builder.Last.SetInteractable(false).SetTooltip(Loc.Get("den_nobody_tonight"));
         }
 
         // Fallback when the board can't open: the stock as a list with Buy and View buttons.

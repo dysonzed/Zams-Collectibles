@@ -158,6 +158,8 @@ namespace ZamsCollectibles
                         ModHelper.MoveItemToInventory(ModHelper.SpawnItem(AugWarriors.DeckBox.DECKBOX_ID)))
                     .AddButton("Test Match (random deck, no stakes)", () =>
                         AugWarriors.AugBoard.Start(null, "Rook", AugWarriors.AugPersonality.Cautious, 0))
+                    .AddButton("Test Match vs Oracle (random deck, no stakes)", () =>
+                        AugWarriors.AugBoard.Start(null, "Oracle", AugWarriors.AugPersonality.Oracle, 0))
                     .AddButton("Full Card Set (first set)", () =>
                     {
                         CardSetDef set = CardDatabase.Sets.Count > 0 ? CardDatabase.Sets[0] : null;
@@ -168,6 +170,8 @@ namespace ZamsCollectibles
                     .AddHeader("Command")
                     // Stand-in for a real grading service: grades every card in the player's inventory.
                     .AddButton("Unlock Downside Den", () => { ModHelper.GetNetworkUpgrade(Progression.DEN_UPGRADE)?.Unlock(); Log.Log("Downside Den unlocked."); })
+                    .AddButton("Den Regulars: Log Pool", () => Log.Log("Den regulars " + AugWarriors.DenRegulars.Describe()))
+                    .AddButton("Den Regulars: Someone In Tonight", () => { AugWarriors.DenRegulars.ForceSomeoneTonight(); Log.Log("Den regulars " + AugWarriors.DenRegulars.Describe()); })
                     .AddButton("Next Customer: Deck Builder", () => NextCustomer(DeckOrders.CreateCustomer()))
                     .AddButton("Next Customer: Pack Flipper", () => NextCustomer(Progression.CreatePackFlipper()))
                     .AddButton("Next Customer: Pack Flipper (asks for a game)", () => NextCustomer(Progression.CreatePackFlipper(100)))

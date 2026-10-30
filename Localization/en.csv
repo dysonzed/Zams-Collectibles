@@ -122,9 +122,6 @@ aug_deck_too_small,"A deck needs at least {0} cards; your deck box has {1}."
 aug_deck_too_big,"A deck can have at most {0} cards; your deck box has {1}."
 aug_deck_copies,"{2} copies of {1}: a deck can have at most {0}."
 aug_challenge_opponent,Opponent
-aug_regular_cautious,"Plays it safe, never pushes the glitch."
-aug_regular_reckless,"All power, no brakes. Often goes Aug."
-aug_regular_hacker,Loves wrecking your build with hacks.
 aug_challenge_ante,Ante
 aug_challenge_start,Play
 aug_close,Close
@@ -269,6 +266,8 @@ challenge_declined,"Shame. Another time, then."
 challenge_they_won,"Good game! Better luck next time."
 challenge_they_lost,"Ugh, you got me. Good game."
 challenge_draw,"A draw? Huh. We'll settle it another day."
+aug_table_opponent_hint,How they play is for you to find out.
+den_nobody_tonight,Nobody's at the back table tonight.
 guide_item_name,Zamco Stockist Guide
 guide_item_desc,"Welcome pack from Zamco Electronics: where to find the Downside Den, and how to play and build decks for Aug Warriors."
 guide_p1_title,A Message to Our Valued Stockists
@@ -319,7 +318,7 @@ guide_p6_6,- A few hacks keep greedy opponents honest.
 guide_p6_7,- Watch your Glitch. Half of a big number is often a small number.
 guide_p6_8,Deck builders may also come to your shop with a box and a wish list. Fill it to their order and they'll pay well for the work.
 guide_p7_title,Playing for Stakes
-guide_p7_1,"At the Den's back table you can challenge the regulars: Rook plays it safe, Vex goes all in, and Patch loves a good hack. Fans of the game may also ask for a quick match at your counter."
+guide_p7_1,"Some nights the Den's regulars are at the back table, up for a game. Who shows up, and how they play, is for you to find out. Fans of the game may also ask for a quick match at your counter."
 guide_p7_2,"Put your deck box in the Deck slot, then choose your stakes:"
 guide_p7_3,- Credits: the winner takes the pot.
 guide_p7_4,"- A card: win and you keep it, plus a new card of the same rarity (sometimes better, often one you don't own yet). Lose and your opponent keeps it."

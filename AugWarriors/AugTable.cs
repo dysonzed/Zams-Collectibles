@@ -23,58 +23,56 @@ namespace ZamsCollectibles.AugWarriors
         private const int RARITY_UP_CHANCE = 15;    // percent: the won card is one rarity up
         private const int NEW_CARD_CHANCE = 25;     // percent: the won card is one the player doesn't own
 
-        // The regulars at the Den. Names are proper nouns; their blurbs are localized.
-        private static readonly (string name, AugPersonality style)[] Regulars =
-        {
-            ("Rook", AugPersonality.Cautious),
-            ("Vex", AugPersonality.Reckless),
-            ("Patch", AugPersonality.Hacker),
-        };
-
         private static PixelWindow window;
         private static GameSlotInventory deckSlot, anteSlot;
         private static MachineryText deckText, anteText, opponentText, statusText;
         private static MachineryButton playButton;
-        private static int regular = 1, creditAnte;
+        private static int chosen, creditAnte;
         private static bool inMatch;
 
-        // A store customer who asked for a game: they are the only opponent, and they leave once it's over.
-        // played is false when the player closed the table without playing.
-        private static (string name, AugPersonality style)? challenger;
-        private static Action<int?, bool> challengeOver;
-        private static bool builtForChallenge;
+        // Who can be played: the regulars at the Den tonight, or one store customer. Their play
+        // styles are hidden from the player.
+        private static List<(string name, AugPersonality style)> opponents = new List<(string, AugPersonality)>();
+        private static string builtFor;   // the opponent list the window was built for
 
-        private static (string name, AugPersonality style) Opponent => challenger ?? Regulars[regular];
+        // A store customer who asked for a game leaves once it's over. played is false when the
+        // player closed the table without playing.
+        private static Action<int?, bool> challengeOver;
+        private static bool AtStore => challengeOver != null;
+
+        private static (string name, AugPersonality style) Opponent => opponents[Math.Min(chosen, opponents.Count - 1)];
 
         // Where the player's things go back to: the Den's inventory, or the store counter.
-        private static GraphNodeStorage Home => challenger != null ? EmporiumEntry.Instance.backInvinvElement : EmporiumEntry.Instance.afterhourInventory;
+        private static GraphNodeStorage Home => AtStore ? EmporiumEntry.Instance.backInvinvElement : EmporiumEntry.Instance.afterhourInventory;
 
-        /// <summary>The Den's table, against the regulars.</summary>
+        /// <summary>The Den's table, against whichever regulars are in tonight (none: it doesn't open).</summary>
         public static void Open()
         {
-            challenger = null;
             challengeOver = null;
+            opponents = DenRegulars.Tonight();
+            if (opponents.Count == 0) return;
             Show();
         }
 
         /// <summary>The table at the store, against a customer. over(winner, played) runs once they're done.</summary>
         public static void OpenChallenge(string name, AugPersonality style, Action<int?, bool> over)
         {
-            challenger = (name, style);
             challengeOver = over;
+            opponents = new List<(string, AugPersonality)> { (name, style) };
             Show();
         }
 
         private static void Show()
         {
-            bool challenge = challenger != null;
-            if (window != null && window.handler != null && builtForChallenge != challenge)
+            string layout = string.Join("|", opponents.Select(o => o.name));
+            if (window != null && window.handler != null && builtFor != layout)
             {
-                // the opponent panel differs: build the other layout
+                // a different set of opponents: rebuild the opponent panel
                 window.Hide();
                 UnityEngine.Object.Destroy(window.handler.gameObject);
                 window = null;
             }
+            if (builtFor != layout) chosen = 0;
             if (window == null || window.handler == null) Build();   // the UI goes with the scene: rebuild after a reload
             Refresh();
             window.Show(new Vector2(Screen.width * 0.5f, Screen.height * 0.72f), Vector2.zero);
@@ -91,20 +89,19 @@ namespace ZamsCollectibles.AugWarriors
         private static void OnClosed()
         {
             ReturnItems();
-            if (challenger != null && !inMatch) EndChallenge(null, false);
+            if (AtStore && !inMatch) EndChallenge(null, false);
         }
 
         private static void EndChallenge(int? winner, bool played)
         {
             Action<int?, bool> over = challengeOver;
-            challenger = null;
             challengeOver = null;
             over?.Invoke(winner, played);
         }
 
         private static void Build()
         {
-            builtForChallenge = challenger != null;
+            builtFor = string.Join("|", opponents.Select(o => o.name));
             deckSlot = new GameSlotInventory();
             deckSlot.mayInventoryAddItemFunc = (item, _) => GeneralHelper.IsItemOwned(item) && DeckBox.IsDeckBox(item) && !inMatch;
             deckSlot.mayInventoryRemoveItemFunc = (_, _) => !inMatch;
@@ -125,15 +122,16 @@ namespace ZamsCollectibles.AugWarriors
             MachineryRadioList credits = new MachineryRadioList(
                 CreditAntes.Select(a => a == 0 ? Loc.Get("aug_no_stakes") : a + GeneralHelper.CreditIcon()).ToList(), 0,
                 i => { creditAnte = CreditAntes[i]; Refresh(); });
-            MachineryRadioList opponents = new MachineryRadioList(Regulars.Select(r => r.name).ToList(), regular,
-                i => { regular = i; Refresh(); });
+            MachineryStack opponentPanel = opponents.Count > 1
+                ? MachineryStack.Vertical(new MachineryRadioList(opponents.Select(o => o.name).ToList(), chosen, i => { chosen = i; Refresh(); }), opponentText)
+                : MachineryStack.Vertical(opponentText);
             playButton = new MachineryButton(Loc.Get("aug_challenge_start"), Play);
             MachineryButton rules = new MachineryButton(Loc.Get("aug_table_rules"), () => ZamcoGuide.Open(ZamcoGuide.RULES_PAGE));
 
             window = MachineHelper.CreateMachineryWindow(true,
                 MachineHelper.Panel(Loc.Get("aug_table_deck"), MachineryStack.Vertical(deckSlot, deckText), "deck"),
                 MachineHelper.Panel(Loc.Get("aug_challenge_ante"), MachineryStack.Vertical(anteSlot, anteText, credits), "ante"),
-                MachineHelper.Panel(Loc.Get("aug_challenge_opponent"), builtForChallenge ? MachineryStack.Vertical(opponentText) : MachineryStack.Vertical(opponents, opponentText), "opponent"),
+                MachineHelper.Panel(Loc.Get("aug_challenge_opponent"), opponentPanel, "opponent"),
                 MachineHelper.Panel(Loc.Get("aug_table_play"), MachineryStack.Vertical(playButton, rules, statusText), "play"));
             window.SetTitle(Loc.Get("aug_challenge_title"));
             window.closeCallback += OnClosed;
@@ -150,9 +148,8 @@ namespace ZamsCollectibles.AugWarriors
 
             CardDef ante = CardItems.GetCardDef(anteSlot.childItem);
             anteText.SetText(ante == null ? Loc.Get("aug_table_no_card") : Loc.Get("aug_table_card_ante", Loc.RarityName(ante.rarity)));
-            opponentText.SetText(challenger != null
-                ? Opponent.name + "\n" + Loc.Get("aug_regular_" + Opponent.style.id)
-                : Loc.Get("aug_regular_" + Opponent.style.id));
+            // how they play is for the player to find out
+            opponentText.SetText(opponents.Count > 1 ? Loc.Get("aug_table_opponent_hint") : Opponent.name);
 
             string problem = deckSlot.childItem == null ? Loc.Get("aug_table_need_deck")
                 : errors.Count > 0 ? Loc.Get("aug_table_fix_deck")
@@ -198,7 +195,7 @@ namespace ZamsCollectibles.AugWarriors
                 GameItem prize = PrizeCard(anteCard);
                 if (prize != null) GraphUtils.EmporiumTryAdd(Home, prize);
             }
-            if (challenger != null)
+            if (AtStore)
             {
                 ReturnItems();
                 EndChallenge(winner, true);
