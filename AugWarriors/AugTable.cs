@@ -38,8 +38,43 @@ namespace ZamsCollectibles.AugWarriors
         private static int regular = 1, creditAnte;
         private static bool inMatch;
 
+        // A store customer who asked for a game: they are the only opponent, and they leave once it's over.
+        // played is false when the player closed the table without playing.
+        private static (string name, AugPersonality style)? challenger;
+        private static Action<int?, bool> challengeOver;
+        private static bool builtForChallenge;
+
+        private static (string name, AugPersonality style) Opponent => challenger ?? Regulars[regular];
+
+        // Where the player's things go back to: the Den's inventory, or the store counter.
+        private static GraphNodeStorage Home => challenger != null ? EmporiumEntry.Instance.backInvinvElement : EmporiumEntry.Instance.afterhourInventory;
+
+        /// <summary>The Den's table, against the regulars.</summary>
         public static void Open()
         {
+            challenger = null;
+            challengeOver = null;
+            Show();
+        }
+
+        /// <summary>The table at the store, against a customer. over(winner, played) runs once they're done.</summary>
+        public static void OpenChallenge(string name, AugPersonality style, Action<int?, bool> over)
+        {
+            challenger = (name, style);
+            challengeOver = over;
+            Show();
+        }
+
+        private static void Show()
+        {
+            bool challenge = challenger != null;
+            if (window != null && window.handler != null && builtForChallenge != challenge)
+            {
+                // the opponent panel differs: build the other layout
+                window.Hide();
+                UnityEngine.Object.Destroy(window.handler.gameObject);
+                window = null;
+            }
             if (window == null || window.handler == null) Build();   // the UI goes with the scene: rebuild after a reload
             Refresh();
             window.Show(new Vector2(Screen.width * 0.5f, Screen.height * 0.72f), Vector2.zero);
@@ -52,8 +87,24 @@ namespace ZamsCollectibles.AugWarriors
             window?.Hide();
         }
 
+        // Closed with its X: a store challenger takes that as a no.
+        private static void OnClosed()
+        {
+            ReturnItems();
+            if (challenger != null && !inMatch) EndChallenge(null, false);
+        }
+
+        private static void EndChallenge(int? winner, bool played)
+        {
+            Action<int?, bool> over = challengeOver;
+            challenger = null;
+            challengeOver = null;
+            over?.Invoke(winner, played);
+        }
+
         private static void Build()
         {
+            builtForChallenge = challenger != null;
             deckSlot = new GameSlotInventory();
             deckSlot.mayInventoryAddItemFunc = (item, _) => GeneralHelper.IsItemOwned(item) && DeckBox.IsDeckBox(item) && !inMatch;
             deckSlot.mayInventoryRemoveItemFunc = (_, _) => !inMatch;
@@ -82,10 +133,10 @@ namespace ZamsCollectibles.AugWarriors
             window = MachineHelper.CreateMachineryWindow(true,
                 MachineHelper.Panel(Loc.Get("aug_table_deck"), MachineryStack.Vertical(deckSlot, deckText), "deck"),
                 MachineHelper.Panel(Loc.Get("aug_challenge_ante"), MachineryStack.Vertical(anteSlot, anteText, credits), "ante"),
-                MachineHelper.Panel(Loc.Get("aug_challenge_opponent"), MachineryStack.Vertical(opponents, opponentText), "opponent"),
+                MachineHelper.Panel(Loc.Get("aug_challenge_opponent"), builtForChallenge ? MachineryStack.Vertical(opponentText) : MachineryStack.Vertical(opponents, opponentText), "opponent"),
                 MachineHelper.Panel(Loc.Get("aug_table_play"), MachineryStack.Vertical(playButton, rules, statusText), "play"));
             window.SetTitle(Loc.Get("aug_challenge_title"));
-            window.closeCallback += ReturnItems;
+            window.closeCallback += OnClosed;
         }
 
         private static void Refresh()
@@ -99,7 +150,9 @@ namespace ZamsCollectibles.AugWarriors
 
             CardDef ante = CardItems.GetCardDef(anteSlot.childItem);
             anteText.SetText(ante == null ? Loc.Get("aug_table_no_card") : Loc.Get("aug_table_card_ante", Loc.RarityName(ante.rarity)));
-            opponentText.SetText(Loc.Get("aug_regular_" + Regulars[regular].style.id));
+            opponentText.SetText(challenger != null
+                ? Opponent.name + "\n" + Loc.Get("aug_regular_" + Opponent.style.id)
+                : Loc.Get("aug_regular_" + Opponent.style.id));
 
             string problem = deckSlot.childItem == null ? Loc.Get("aug_table_need_deck")
                 : errors.Count > 0 ? Loc.Get("aug_table_fix_deck")
@@ -115,7 +168,7 @@ namespace ZamsCollectibles.AugWarriors
             if (inMatch || !AugRules.IsLegalDeck(deck) || PlayerStore.Instance.GetCash() < creditAnte) return;
             inMatch = true;
             window.Hide();
-            var (name, style) = Regulars[regular];
+            var (name, style) = Opponent;
             try
             {
                 AugBoard.Start(deck, name, style, creditAnte, Finished);
@@ -143,9 +196,15 @@ namespace ZamsCollectibles.AugWarriors
             else if (anteCard != null && winner == 0)
             {
                 GameItem prize = PrizeCard(anteCard);
-                if (prize != null) GraphUtils.EmporiumTryAdd(EmporiumEntry.Instance.afterhourInventory, prize);
+                if (prize != null) GraphUtils.EmporiumTryAdd(Home, prize);
             }
-            Open();
+            if (challenger != null)
+            {
+                ReturnItems();
+                EndChallenge(winner, true);
+                return;
+            }
+            Show();
         }
 
         /// <summary>A card of the anted card's rarity, sometimes one up, a quarter of the time one the player doesn't own.</summary>
@@ -178,7 +237,7 @@ namespace ZamsCollectibles.AugWarriors
                 GameItem item = slot?.childItem;
                 if (item == null) continue;
                 slot.Expel(item);
-                GraphUtils.EmporiumTryAdd(EmporiumEntry.Instance.afterhourInventory, item);
+                GraphUtils.EmporiumTryAdd(Home, item);
             }
         }
 

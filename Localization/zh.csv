@@ -247,8 +247,8 @@ client_pack_flipper_line,捡到几包 Aug Warriors 卡包。还没拆，我发�
 
 # 卡组订单
 client_deck_order,组卡客
-client_deck_order_line,我需要组一副 Aug Warriors 卡组，听说你懂卡。
-client_deck_order_wants,这是我的卡组盒。我需要：{0}
+client_deck_order_line,嘿，能帮我组一副 Aug Warriors 卡组吗？
+client_deck_order_wants,这是我的卡组盒。要求都在平板上。
 order_box_name,卡组订单
 order_box_desc,客人的卡组盒。按订单（见清单）装好，放回柜台交给客人。
 order_tooltip_header,订单要求：
@@ -260,5 +260,14 @@ order_req_slot,{0}+ 张{1}义体
 order_req_hacks,{0}+ 张骇入
 order_req_mods,{0}+ 张改装件
 order_req_rarity,{0}+ 张{1}卡
-client_deck_order_extras,以下另付：{0}。
 order_tooltip_extras,额外要求（可选，多付钱）：
+tablet_order_required,卡组订单
+tablet_order_extras,额外要求（多付钱）
+challenge_ask,走之前……你玩 Aug Warriors 吗？带卡组了吗？就在柜台上来一局。
+challenge_choice_yes,来一局
+challenge_choice_no,今天算了
+challenge_accepted,哈！摆好你的卡组，赌注随你。
+challenge_declined,可惜。下次吧。
+challenge_they_won,打得好！下次好运。
+challenge_they_lost,唉，被你赢了。打得好。
+challenge_draw,平局？行，改天再分高下。

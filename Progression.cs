@@ -17,6 +17,7 @@ namespace ZamsCollectibles
         private const int JACKSON_PACK_CHANCE = 20;   // percent per visit
         private const int PACK_FLIPPER_CHANCE = 6;    // percent per customer generated, at most once a day
         private const int DECK_ORDER_CHANCE = 8;      // percent per customer generated, at most once a day, once unlocked
+        private const int FLIPPER_GAME_CHANCE = 10;   // percent: asks for a game of Aug Warriors when sent off
 
         public static bool DenUnlocked => ModHelper.IsNetworkUpgradeUnlocked(DEN_UPGRADE);
 
@@ -66,7 +67,9 @@ namespace ZamsCollectibles
         private static void MarkToday(string key) => ModHelper.SetModDataInt(ModEntry.MOD_ID, key, StoreStation.GetDayCounter());
 
         // A scavenger with a few packs they found or flipped.
-        public static StoreClient CreatePackFlipper()
+        public static StoreClient CreatePackFlipper() => CreatePackFlipper(FLIPPER_GAME_CHANCE);
+
+        public static StoreClient CreatePackFlipper(int gameChance)
         {
             StoreClient client = new StoreClient();
             client.identifier = ModEntry.MOD_ID + ".pack_flipper";
@@ -80,6 +83,7 @@ namespace ZamsCollectibles
                 for (int i = 0; i < packs; i++)
                     PlayerStore.Instance.AddDirectSellingItemToTable(CardItems.BoosterId(RNG.GetRandomElement(CardDatabase.Sets)));
             });
+            AugWarriors.StoreChallenge.Offer(client, gameChance);
             client.CompleteClientCreation();
             return client;
         }

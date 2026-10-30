@@ -167,6 +167,7 @@ namespace ZamsCollectibles
                     .AddButton("Unlock Downside Den", () => { ModHelper.GetNetworkUpgrade(Progression.DEN_UPGRADE)?.Unlock(); Log.Log("Downside Den unlocked."); })
                     .AddButton("Next Customer: Deck Builder", () => NextCustomer(DeckOrders.CreateCustomer()))
                     .AddButton("Next Customer: Pack Flipper", () => NextCustomer(Progression.CreatePackFlipper()))
+                    .AddButton("Next Customer: Pack Flipper (asks for a game)", () => NextCustomer(Progression.CreatePackFlipper(100)))
                     .AddButton("Grade Inventory Cards", () =>
                     {
                         int graded = 0;

@@ -247,8 +247,8 @@ client_pack_flipper_line,"Found some Aug Warriors packs. Still sealed, I swear. 
 
 # Deck orders
 client_deck_order,Deck Builder
-client_deck_order_line,"I need an Aug Warriors deck built, and I hear you know cards."
-client_deck_order_wants,"Here's my box. I need {0}"
+client_deck_order_line,"Hey, can you build me an Aug Warriors deck?"
+client_deck_order_wants,"Here's my box. What I'm after is on the tablet."
 order_box_name,Deck Order
 order_box_desc,"A customer's deck box. Fill it to their order (see the list) and hand it back on the counter."
 order_tooltip_header,The order:
@@ -260,5 +260,14 @@ order_req_slot,{0}+ {1} augments
 order_req_hacks,{0}+ hacks
 order_req_mods,{0}+ mods
 order_req_rarity,{0}+ {1} cards
-client_deck_order_extras,"I'll pay extra for: {0}."
 order_tooltip_extras,"Extras (optional, pay more):"
+tablet_order_required,Deck order
+tablet_order_extras,"Extras (pay more)"
+challenge_ask,"Before I go... you play Aug Warriors? Got a deck on you? Quick game, right here on the counter."
+challenge_choice_yes,Deal some cards
+challenge_choice_no,Not today
+challenge_accepted,"Ha! Set up your deck. Ante whatever you like."
+challenge_declined,"Shame. Another time, then."
+challenge_they_won,"Good game! Better luck next time."
+challenge_they_lost,"Ugh, you got me. Good game."
+challenge_draw,"A draw? Huh. We'll settle it another day."

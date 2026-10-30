@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using HarmonyLib;
 using Newtonsoft.Json;
+using TMPro;
 using UnityEngine;
 
 namespace ZamsCollectibles
@@ -21,6 +24,7 @@ namespace ZamsCollectibles
         private const string ORDER_ID_TAG = "ZAMS_DECK_ORDER_ID_INT";  // ties the box to its customer
         private const string BONUS_TAG = "ZAMS_DECK_ORDER_BONUS_INT";
         private const int COLUMNS = 5, ROWS = 2;   // up to 10 cards
+        private const int GAME_CHANCE = 15;        // percent: asks for a game of Aug Warriors when sent off
 
         private static readonly Color Met = new Color32(0x67, 0xAA, 0xA5, 0xFF);
         private static readonly Color Unmet = new Color32(0xE0, 0x50, 0x5A, 0xFF);
@@ -212,16 +216,64 @@ namespace ZamsCollectibles
                 (IsOrderBox(item) && item.GetTagReadonly(ORDER_ID_TAG).GetInt() == orderId && IsFilled(item))
                 || (CardItems.IsCard(item) && IsOrderBox(item.parentInventory?.GetParentItem()));
 
-            string wants = string.Join(", ", order.Where(r => !r.optional).Select(r => r.Describe())) + ".";
-            List<Requirement> extras = order.Where(r => r.optional).ToList();
-            if (extras.Count > 0)
-                wants += " " + Loc.Get("client_deck_order_extras", string.Join(", ", extras.Select(r => $"{r.Describe()} (+{r.bonus}{GeneralHelper.CreditIcon()})")));
+            // The details are on the tablet and the box's tooltip; the customer just asks.
             client.mainDialogue.SetText(client.displayName, Loc.Get("client_deck_order_line"))
-                .NextDialogue().SetText(client.displayName, Loc.Get("client_deck_order_wants", wants))
+                .NextDialogue().SetText(client.displayName, Loc.Get("client_deck_order_wants"))
                 .SetEndAction(() => HandOverBox(orderId, order, bonus));
             client.OnDismiss = () => TakeBackBox(orderId);
+            AugWarriors.StoreChallenge.Offer(client, GAME_CHANCE);
             client.CompleteClientCreation();
+            Orders.Add(client, new Order { id = orderId, requirements = order });
             return client;
+        }
+
+        // ------------------------------------------------------------ the shop tablet
+
+        private class Order
+        {
+            public int id;
+            public List<Requirement> requirements;
+        }
+
+        // The order each deck builder came in with, for the tablet to show while they're at the counter.
+        private static readonly ConditionalWeakTable<StoreClient, Order> Orders = new ConditionalWeakTable<StoreClient, Order>();
+
+        private static List<CardDef> OrderCards(int orderId)
+        {
+            GameItem box = EmporiumEntry.Instance.GetAllItems().FirstOrDefault(i => IsOrderBox(i) && i.GetTagReadonly(ORDER_ID_TAG).GetInt() == orderId);
+            return box == null ? new List<CardDef>() : Cards(box);
+        }
+
+        /// <summary>
+        /// The order sheet on the negotiation tablet, like the gunsmith's: the requirements and the
+        /// extras with what each pays, turning green as the box meets them. Drawn above the box row.
+        /// </summary>
+        public static void DrawTabletSheet(NegotiationTabletFrame frame, StoreClient client)
+        {
+            if (frame == null || client == null || !Orders.TryGetValue(client, out Order order)) return;
+            List<CardDef> cards = OrderCards(order.id);
+            TabletUI.SubHeader(frame, frame.content, Loc.Get("tablet_order_required"), 28f);
+            foreach (Requirement r in order.requirements.Where(r => !r.optional)) TabletRow(frame, r, cards, "");
+            if (!order.requirements.Any(r => r.optional)) return;
+            TabletUI.SubHeader(frame, frame.content, Loc.Get("tablet_order_extras"), 28f);
+            foreach (Requirement r in order.requirements.Where(r => r.optional)) TabletRow(frame, r, cards, "+" + TabletUI.Credits(r.bonus));
+        }
+
+        private static void TabletRow(NegotiationTabletFrame frame, Requirement r, List<CardDef> cards, string reward)
+        {
+            bool met = r.IsMet(cards);
+            Color color = met ? TabletStyle.GREEN : TabletStyle.INK;
+            RectTransform row = TabletUI.TextRow(frame, frame.content, $"{r.Describe()} ({Math.Min(r.Count(cards), r.count)}/{r.count})", 18f, color);
+            if (reward.Length > 0)
+                TabletUI.NewText(frame, row, "Reward", 368f, 0f, 130f, 28f, FontLoader.FontRole.Noto_Sans, 20f, color, TextAlignmentOptions.MidlineRight).text = reward;
+        }
+
+        /// <summary>The tablet redraws when its signature changes: add how far along the order is.</summary>
+        public static string TabletSignature(StoreClient client)
+        {
+            if (client == null || !Orders.TryGetValue(client, out Order order)) return "";
+            List<CardDef> cards = OrderCards(order.id);
+            return "|deck:" + string.Join(",", order.requirements.Select(r => r.Count(cards)));
         }
 
         // The customer's empty deck box goes on the counter, the player's to fill.
@@ -250,6 +302,41 @@ namespace ZamsCollectibles
                 }
                 box.Destroy();
             }
+        }
+    }
+
+    // The deck builder is a buying customer, so the tablet shows its buying page; the order sheet goes on top.
+    // The tablet isn't part of the modding API, so this reaches into its private code. If a game update
+    // changes that code the patch skips itself (Prepare) or swallows its error, and the order box's
+    // tooltip is still there.
+    [HarmonyPatch(typeof(NegociationUIManager), "BuildBuying")]
+    public static class DeckOrderTabletPatch
+    {
+        private static readonly System.Reflection.FieldInfo FrameField = AccessTools.Field(typeof(NegociationUIManager), "frame");
+        private static bool failed;
+
+        static bool Prepare() =>
+            FrameField != null && typeof(NegotiationTabletFrame).IsAssignableFrom(FrameField.FieldType)
+            && AccessTools.Method(typeof(NegociationUIManager), "BuildBuying", new[] { typeof(StoreClient), typeof(bool) }) != null;
+
+        static void Prefix(NegociationUIManager __instance, StoreClient storeClient)
+        {
+            if (failed) return;
+            try { DeckOrders.DrawTabletSheet(FrameField.GetValue(__instance) as NegotiationTabletFrame, storeClient); }
+            catch (Exception e) { failed = true; ModEntry.Instance.Log.Log($"Deck order tablet sheet disabled: {e.Message}"); }
+        }
+    }
+
+    [HarmonyPatch(typeof(NegociationUIManager), "BuildSignature")]
+    public static class DeckOrderTabletSignaturePatch
+    {
+        static bool Prepare() =>
+            AccessTools.Method(typeof(NegociationUIManager), "BuildSignature", new[] { typeof(StoreClient) })?.ReturnType == typeof(string);
+
+        static void Postfix(StoreClient storeClient, ref string __result)
+        {
+            try { __result += DeckOrders.TabletSignature(storeClient); }
+            catch (Exception) { }
         }
     }
 }
