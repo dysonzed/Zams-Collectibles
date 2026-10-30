@@ -4,10 +4,44 @@
 	"publishedfileid"		"0"
 	"contentfolder"		"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Probably Stolen\\Mods\\ZamsCollectibles"
 	"previewfile"		"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Probably Stolen\\Mods\\ZamsCollectibles\\preview.png"
-	"visibility"		"2"
+	"visibility"		"1"
 	"title"		"Zam's Collectibles"
-	"description"		"Zamco Electronics brings the Aug Warriors trading card game to the station. Open booster packs, collect cards in six conditions, grade them, and seal complete sets in a Collector's Box to sell at a premium.
+	"description"		"Zamco Electronics brings the Aug Warriors trading card game to the station. Collect, trade, grade and play.
 
-Save warning: cards, booster packs and boxes are items from this mod. If you disable or remove the mod, they disappear from your store."
-	"changenote"		"First release"
+[h2]Collect[/h2]
+[list]
+[*]Booster packs and booster boxes for two card sets, with cards in six conditions you'll have to judge by eye
+[*]Grade your best cards, seal complete sets in a Collector's Box for a premium, and keep the rest in an 8-page collection binder
+[*]A new Collectible item category that only the right customers buy
+[/list]
+
+[h2]The Downside Den[/h2]
+[list]
+[*]Unlock a card shop down in the lower section through Wild's Network
+[*]Downside Dan sells fresh packs, boxes and singles every night and buys cards over the counter
+[*]Comes with the Zamco Stockist Guide (how to play and build decks) and a Zamco Authorized Dealer Certificate: put it in your display case to draw card customers
+[/list]
+
+[h2]Aug Warriors[/h2]
+[list]
+[*]A quick card game: fill your mercenary's body with augments, push your Power, and keep your Glitch under your Stability
+[*]Build decks in deck boxes, then play the Den's regulars for credits or cards. Each save gets its own regulars, each with a hidden play style, and one of them is very, very good
+[*]Card customers may challenge you to a game at your counter
+[/list]
+
+[h2]Customers[/h2]
+[list]
+[*]Pack flippers who sell you booster packs
+[*]Deck builders who hand you a box and a wish list, with the order shown on your shop tablet
+[*]Dr. Jackson sometimes has a pack on his table
+[/list]
+
+[h2]New start: Card Dealer[/h2]
+Begin with the Den unlocked, three booster packs, a deck box and a binder.
+
+[h2]Notes[/h2]
+This is an early test version: expect rough edges and placeholder art. Text is in English, with a draft Chinese translation.
+
+Save warning: cards, packs, boxes and the other items from this mod disappear from your store if you disable or remove it."
+	"changenote"		"First test release"
 }
