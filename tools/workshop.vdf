@@ -6,42 +6,67 @@
 	"previewfile"		"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Probably Stolen\\Mods\\ZamsCollectibles\\preview.png"
 	"visibility"		"1"
 	"title"		"Zam's Collectibles"
-	"description"		"Zamco Electronics brings the Aug Warriors trading card game to the station. Collect, trade, grade and play.
+	"description"		"Zamco Electronics brings the Aug Warriors trading card game to the station. Open packs, chase rares, grade your best pulls, seal complete sets, and play the game at the back table of a card shop that only opens after hours.
+
+[h2]Ten sets, three tiers[/h2]
+[list]
+[*][b]Tier 1:[/b] Rustwave Rising, Doomed Decay, Oxygen Leak
+[*][b]Tier 2:[/b] Restored Grace, Broodmother's Clutch, Neural Tap, Fate's End
+[*][b]Tier 3:[/b] Ascension, Singularity, Recursion
+[*]Over 120 cards, each set with its own theme, rarity mix, pack art and booster box
+[*]Ultra rares in roughly 1 of every 100 packs of their set
+[*]Higher tiers are stronger and pricier, and must be licensed from Zamco through Wild's Network
+[/list]
 
 [h2]Collect[/h2]
 [list]
-[*]Booster packs and booster boxes for two card sets, with cards in six conditions you'll have to judge by eye
-[*]Grade your best cards, seal complete sets in a Collector's Box for a premium, and keep the rest in an 8-page collection binder
-[*]A new Collectible item category that only the right customers buy
+[*]Booster packs and booster boxes; boxes are the better buy
+[*]Every card has a hidden condition you judge by its wear. A perfect gem 10 is a true jackpot
+[*]The Card Grader seals your cards in graded slabs, with a big premium for top grades
+[*]Seal a complete set in a Collector's Box for a bonus; include the ultra rare for a Master Set
+[*]Collection binders, deck boxes, and a Collectible item category only the right customers buy
+[*]The economy is tuned per tier: Tier 1 is a gamble, Tier 3 pays back the investment
 [/list]
 
 [h2]The Downside Den[/h2]
 [list]
 [*]Unlock a card shop down in the lower section through Wild's Network
 [*]Downside Dan sells fresh packs, boxes and singles every night and buys cards over the counter
-[*]Comes with the Zamco Stockist Guide (how to play and build decks) and a Zamco Authorized Dealer Certificate: put it in your display case to draw card customers
+[*]Arrive with the Zamco Stockist Guide (how to play, how to read a card, deck building) and an Authorized Dealer Certificate: hang it in your display case to draw card customers
 [/list]
 
 [h2]Aug Warriors[/h2]
 [list]
-[*]A quick card game: fill your mercenary's body with augments, push your Power, and keep your Glitch under your Stability
-[*]Build decks in deck boxes, then play the Den's regulars for credits or cards. Each save gets its own regulars, each with a hidden play style, and one of them is very, very good
+[*]Build a mercenary one augment at a time: push your Power, keep your Glitch under your Stability, and call the showdown at the right moment
+[*]Dozens of card effects: hacks, mod stealing, extra actions, swarm synergies and more
+[*]Play the Den's regulars for credits or cards. Each save has its own regulars with hidden play styles, and one of them, Oracle, is very, very good
 [*]Card customers may challenge you to a game at your counter
 [/list]
 
 [h2]Customers[/h2]
 [list]
-[*]Pack flippers who sell you booster packs
-[*]Deck builders who hand you a box and a wish list, with the order shown on your shop tablet
-[*]Dr. Jackson sometimes has a pack on his table
+[*]Pack flippers who sell you packs below Dan's prices
+[*]Deck builders who hand you a box and a wish list, shown on your shop tablet
+[*]The Card Grader, who takes your cards away for a day and brings them back slabbed
 [/list]
 
 [h2]New start: Card Dealer[/h2]
-Begin with the Den unlocked, three booster packs, a deck box and a binder.
+Begin with the Den open, three booster packs, a deck box and a binder.
 
 [h2]Notes[/h2]
-This is an early test version: expect rough edges and placeholder art. Text is in English, with a draft Chinese translation.
+This is an early version: expect rough edges and placeholder card art. Text is in English, with a partial draft Chinese translation.
 
 Save warning: cards, packs, boxes and the other items from this mod disappear from your store if you disable or remove it."
-	"changenote"		"First test release"
+	"changenote"		"Version 0.2: a complete overhaul.
+
+- The old card sets are replaced by ten new sets in three power tiers (save warning: cards from the old sets disappear from existing saves)
+- Tier 2 and Tier 3 are unlocked with Zamco licenses in Wild's Network
+- Ultra rares, gem 10 jackpots, and a reworked economy per tier
+- The Card Grader customer and graded slabs
+- Zamco Authorized Dealer Certificate: display it to draw card customers
+- New Card Dealer starting scenario
+- Oracle and new hidden play styles for the Den's regulars
+- Collector's Box grows as you fill it; Master Sets with the ultra rare
+- Clearer mini cards, a 12-card hand, a Glitch tracker, and a card-reading guide page
+- Themed packs, card backs, slabs and boxes for every set"
 }

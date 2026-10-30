@@ -343,13 +343,17 @@ namespace ZamsCollectibles
         private const long BOX_VALUE = 10;
 
         /// <summary>
-        /// A display box with its own card grid. Any cards can go in; the Seal Set button only
-        /// works when it holds exactly one of each card of a single set.
+        /// A display box with its own card grid. It opens with one slot and grows a slot each time
+        /// one is filled, up to the size of the set being collected. The Seal Set button works when
+        /// it holds one of each card of a single set; the ultra rare is optional, and sealing with
+        /// it makes a Master Set, worth more.
         /// </summary>
         private static GameItem CreateCollectorBox()
         {
             int largestSet = CardDatabase.Sets.Count > 0 ? CardDatabase.Sets.Max(s => s.cards.Length) : BOX_GRID_WIDTH;
-            GameGridInventory grid = new GameGridInventory(BOX_GRID_WIDTH, (largestSet + BOX_GRID_WIDTH - 1) / BOX_GRID_WIDTH);
+            int rows = (largestSet + BOX_GRID_WIDTH - 1) / BOX_GRID_WIDTH;
+            GameGridInventory grid = new GameGridInventory(BOX_GRID_WIDTH, rows);
+            Grow(grid, rows);
             MachineryText status = MachineryText.Status(Loc.Get("box_status"), Loc.Get("box_status_empty"));
             GameItem item = null;
             MachineryButton seal = new MachineryButton(Loc.Get("box_seal_button"), () => TrySeal(item, grid, status))
@@ -359,7 +363,7 @@ namespace ZamsCollectibles
                 MachineHelper.Panel(Loc.Get("box_panel_cards"), grid, "cards"),
                 MachineHelper.Panel(Loc.Get("box_panel_seal"), MachineryStack.Vertical(status, seal), "seal"));
             // a loaded save refills the grid without the add callbacks below, so refresh on open too
-            window.openCallback += () => RefreshStatus(grid, status);
+            window.openCallback += () => { Grow(grid, rows); RefreshStatus(grid, status); };
 
             item = ItemDirectory.CreateEmptyItem(COLLECTOR_BOX_ID)
                 .SetContentWindow(window)
@@ -370,9 +374,30 @@ namespace ZamsCollectibles
 
             ContainerHelper.InitContainerItem(grid, item, allowedTags: new List<string> { CARD_TAG });
             TrackContainerValue(item, BOX_VALUE, grid);
-            grid.onSlotAddItemEndFunc += (_, _, _) => RefreshStatus(grid, status);
-            grid.onSlotRemoveItemEndFunc += (_, _, _) => RefreshStatus(grid, status);
+            grid.onSlotAddItemEndFunc += (_, _, _) => { Grow(grid, rows); RefreshStatus(grid, status); };
+            grid.onSlotRemoveItemEndFunc += (_, _, _) => { Grow(grid, rows); RefreshStatus(grid, status); };
             return item;
+        }
+
+        /// <summary>
+        /// Opens one more slot than the box has cards, in reading order, never closing a slot that
+        /// holds a card; once the set is known, no more than that set has cards.
+        /// </summary>
+        private static void Grow(GameGridInventory grid, int rows)
+        {
+            int cells = BOX_GRID_WIDTH * rows;
+            List<GameItem> cards = grid.childItems.Where(IsCard).ToList();
+            int highest = -1;
+            foreach (GameItem card in cards)
+            {
+                GridShape at = grid.GetIncompleteItemInventorySlot(card)?.itemGridShape;
+                if (at != null) highest = Math.Max(highest, at.minY * BOX_GRID_WIDTH + at.minX);
+            }
+            CardSetDef set = cards.Select(GetCardDef).FirstOrDefault(d => d != null)?.set;
+            int limit = set != null ? Math.Min(cells, set.cards.Length) : cells;
+            int open = Math.Min(cells, Math.Max(highest + 1, Math.Min(limit, cards.Count + 1)));
+            open = Math.Max(1, open);
+            grid.SetShape(new string('0', open) + new string('1', cells - open), BOX_GRID_WIDTH);
         }
 
         private static void SetBoxText(GameItem item)
@@ -397,14 +422,22 @@ namespace ZamsCollectibles
             CardDef duplicate = defs.GroupBy(d => d).Where(g => g.Count() > 1).Select(g => g.Key).FirstOrDefault();
             if (duplicate != null) { problem = Loc.Get("box_status_duplicate", CardNumber(duplicate)); return null; }
 
-            if (defs.Count < set.cards.Length) { problem = Loc.Get("box_status_progress", set.code, defs.Count, set.cards.Length); return null; }
+            int needed = set.cards.Count(c => !IsUltra(c));
+            int have = defs.Count(d => !IsUltra(d));
+            if (have < needed) { problem = Loc.Get("box_status_progress", set.code, have, needed); return null; }
             return set;
         }
+
+        private static bool IsUltra(CardDef card) => card.rarity == "ultra";
+
+        // A complete set with its ultra rare is a Master Set: double the sealed bonus.
+        private static bool IsMaster(GameInventory grid) => grid.childItems.Where(IsCard).Select(GetCardDef).Any(d => d != null && IsUltra(d));
 
         private static void RefreshStatus(GameInventory grid, MachineryText status)
         {
             CardSetDef set = CheckContents(grid, out string problem);
-            status.SetStatus(Loc.Get("box_status"), set != null ? Loc.Get("box_status_complete", set.code) : problem);
+            status.SetStatus(Loc.Get("box_status"), set == null ? problem
+                : IsMaster(grid) ? Loc.Get("box_status_master", set.code) : Loc.Get("box_status_complete", set.code));
         }
 
         private static void TrySeal(GameItem box, GameInventory grid, MachineryText status)
@@ -419,7 +452,7 @@ namespace ZamsCollectibles
 
             List<GameItem> cards = grid.childItems.Where(IsCard).ToList();
             long loose = cards.Sum(c => c.unitValue);
-            long sealedValue = (long)Math.Round(loose * (1f + set.sealedMarkup));
+            long sealedValue = (long)Math.Round(loose * (1f + set.sealedMarkup * (IsMaster(grid) ? 2f : 1f)));
             Confirm(Loc.Get("box_seal_confirm", Loc.SetName(set), loose, sealedValue), () =>
             {
                 float avgCondition = cards.Average(GetCondition);
@@ -443,7 +476,7 @@ namespace ZamsCollectibles
             item.SetGameItemType(Collectibles.TYPE);
             item.EnableTag(BUNDLE_TAG);
             // Real value is set when a box is sealed; this is the fallback for spawned copies.
-            item.SetValue((long)Math.Round(set.cards.Sum(CardDatabase.BaseValue) * (1f + set.sealedMarkup)));
+            item.SetValue((long)Math.Round(set.cards.Where(c => !IsUltra(c)).Sum(CardDatabase.BaseValue) * (1f + set.sealedMarkup)));
             return item;
         }
 

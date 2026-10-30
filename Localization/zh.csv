@@ -45,7 +45,7 @@ booster_open_confirm,要拆开 {0} 补充包吗？\n拆开后无法复原。
 
 # 收藏盒
 box_name,收藏盒
-box_desc,用于收纳一整套卡牌的展示盒。放入该系列每张卡各一张后即可封装：封装的套卡比散卡卖得更贵一些。
+box_desc,一套卡牌的展示盒。每放进一张卡就多出一个格子。每张卡各放一张后即可封装：封装的套装比散卡更值钱。加入超稀有卡可组成大师套装，价值更高。
 box_panel_cards,卡牌
 box_panel_seal,封装
 box_seal_button,封装套卡
@@ -372,3 +372,4 @@ upgrade_tier2_title,Zamco 二级授权
 upgrade_tier2_desc,Zamco 的高级系列：Restored Grace、Broodmother's Clutch、Neural Tap 和 Fate's End。卡牌更强、价格更高，在 Downside Den 有售，卡牌顾客也会带来。附赠一包样品。
 upgrade_tier3_title,Zamco 三级授权
 upgrade_tier3_desc,Zamco 的旗舰系列：Ascension、Singularity 和 Recursion。Zamco 最强的卡牌，价格也相称。附赠一包样品。
+box_status_master,{0} 大师套装，含超稀有卡。封装可得双倍加成。
