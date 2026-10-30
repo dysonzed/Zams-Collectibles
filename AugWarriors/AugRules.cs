@@ -120,11 +120,20 @@ namespace ZamsCollectibles.AugWarriors
         /// <summary>Where a card can be played this turn: own slots for augments and mods, the opponent's for hacks.</summary>
         public List<Slot> Targets(CardDef card) => AugRules.Targets(Current, Opponent, card);
 
+        /// <summary>Whether the current player has any card they can play.</summary>
+        public bool HasPlay() => Current.hand.Any(c => Targets(c).Count > 0);
+
+        // You must play a card or call the showdown. With nothing playable you must call; on the
+        // last turn (no second call) the turn simply ends.
         public bool IsLegal(AugAction action)
         {
             if (over) return false;
-            if (action.kind != ActionKind.Play) return action.kind != ActionKind.CallShowdown || !finalTurn;
-            return Current.hand.Contains(action.card) && Targets(action.card).Contains(action.target);
+            switch (action.kind)
+            {
+                case ActionKind.Hold: return finalTurn && !HasPlay();   // nothing playable on the last turn: it just ends
+                case ActionKind.CallShowdown: return !finalTurn;
+                default: return Current.hand.Contains(action.card) && Targets(action.card).Contains(action.target);
+            }
         }
 
         public void Apply(AugAction action)

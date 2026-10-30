@@ -48,7 +48,7 @@ namespace ZamsCollectibles
         public override string ImageKey => $"{ModEntry.MOD_ID}:den_card";
         public override string BackgroundKey => $"{ModEntry.MOD_ID}:den_scene";
         public override string GetTitle() => Loc.Get("den_name");
-        public override bool IsDiscovered() => true;
+        public override bool IsDiscovered() => Progression.DenUnlocked;   // found through Wild's Network
 
         // The board sits inside the frame painted on the right of den_scene.png; the counter
         // (where items are dropped to trade) is in the same place as Jackson's.

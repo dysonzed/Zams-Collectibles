@@ -149,7 +149,7 @@ aug_select,选择
 aug_selected,已选
 aug_pick_card,选择一张卡，或跳过。
 aug_pick_target,选择放置位置。
-aug_hold,跳过
+aug_hold,放弃
 aug_call,发起对决
 aug_concede,认输
 aug_log,记录
@@ -208,10 +208,9 @@ aug_title_vs,Aug Warriors 对阵 {0}
 aug_board_them,对手
 aug_board_you,你的义体人
 aug_board_stats,力量 {0} · 故障 {1} / {2}
-aug_board_your_turn,你的回合：把卡拖到你的义体人上，或跳过。
-aug_board_final_turn,最后一回合！把卡拖到你的义体人上，或跳过。
+aug_board_your_turn,你的回合：把卡拖到义体人上，或发起对决。
+aug_board_final_turn,最后一回合！把卡拖到义体人上。
 aug_board_their_turn,{0} 正在思考……
-aug_hold_desc,本回合不出牌。
 aug_call_desc,结束对局：对手还有最后一回合，然后对决。
 aug_board_part,{0}：{1} · 力 {2} · 障 {3}
 aug_board_part_empty,{0}：空
@@ -223,3 +222,43 @@ aug_log_replace_you,你用 {1} 替换了 {2}。
 aug_log_mod_you,你把 {1} 装到 {2} 上。
 aug_log_hack_you,你用 {1} 骇入 {2}：故障 +{3}。
 aug_log_scrap_you,你用 {1} 废掉了 {2}。
+aug_board_power,力量 {0}
+aug_board_stability,稳定 · 已用 {0}/{1}
+aug_board_compromised,失控 · 故障 {0} 超过 {1}
+aug_board_stuck,没有可出的牌：你必须发起对决。
+aug_board_stuck_final,没有可出的牌：你的最后一回合结束。
+aug_toss_call,掷硬币！请猜。
+aug_toss_heads,正面
+aug_toss_tails,反面
+aug_toss_flipping,硬币翻转中……
+aug_toss_won,{0}！你猜对了。先手还是后手？
+aug_toss_lost_first,{0}！{1} 赢得掷币，选择先手。
+aug_toss_lost_second,{0}！{1} 赢得掷币，让你先手。
+aug_toss_first,先手
+aug_toss_second,后手
+aug_log_first,{0} 先手。
+aug_log_first_you,你先手。
+
+# 进度：Wild 网络升级、卡包贩子
+upgrade_den_title,下城据点
+upgrade_den_desc,Wild 知道下城区有家卡牌店：下城据点。卡包、单卡、Aug Warriors 对战，还有想找人组卡组的人。
+client_pack_flipper,卡包贩子
+client_pack_flipper_line,捡到几包 Aug Warriors 卡包。还没拆，我发誓。要吗？
+
+# 卡组订单
+client_deck_order,组卡客
+client_deck_order_line,我需要组一副 Aug Warriors 卡组，听说你懂卡。
+client_deck_order_wants,这是我的卡组盒。我需要：{0}
+order_box_name,卡组订单
+order_box_desc,客人的卡组盒。按订单（见清单）装好，放回柜台交给客人。
+order_tooltip_header,订单要求：
+order_tooltip_bonus,卡钱之外另付：{0}
+order_req_size,至少 {0} 张卡
+order_req_set,{0}+ 张{1}卡
+order_req_power,{0}+ 张力量 {1}+ 的义体
+order_req_slot,{0}+ 张{1}义体
+order_req_hacks,{0}+ 张骇入
+order_req_mods,{0}+ 张改装件
+order_req_rarity,{0}+ 张{1}卡
+client_deck_order_extras,以下另付：{0}。
+order_tooltip_extras,额外要求（可选，多付钱）：

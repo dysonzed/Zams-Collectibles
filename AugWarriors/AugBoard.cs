@@ -61,6 +61,19 @@ namespace ZamsCollectibles.AugWarriors
         private static Action<int?> onFinished;
         private static readonly Queue<AugAction> pending = new Queue<AugAction>();
         private static float nextNpcMove;
+
+        // coin toss: the player calls it; the winner picks who goes first
+        private enum Toss { Call, Flipping, Lost, Choose, Done }
+        private static Toss toss = Toss.Done;
+        private static System.Random tossRng;
+        private static bool calledHeads, landedHeads;
+        private static bool npcGoesFirst;
+        private const int NPC_FIRST_CHANCE = 25;   // percent: an NPC that wins the toss usually goes second (it wins more often)
+        private static float tossStart;
+        private const float FLIP_TIME = 1.6f, LOST_PAUSE = 1.8f;
+        private static SpritePixelElement coin;
+        private static MachineryText coinSpace;   // a gap under the coin while it shows
+        private static MachineryButton choiceA, choiceB;
         private static bool bounced;     // the last drop wasn't legal and went back to the hand
         private static bool resync;      // redraw on the next frame (never inside the game's drop callbacks)
 
@@ -70,11 +83,12 @@ namespace ZamsCollectibles.AugWarriors
         private static readonly MachineryText[,] partText = new MachineryText[2, AugRules.SLOTS];
         private static readonly MachineryText[] statText = new MachineryText[2];
         private static readonly MachineryProgressBar[] powerBar = new MachineryProgressBar[2];
-        private static readonly MachineryProgressBar[] glitchBar = new MachineryProgressBar[2];
+        private static readonly SpritePixelElement[] stabilityBar = new SpritePixelElement[2];
+        private static readonly MachineryText[] stabilityText = new MachineryText[2];
         private static readonly MachineryText[] logText = new MachineryText[3];
         private static GameGridInventory hand;
         private static MachineryText statusText;
-        private static MachineryButton holdButton, callButton, endButton;
+        private static MachineryButton callButton, endButton;
         private static bool syncing;     // the board is being redrawn: grids accept anything, nothing is a move
         private static GameObject runner;
 
@@ -90,7 +104,8 @@ namespace ZamsCollectibles.AugWarriors
             AugPlayer you = new AugPlayer(Loc.Get("aug_you"), deck ?? AugAI.BuildDeck(pool, AugPersonality.Cautious, rng));
             AugPlayer them = new AugPlayer(opponentName, AugAI.BuildDeck(pool, style, rng));
             match = new AugMatch(you, them, rng.Next());
-            if (rng.Next(2) == 1) match.current = NPC;   // coin flip for who starts
+            toss = Toss.Call;            // who starts is settled by the coin toss before play
+            tossRng = rng;
             npcName = opponentName;
             npcStyle = style;
             ante = stake;
@@ -115,6 +130,7 @@ namespace ZamsCollectibles.AugWarriors
         private static void Update()
         {
             if (match == null) return;
+            if (toss != Toss.Done) { UpdateToss(); return; }
             if (resync) { resync = false; Sync(); return; }
             if (pending.Count > 0)
             {
@@ -213,7 +229,7 @@ namespace ZamsCollectibles.AugWarriors
             if (syncing) return true;
             if (who != HUMAN || !IsMatchCard(item) || item.parentInventory != hand) return false;
             CardDef card = CardItems.GetCardDef(item);
-            return card != null && card.kind == AugRules.AUGMENT && match != null && !match.over && match.current == HUMAN;
+            return card != null && card.kind == AugRules.AUGMENT && match != null && toss == Toss.Done && !match.over && match.current == HUMAN;
         }
 
         private static void OnDropOnBoard(GameItem item, int who)
@@ -228,7 +244,7 @@ namespace ZamsCollectibles.AugWarriors
         // A card dropped onto an installed card: replace it, attach a mod, or hack it.
         private static AugAction? TargetAction(GameItem source, GameItem target)
         {
-            if (match == null || match.over || match.current != HUMAN) return null;
+            if (match == null || toss != Toss.Done || match.over || match.current != HUMAN) return null;
             if (!IsMatchCard(source) || source.parentInventory != hand || !IsMatchCard(target)) return null;
             int who = BoardOf(target.parentInventory);
             if (who < 0 || !PocketOf(target, out Slot slot)) return null;
@@ -262,6 +278,9 @@ namespace ZamsCollectibles.AugWarriors
             board.mayInventoryRemoveItemFunc = (_, _) => syncing;
             board.onSlotAddItemEndFunc += (item, _, _) => OnDropOnBoard(item, owner);
             boards[who] = board;
+            // the skeleton shows in the empty pockets: parts are bolted onto a body
+            foreach (var cell in AugArt.Skeleton(BOARD_WIDTH, BoardShape.Length / BOARD_WIDTH))
+                if (BoardShape[cell.Key.y * BOARD_WIDTH + cell.Key.x] == '0') board.SetCellBackdrop(cell.Key.x, cell.Key.y, cell.Value);
 
             List<PixelElement> rows = new List<PixelElement> { board };
             for (int s = 0; s < AugRules.SLOTS; s++)
@@ -271,10 +290,16 @@ namespace ZamsCollectibles.AugWarriors
             }
             statText[who] = new MachineryText();
             powerBar[who] = new MachineryProgressBar(0f).SetColor(PowerColor);
-            glitchBar[who] = new MachineryProgressBar(0f);
+            stabilityText[who] = new MachineryText(null, 6, TMPro.HorizontalAlignmentOptions.Center, true);
+            stabilityBar[who] = new SpritePixelElement("Items/items_misc", "postit");
+            // the element takes its size from the sprite it has when laid out, so give it the bar's
+            // fixed-width canvas now (later bars are the same size and stay centred)
+            stabilityBar[who].SetSprite(AugArt.StabilityBar(who, AugRules.BASE_STABILITY, 0));
+            stabilityBar[who].Validate();
             rows.Add(statText[who]);
             rows.Add(powerBar[who]);
-            rows.Add(glitchBar[who]);
+            rows.Add(stabilityText[who]);
+            rows.Add(stabilityBar[who]);
             return MachineryStack.Vertical(rows.ToArray());
         }
 
@@ -284,11 +309,16 @@ namespace ZamsCollectibles.AugWarriors
             hand.mayInventoryAddItemFunc = (item, _) => syncing || item.parentInventory == hand;   // rearranging only
             statusText = new MachineryText(null, 6, TMPro.HorizontalAlignmentOptions.Left, false);
             for (int i = 0; i < logText.Length; i++) logText[i] = new MachineryText(null, 5, TMPro.HorizontalAlignmentOptions.Left, false);
-            holdButton = new MachineryButton(Loc.Get("aug_hold"), () => Queue(AugAction.Hold)).SetDescription(Loc.Get("aug_hold_desc"));
             callButton = new MachineryButton(Loc.Get("aug_call"), () => Queue(AugAction.Call)).SetDescription(Loc.Get("aug_call_desc"));
             endButton = new MachineryButton(Loc.Get("aug_concede"), () => { window.Hide(); Finish(); });
-            return MachineryStack.Vertical(hand, statusText, logText[0], logText[1], logText[2],
-                MachineryStack.Horizontal(holdButton, callButton, endButton));
+            coin = new SpritePixelElement("Items/items_misc", "postit");
+            coin.SetSprite(AugArt.Coin(true, 1f));   // sized from its sprite at layout: the coin's size
+            coin.Validate();
+            choiceA = new MachineryButton(Loc.Get("aug_toss_heads"), () => ChoiceA());
+            choiceB = new MachineryButton(Loc.Get("aug_toss_tails"), () => ChoiceB());
+            coinSpace = new MachineryText(" ");
+            return MachineryStack.Vertical(hand, coin, coinSpace, statusText, MachineryStack.Horizontal(choiceA, choiceB), logText[0], logText[1], logText[2],
+                MachineryStack.Horizontal(callButton, endButton));
         }
 
         // Redraws the board from the rules engine's state.
@@ -324,25 +354,128 @@ namespace ZamsCollectibles.AugWarriors
                 for (int i = 0; i < logText.Length; i++)
                     logText[i].SetText(i < recent.Count ? AugMatchWindow.LogLine(recent[i]) : "");
 
-                if (match.over)
+                ShowToss();
+                if (toss != Toss.Done)
+                {
+                    callButton.Disable();
+                    endButton.SetText(Loc.Get("aug_concede"));
+                }
+                else if (match.over)
                 {
                     Settle();
                     statusText.SetText(Verdict());
-                    holdButton.Disable(); callButton.Disable();
+                    callButton.Disable();
                     endButton.SetText(Loc.Get("aug_close"));
                 }
                 else
                 {
                     bool mine = match.current == HUMAN;
+                    bool stuck = mine && !match.HasPlay();
                     statusText.SetText(!mine ? Loc.Get("aug_board_their_turn", npcName)
+                        : stuck ? Loc.Get(match.finalTurn ? "aug_board_stuck_final" : "aug_board_stuck")
                         : bounced ? Loc.Get("aug_board_bounced")
                         : match.finalTurn ? Loc.Get("aug_board_final_turn") : Loc.Get("aug_board_your_turn"));
-                    if (mine) holdButton.Enable(); else holdButton.Disable();
+                    // nothing playable on the last turn: it ends on its own
+                    if (stuck && match.finalTurn) pending.Enqueue(AugAction.Hold);
                     if (mine && !match.finalTurn) callButton.Enable(); else callButton.Disable();
                     endButton.SetText(Loc.Get("aug_concede"));
                 }
             }
             finally { syncing = false; }
+        }
+
+        // ------------------------------------------------------------ coin toss
+
+        // The two choice buttons: heads / tails to call it, then go first / go second.
+        private static void ChoiceA()
+        {
+            if (toss == Toss.Call) Flip(heads: true);
+            else if (toss == Toss.Choose) StartPlay(HUMAN);
+        }
+
+        private static void ChoiceB()
+        {
+            if (toss == Toss.Call) Flip(heads: false);
+            else if (toss == Toss.Choose) StartPlay(NPC);
+        }
+
+        private static void Flip(bool heads)
+        {
+            calledHeads = heads;
+            landedHeads = tossRng.Next(2) == 0;
+            npcGoesFirst = tossRng.Next(100) < NPC_FIRST_CHANCE;   // only used if the NPC wins the toss
+            toss = Toss.Flipping;
+            tossStart = Time.time;
+            resync = true;
+        }
+
+        private static void StartPlay(int first)
+        {
+            match.current = first;
+            toss = Toss.Done;
+            nextNpcMove = Time.time + NPC_DELAY;
+            match.log.Add(new AugEvent("aug_log_first", match.players[first].name));
+            resync = true;
+        }
+
+        // Runs every frame during the toss: the spinning coin, then the loser's pause.
+        private static void UpdateToss()
+        {
+            float t = Time.time - tossStart;
+            if (resync) { resync = false; Sync(); }
+            if (toss == Toss.Flipping)
+            {
+                if (t < FLIP_TIME)
+                {
+                    // spins fast, then slows: the angle eases out over the flip
+                    float eased = 1f - (1f - t / FLIP_TIME) * (1f - t / FLIP_TIME);
+                    float angle = eased * Mathf.PI * 9f;
+                    bool face = Mathf.Cos(angle) >= 0f ? landedHeads : !landedHeads;
+                    coin.SetSprite(AugArt.Coin(face, Mathf.Abs(Mathf.Cos(angle))));
+                    return;
+                }
+                bool won = calledHeads == landedHeads;
+                toss = won ? Toss.Choose : Toss.Lost;
+                tossStart = Time.time;
+                Sync();
+            }
+            else if (toss == Toss.Lost && t >= LOST_PAUSE)
+            {
+                StartPlay(npcGoesFirst ? NPC : HUMAN);
+            }
+        }
+
+        private static void ShowToss()
+        {
+            bool tossing = toss != Toss.Done;
+            if (tossing) { coin.Show(); coin.SetSprite(AugArt.Coin(toss == Toss.Call || landedHeads, 1f)); }
+            else coin.Hide();   // gone once play starts
+            coinSpace.SetText(tossing ? " " : "");
+            string face = Loc.Get(landedHeads ? "aug_toss_heads" : "aug_toss_tails");
+            switch (toss)
+            {
+                case Toss.Call:
+                    statusText.SetText(Loc.Get("aug_toss_call"));
+                    choiceA.SetText(Loc.Get("aug_toss_heads")); choiceB.SetText(Loc.Get("aug_toss_tails"));
+                    choiceA.Show(); choiceB.Show();
+                    break;
+                case Toss.Flipping:
+                    statusText.SetText(Loc.Get("aug_toss_flipping"));
+                    choiceA.Hide(); choiceB.Hide();
+                    break;
+                case Toss.Choose:
+                    statusText.SetText(Loc.Get("aug_toss_won", face));
+                    choiceA.SetText(Loc.Get("aug_toss_first")); choiceB.SetText(Loc.Get("aug_toss_second"));
+                    choiceA.Show(); choiceB.Show();
+                    break;
+                case Toss.Lost:
+                    statusText.SetText(Loc.Get(npcGoesFirst ? "aug_toss_lost_first" : "aug_toss_lost_second", face, npcName));
+                    choiceA.Hide(); choiceB.Hide();
+                    break;
+                default:
+                    choiceA.Hide(); choiceB.Hide();
+                    break;
+            }
         }
 
         // A temporary, unowned card item showing the card's mini face.
@@ -391,11 +524,11 @@ namespace ZamsCollectibles.AugWarriors
         private static void Stats(int who)
         {
             AugScore s = AugRules.Score(match.players[who], match.caller == who);
-            statText[who].SetStatus(match.players[who].name, Loc.Get("aug_board_stats", s.power, s.glitch, s.stability));
+            statText[who].SetStatus(match.players[who].name, Loc.Get("aug_board_power", s.power));
             powerBar[who].SetValue(Mathf.Clamp01(s.power / POWER_BAR_MAX));
-            float load = s.stability > 0 ? (float)s.glitch / s.stability : 1f;
-            glitchBar[who].SetValue(Mathf.Clamp01(load));
-            glitchBar[who].SetColor(s.glitch > s.stability ? Bad : load >= 0.75f ? Risky : Good);
+            stabilityText[who].SetText(s.compromised ? Loc.Get("aug_board_compromised", s.glitch, s.stability) : Loc.Get("aug_board_stability", s.glitch, s.stability));
+            stabilityText[who].SetColor(s.compromised ? Bad : s.glitch >= s.stability ? Risky : Good);
+            stabilityBar[who].SetSprite(AugArt.StabilityBar(who, s.stability, s.glitch));
         }
 
         private static string Verdict()

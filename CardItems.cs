@@ -27,7 +27,8 @@ namespace ZamsCollectibles
         public static string CardId(CardDef card) => $"{ModEntry.MOD_ID}.card.{card.set.id}.{card.number:000}";
         public static string BoosterId(CardSetDef set) => $"{ModEntry.MOD_ID}.booster.{set.id}";
         public static string BundleId(CardSetDef set) => $"{ModEntry.MOD_ID}.set.{set.id}";
-        // Booster packs and boxes are sold only at the Downside Den: don't add them to loot tables or other shops.
+        // Booster boxes are sold only at the Downside Den; packs there, and by chance from a pack
+        // flipper customer or Dr. Jackson (see Progression). Keep them out of loot tables.
         public static string BoosterBoxId(CardSetDef set) => $"{ModEntry.MOD_ID}.boosterbox.{set.id}";
         public static string OpenedBoxId(CardSetDef set) => $"{ModEntry.MOD_ID}.boosterbox_open.{set.id}";
 
@@ -57,6 +58,7 @@ namespace ZamsCollectibles
             textByItemId[COLLECTOR_BOX_ID] = SetBoxText;
             CardBinder.Register(dir, textByItemId);
             AugWarriors.DeckBox.Register(dir, textByItemId);
+            DeckOrders.Register(dir, textByItemId);
         }
 
         /// <summary>Re-applies an item's name and descriptions in the current language; false if it isn't ours.</summary>
@@ -303,7 +305,11 @@ namespace ZamsCollectibles
             SetOpenedBoxText(item, set);
             item.SetGameItemType(Collectibles.TYPE);
             item.SetValue(OPENED_BOX_VALUE);
-            ContainerHelper.InitContainerItem(grid, item, allowedId: new List<string> { BoosterId(set) });
+            // An empty tag list matters: with no tag list at all the game lets anything in.
+            ContainerHelper.InitContainerItem(grid, item, allowedTags: new List<string>(), allowedId: new List<string> { BoosterId(set) });
+            // Emptied boxes go away when their window is closed (not the moment the last pack
+            // leaves: a cancelled drag of that pack would have nowhere to return to).
+            window.closeCallback += () => { if (grid.childItems.Count == 0 && item.parentInventory != null) item.Destroy(); };
             TrackContainerValue(item, OPENED_BOX_VALUE, grid);
             return item;
         }
@@ -437,10 +443,14 @@ namespace ZamsCollectibles
         /// scratch on every change: the game re-adds the contents when a save loads, so adding
         /// and subtracting deltas (ContainerHelper's value rule) would count them twice.
         /// </summary>
-        public static void TrackContainerValue(GameItem container, long ownValue, params GameGridInventory[] grids)
+        public static void TrackContainerValue(GameItem container, long ownValue, params GameGridInventory[] grids) =>
+            TrackContainerValue(container, () => ownValue, grids);
+
+        /// <summary>As above, with the container's own value read when it changes (e.g. from a tag).</summary>
+        public static void TrackContainerValue(GameItem container, Func<long> ownValue, params GameGridInventory[] grids)
         {
             void Recompute(GameItem _, GameInventory __, SlotMarker ___) =>
-                container.SetValue(ownValue + grids.Sum(g => g.childItems.Sum(c => c.unitValue * Math.Max(1, c.unitCount))));
+                container.SetValue(ownValue() + grids.Sum(g => g.childItems.Sum(c => c.unitValue * Math.Max(1, c.unitCount))));
             foreach (GameGridInventory grid in grids)
             {
                 grid.onSlotAddItemEndFunc += Recompute;

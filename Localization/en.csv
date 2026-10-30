@@ -149,7 +149,7 @@ aug_select,Select
 aug_selected,Selected
 aug_pick_card,"Select a card to play, or hold."
 aug_pick_target,Pick where it goes.
-aug_hold,Hold
+aug_hold,Pass
 aug_call,Call Showdown
 aug_concede,Concede
 aug_log,Log
@@ -208,10 +208,9 @@ aug_title_vs,Aug Warriors vs {0}
 aug_board_them,Opponent
 aug_board_you,Your Aug
 aug_board_stats,Power {0} · Glitch {1} / {2}
-aug_board_your_turn,"Your turn: drag a card onto your Aug, or Hold."
-aug_board_final_turn,"Last turn! Drag a card onto your Aug, or Hold."
+aug_board_your_turn,"Your turn: drag a card onto an Aug, or call the showdown."
+aug_board_final_turn,"Last turn! Drag a card onto an Aug."
 aug_board_their_turn,{0} is thinking…
-aug_hold_desc,Play nothing this turn.
 aug_call_desc,"End the game: your opponent gets one last turn, then the showdown."
 aug_board_part,"{0}: {1} · P {2} · G {3}"
 aug_board_part_empty,{0}: empty
@@ -223,3 +222,43 @@ aug_log_replace_you,You install {1} over {2}.
 aug_log_mod_you,You attach {1} to {2}.
 aug_log_hack_you,"You hack {2} with {1}: +{3} Glitch."
 aug_log_scrap_you,You scrap {2} with {1}.
+aug_board_power,Power {0}
+aug_board_stability,Stability · {0} of {1} used
+aug_board_compromised,COMPROMISED · Glitch {0} over {1}
+aug_board_stuck,"No card you can play: you must call the showdown."
+aug_board_stuck_final,"No card you can play: your last turn ends."
+aug_toss_call,Coin toss! Call it.
+aug_toss_heads,Heads
+aug_toss_tails,Tails
+aug_toss_flipping,Flipping…
+aug_toss_won,"{0}! You called it. Go first or second?"
+aug_toss_lost_first,"{0}! {1} wins the toss and goes first."
+aug_toss_lost_second,"{0}! {1} wins the toss and lets you go first."
+aug_toss_first,Go first
+aug_toss_second,Go second
+aug_log_first,{0} goes first.
+aug_log_first_you,You go first.
+
+# Progression: Wild's Network upgrade, pack flipper
+upgrade_den_title,Downside Den
+upgrade_den_desc,"Wild knows a card shop down in the lower section: the Downside Den. Packs, singles, Aug Warriors matches, and people who want decks built."
+client_pack_flipper,Pack Flipper
+client_pack_flipper_line,"Found some Aug Warriors packs. Still sealed, I swear. Want 'em?"
+
+# Deck orders
+client_deck_order,Deck Builder
+client_deck_order_line,"I need an Aug Warriors deck built, and I hear you know cards."
+client_deck_order_wants,"Here's my box. I need {0}"
+order_box_name,Deck Order
+order_box_desc,"A customer's deck box. Fill it to their order (see the list) and hand it back on the counter."
+order_tooltip_header,The order:
+order_tooltip_bonus,"Pays on top of the cards: {0}"
+order_req_size,at least {0} cards
+order_req_set,{0}+ {1} cards
+order_req_power,{0}+ augments with {1}+ Power
+order_req_slot,{0}+ {1} augments
+order_req_hacks,{0}+ hacks
+order_req_mods,{0}+ mods
+order_req_rarity,{0}+ {1} cards
+client_deck_order_extras,"I'll pay extra for: {0}."
+order_tooltip_extras,"Extras (optional, pay more):"

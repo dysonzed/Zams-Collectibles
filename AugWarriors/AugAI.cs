@@ -28,8 +28,9 @@ namespace ZamsCollectibles.AugWarriors
             float now = Value(me, style, called: false);
             float theirs = AugRules.Score(opponent, false).final;
 
+            // The best play, even if it hurts: holding is only allowed with nothing playable.
             AugAction best = AugAction.Hold;
-            float bestGain = 0f;
+            float bestGain = float.NegativeInfinity;
             foreach (CardDef card in me.hand.Distinct())
             {
                 foreach (Slot target in match.Targets(card))
@@ -46,7 +47,9 @@ namespace ZamsCollectibles.AugWarriors
                 bool lastTurn = me.turnsTaken >= AugRules.MAX_TURNS - 1;
                 if (lead >= style.callLead && bestGain < 2f) return AugAction.Call;
                 if (lastTurn && lead > 0 && bestGain < 1f) return AugAction.Call;
+                if (lead > 0 && bestGain < 0f) return AugAction.Call;   // every play would hurt: stop while ahead
             }
+            if (float.IsNegativeInfinity(bestGain)) return match.finalTurn ? AugAction.Hold : AugAction.Call;   // nothing playable
             return best;
         }
 

@@ -34,6 +34,9 @@ namespace ZamsCollectibles
             ModHook.OnCreateTooltipLate += OnCreateTooltip;
             ModHook.OnCreateDevTooltipLate += OnCreateDevTooltip;
             ModHook.OnGenerateCustomerLate += Collectibles.OnGenerateCustomer;
+            ModHook.OnGenerateCustomerNormal += Progression.OnGenerateCustomer;
+            ModHook.OnPlaceInventorInventoryItemLate += Progression.OnInventorStock;
+            Progression.Register();
             ModHook.OnGameLoadedLate += OnGameLoaded;
             DownsideDen.Register();
             RegisterDebugButtons();
@@ -46,6 +49,9 @@ namespace ZamsCollectibles
             ModHook.OnCreateTooltipLate -= OnCreateTooltip;
             ModHook.OnCreateDevTooltipLate -= OnCreateDevTooltip;
             ModHook.OnGenerateCustomerLate -= Collectibles.OnGenerateCustomer;
+            ModHook.OnGenerateCustomerNormal -= Progression.OnGenerateCustomer;
+            ModHook.OnPlaceInventorInventoryItemLate -= Progression.OnInventorStock;
+            ModHelper.RemoveNetworkUpgrades(MOD_ID);
             ModHook.OnGameLoadedLate -= OnGameLoaded;
             ModHelper.RemoveAfterhourLocations(MOD_ID);
             ModHelper.RemoveDebugFunctions(MOD_ID);
@@ -54,6 +60,8 @@ namespace ZamsCollectibles
 
         private void OnCreateTooltip(RichTextBuilder builder, GameItem item)
         {
+            if (DeckOrders.IsOrderBox(item)) { DeckOrders.Tooltip(builder, item); return; }
+
             if (item.IsTag(CardItems.BUNDLE_TAG))
             {
                 float avg = item.GetTagReadonly(CardItems.BUNDLE_AVG_CONDITION_FLOAT).GetFloat();
@@ -112,8 +120,6 @@ namespace ZamsCollectibles
         // One F9 button that opens our own debug window, so the shared menu stays uncluttered.
         private const string DEBUG_WINDOW_ID = MOD_ID + ".debug";
 
-        // One card per condition label, for checking the wear and icons.
-        private static readonly float[] DebugConditions = { 9.8f, 9.0f, 7.8f, 6.0f, 4.0f, 1.5f };
 
         private void RegisterDebugButtons()
         {
@@ -152,9 +158,11 @@ namespace ZamsCollectibles
                         foreach (CardDef card in set.cards)
                             ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardItems.CardId(card)));
                     })
-                    .AddButton("Rust Rat in Every Condition", SpawnConditionRats)
                     .AddHeader("Command")
                     // Stand-in for a real grading service: grades every card in the player's inventory.
+                    .AddButton("Unlock Downside Den", () => { ModHelper.GetNetworkUpgrade(Progression.DEN_UPGRADE)?.Unlock(); Log.Log("Downside Den unlocked."); })
+                    .AddButton("Next Customer: Deck Builder", () => NextCustomer(DeckOrders.CreateCustomer()))
+                    .AddButton("Next Customer: Pack Flipper", () => NextCustomer(Progression.CreatePackFlipper()))
                     .AddButton("Grade Inventory Cards", () =>
                     {
                         int graded = 0;
@@ -168,17 +176,14 @@ namespace ZamsCollectibles
                 .Show();
         }
 
-        private void SpawnConditionRats()
+        // Puts a customer at the front of the queue: they are the next to walk in.
+        private void NextCustomer(StoreClient client)
         {
-            CardDef rat = CardDatabase.SetsById.TryGetValue("scrapyard", out CardSetDef set) ? set.cards.FirstOrDefault(c => c.number == 1) : null;
-            if (rat == null) return;
-            foreach (float condition in DebugConditions)
-            {
-                GameItem card = ModHelper.SpawnItem(CardItems.CardId(rat));
-                CardItems.SetCondition(card, condition);
-                ModHelper.MoveItemToInventory(card);
-                Log.Log($"Spawned Rust Rat at {condition:0.0} ({CardCondition.Label(condition)}).");
-            }
+            StoreClientManager manager = PlayerStore.Instance?.storeClientManager;
+            if (manager == null) return;
+            ModHelper.SetClientSource(client, MOD_ID);
+            manager.clientStack.Insert(0, client);
+            Log.Log($"Next customer: {client.displayName}.");
         }
 
         private static RenderHandler.ColorPalette ParseColor(string name) =>
