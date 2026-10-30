@@ -717,3 +717,18 @@ guide_p7_2,把卡组盒放进卡组槽，然后选择赌注：
 guide_p7_3,- 信用点：赢家通吃。
 guide_p7_4,- 卡牌：赢了保留自己的卡，再得一张同稀有度的新卡（有时更好，常常是你还没有的）。输了卡归对手。
 guide_p7_5,也可以什么都不押，只为荣誉而战。
+order_req_graded,{0}+ 张评级卡
+order_req_condition,{0}+ 张近全新或更好的卡
+order_req_legal,一副合规的 Aug Warriors 卡组（至少 10 张，同名最多 2 张）
+order_req_grade9,一张等级 9 或以上的评级卡
+order_req_effect,{0}+ 张带特殊能力的卡
+order_req_glitch_free,{0}+ 个没有故障的义体
+order_req_risky,{0}+ 个故障 3 或以上的义体
+order_req_stability,{0}+ 张增加稳定度的卡
+order_req_variety,来自 {0}+ 个不同系列的卡
+order_req_playset,{0}+ 组成对的卡（两张相同）
+order_req_tier,{0}+ 张 {1} 级或更高系列的卡
+order_req_full_body,完整身体：头部、躯干、两条手臂和腿部
+order_req_mono_set,只用同一个系列的卡（任选一个系列）
+order_req_no_hacks,没有骇入卡
+order_req_budget,只有普通和非普通卡

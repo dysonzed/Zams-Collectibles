@@ -373,3 +373,18 @@ guide_p7_2,"Put your deck box in the Deck slot, then choose your stakes:"
 guide_p7_3,- Credits: the winner takes the pot.
 guide_p7_4,"- A card: win and you keep it, plus a new card of the same rarity (sometimes better, often one you don't own yet). Lose and your opponent keeps it."
 guide_p7_5,"Or play for nothing at all, just for the glory."
+order_req_graded,{0}+ graded cards
+order_req_condition,{0}+ cards in Near Mint or better
+order_req_legal,"A legal Aug Warriors deck (10+ cards, at most 2 of each)"
+order_req_grade9,A graded card of grade 9 or better
+order_req_effect,{0}+ cards with special abilities
+order_req_glitch_free,{0}+ augments with no Glitch
+order_req_risky,{0}+ augments with Glitch 3 or more
+order_req_stability,{0}+ cards that add Stability
+order_req_variety,Cards from {0}+ different sets
+order_req_playset,{0}+ cards in pairs (two copies)
+order_req_tier,{0}+ cards from Tier {1} or higher
+order_req_full_body,"A full body: head, torso, two arms and legs"
+order_req_mono_set,Only cards from one set (any one)
+order_req_no_hacks,No hacks
+order_req_budget,Only commons and uncommons
