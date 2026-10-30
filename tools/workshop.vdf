@@ -70,5 +70,12 @@ Zamco 电子把 Aug Warriors 集换式卡牌游戏带到了空间站。拆补充
 [*]新顾客：补充包贩子、组卡客和卡牌评级师；新开局：卡牌经销商
 [/list]
 支持简体中文。注意：停用或移除本模组后，其物品会从你的商店中消失。"
-	"changenote"		"Version 0.2.1: full Simplified Chinese translation, including every card's name, rules and flavour text. 新增完整的简体中文翻译，包括所有卡牌的名称、规则和风味文字。"
+	"changenote"		"Version 0.2.2: smarter deck builders.
+
+- Order pay now scales with the tier of the cards involved
+- Power requests rise as you license higher tiers
+- Some orders ask for a real, legal Aug Warriors deck
+- A much larger pool of optional extras: graded cards, grade 9+ slabs, Near Mint cards, single-set and multi-set decks, pairs, a full body, budget decks, no-hack decks and more
+
+版本 0.2.2：组卡客更聪明了。订单报酬随卡牌等级提高；力量要求随授权等级上升；部分订单要求一副合规的 Aug Warriors 卡组；新增大量可选额外要求。"
 }
