@@ -3,7 +3,7 @@
   <ID>zams-collectibles</ID>
   <Name>Zam's Collectibles</Name>
   <Author>Zam</Author>
-  <ModVersion>0.2</ModVersion>
+  <ModVersion>0.2.1</ModVersion>
   <Description>Zamco Electronics brings the Aug Warriors trading card game to the station: ten card sets across three power tiers, booster packs and boxes to open, cards to grade and sell, sets to seal, a card shop after hours, and a full card game to play. Cards are mod items: they are lost if the mod is disabled.</Description>
   <GameVersions>
     <Version>0.46</Version>

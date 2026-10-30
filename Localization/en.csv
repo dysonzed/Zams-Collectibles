@@ -278,6 +278,31 @@ scenario_start_gear,Deck box and collection binder
 scenario_start_certificate,Zamco Authorized Dealer Certificate
 scenario_tag,Collectibles
 aug_board_glitch,Glitch · {0}
+client_grader,Card Grader
+grader_offer,"Evening. I grade cards: I check them over properly and seal them in a slab with their grade. {0} credits a card, back tomorrow. Interested?"
+grader_choice_yes,Let's grade some cards
+grader_choice_no,Not today
+grader_accepted,"Great. My case holds {0} cards today. Put in the ones you want graded."
+grader_declined,"No problem. Another time."
+grader_submitted,"{0} cards. I'll have them back to you first thing tomorrow."
+grader_return,"Back as promised. Your cards, graded and slabbed."
+grader_title,Card Grading
+grader_case,Grading case ({0} slots)
+grader_cost,"{0} cards: {1} credits"
+grader_submit,Submit for grading
+slab_label,AUG WARRIORS · GRADE {0} · {1}
+aug_log_hack_on,{0} plays {1} on {2}.
+aug_log_hack_on_you,You play {1} on {2}.
+aug_log_blocked,{0}'s {1} is blocked.
+aug_log_blocked_you,Your {1} is blocked.
+aug_log_steal,{0}'s {1} steals {2}.
+aug_log_steal_you,Your {1} steals {2}.
+upgrade_card_zamco,Zamco Distribution
+upgrade_tier2_title,Zamco Tier 2 License
+upgrade_tier2_desc,"Zamco's premium lines: Restored Grace, Broodmother's Clutch, Neural Tap and Fate's End. Stronger cards at higher prices, stocked at the Downside Den and carried by your card customers. Comes with a sample pack."
+upgrade_tier3_title,Zamco Tier 3 License
+upgrade_tier3_desc,"Zamco's flagship lines: Ascension, Singularity and Recursion. The strongest cards Zamco makes, at prices to match. Comes with a sample pack."
+box_status_master,"{0} Master Set, ultra rare included. Ready to seal for double the bonus."
 guide_item_name,Zamco Stockist Guide
 guide_item_desc,"Welcome pack from Zamco Electronics: where to find the Downside Den, and how to play and build decks for Aug Warriors."
 guide_p1_title,A Message to Our Valued Stockists
@@ -348,28 +373,3 @@ guide_p7_2,"Put your deck box in the Deck slot, then choose your stakes:"
 guide_p7_3,- Credits: the winner takes the pot.
 guide_p7_4,"- A card: win and you keep it, plus a new card of the same rarity (sometimes better, often one you don't own yet). Lose and your opponent keeps it."
 guide_p7_5,"Or play for nothing at all, just for the glory."
-client_grader,Card Grader
-grader_offer,"Evening. I grade cards: I check them over properly and seal them in a slab with their grade. {0} credits a card, back tomorrow. Interested?"
-grader_choice_yes,Let's grade some cards
-grader_choice_no,Not today
-grader_accepted,"Great. My case holds {0} cards today. Put in the ones you want graded."
-grader_declined,"No problem. Another time."
-grader_submitted,"{0} cards. I'll have them back to you first thing tomorrow."
-grader_return,"Back as promised. Your cards, graded and slabbed."
-grader_title,Card Grading
-grader_case,Grading case ({0} slots)
-grader_cost,"{0} cards: {1} credits"
-grader_submit,Submit for grading
-slab_label,AUG WARRIORS · GRADE {0} · {1}
-aug_log_hack_on,{0} plays {1} on {2}.
-aug_log_hack_on_you,You play {1} on {2}.
-aug_log_blocked,{0}'s {1} is blocked.
-aug_log_blocked_you,Your {1} is blocked.
-aug_log_steal,{0}'s {1} steals {2}.
-aug_log_steal_you,Your {1} steals {2}.
-upgrade_card_zamco,Zamco Distribution
-upgrade_tier2_title,Zamco Tier 2 License
-upgrade_tier2_desc,"Zamco's premium lines: Restored Grace, Broodmother's Clutch, Neural Tap and Fate's End. Stronger cards at higher prices, stocked at the Downside Den and carried by your card customers. Comes with a sample pack."
-upgrade_tier3_title,Zamco Tier 3 License
-upgrade_tier3_desc,"Zamco's flagship lines: Ascension, Singularity and Recursion. The strongest cards Zamco makes, at prices to match. Comes with a sample pack."
-box_status_master,"{0} Master Set, ultra rare included. Ready to seal for double the bonus."

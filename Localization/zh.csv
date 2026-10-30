@@ -278,6 +278,375 @@ scenario_start_gear,卡组盒和卡册
 scenario_start_certificate,Zamco 授权经销商证书
 scenario_tag,收藏品
 aug_board_glitch,故障 · {0}
+client_grader,卡牌评级师
+grader_offer,晚上好。我做卡牌评级：仔细检查后封进评级盒，标上等级。每张 {0} 信用点，明天送回。有兴趣吗？
+grader_choice_yes,来评级吧
+grader_choice_no,今天算了
+grader_accepted,好。我的箱子今天能装 {0} 张卡。把要评级的放进来。
+grader_declined,没问题。下次吧。
+grader_submitted,{0} 张卡。明天一早给你送回来。
+grader_return,说到做到。你的卡，评好级封好了。
+grader_title,卡牌评级
+grader_case,评级箱（{0} 格）
+grader_cost,{0} 张卡：{1} 信用点
+grader_submit,提交评级
+slab_label,AUG WARRIORS · 等级 {0} · {1}
+aug_log_hack_on,{0} 对 {2} 打出 {1}。
+aug_log_hack_on_you,你对 {2} 打出 {1}。
+aug_log_blocked,{0} 的 {1} 被挡下了。
+aug_log_blocked_you,你的 {1} 被挡下了。
+aug_log_steal,{0} 的 {1} 抢走了 {2}。
+aug_log_steal_you,你的 {1} 抢走了 {2}。
+upgrade_card_zamco,Zamco 经销
+upgrade_tier2_title,Zamco 二级授权
+upgrade_tier2_desc,Zamco 的高级系列：Restored Grace、Broodmother's Clutch、Neural Tap 和 Fate's End。卡牌更强、价格更高，在 Downside Den 有售，卡牌顾客也会带来。附赠一包样品。
+upgrade_tier3_title,Zamco 三级授权
+upgrade_tier3_desc,Zamco 的旗舰系列：Ascension、Singularity 和 Recursion。Zamco 最强的卡牌，价格也相称。附赠一包样品。
+box_status_master,{0} 大师套装，含超稀有卡。封装可得双倍加成。
+set_rustwave_name,锈潮崛起
+set_doomed_name,腐朽末日
+set_oxygen_name,氧气泄漏
+set_grace_name,恩典重铸
+set_brood_name,巢母之握
+set_neural_name,神经窃听
+set_fates_name,命运终局
+set_ascension_name,飞升
+set_singularity_name,奇点
+set_recursion_name,递归
+rarity_common,普通
+rarity_uncommon,非普通
+rarity_rare,稀有
+rarity_ultra,超稀有
+card_rustwave_01_name,废铁底盘
+card_rustwave_01_flavor,又重又丑，但还站着。
+card_rustwave_02_name,锈蚀活塞
+card_rustwave_02_flavor,每一拳都在尖叫。
+card_rustwave_03_name,破伤风钉
+card_rustwave_03_flavor,先去打针。
+card_rustwave_04_name,生锈护胫
+card_rustwave_04_flavor,吱嘎作响，但撑得住。
+card_rustwave_05_name,拼凑面罩
+card_rustwave_05_text,安装时，抽一张牌。
+card_rustwave_05_flavor,六片镜头，没有一片配得上。
+card_rustwave_06_name,钢铁意志
+card_rustwave_06_text,骇入无法降低你的稳定度。
+card_rustwave_06_flavor,有些心智锈死了，打不开。
+card_rustwave_07_name,反馈回路
+card_rustwave_07_text,目标故障 +2；若它带有改装件则 +3。
+card_rustwave_07_flavor,调大，直到它尖叫。
+card_rustwave_08_name,超频熔炉
+card_rustwave_08_flavor,很烫。越来越烫。
+card_rustwave_09_name,磁力抓钩
+card_rustwave_09_text,它身上每有一个改装件，力量 +1。
+card_rustwave_09_flavor,迟早什么都会吸上来。
+card_rustwave_10_name,分流导线
+card_rustwave_10_text,若所装的义体没有故障，力量 +1。
+card_rustwave_10_flavor,接地。再接一次。
+card_rustwave_11_name,腐蚀发射器
+card_rustwave_11_text,报废你最弱的改装件，使目标故障 +4。
+card_rustwave_11_flavor,什么都能蚀穿，包括你自己的。
+card_rustwave_12_name,赤色威胁
+card_rustwave_12_text,你其他义体上每有一个改装件，力量 +1。
+card_rustwave_12_flavor,整台机体都听它的。
+card_rustwave_13_name,超载线圈
+card_rustwave_13_text,使所装义体的印刷力量翻倍。
+card_rustwave_13_flavor,额定两倍负载。短时间。
+card_doomed_01_name,铅衬靴
+card_doomed_01_flavor,慢慢走过辐射尘。
+card_doomed_02_name,腐朽骨架
+card_doomed_02_flavor,今天很结实。明天再问。
+card_doomed_03_name,腐坏孢子
+card_doomed_03_text,对手失去 2 点稳定度。
+card_doomed_03_flavor,钻进每个关节。
+card_doomed_04_name,脆刃
+card_doomed_04_flavor,够锋利。一次。
+card_doomed_05_name,虹吸管
+card_doomed_05_text,装上时，对手获得 1 点故障。
+card_doomed_05_flavor,现在是你的问题了。
+card_doomed_06_name,毒素滤网
+card_doomed_06_text,对手骇入你时，他们获得 2 点故障。
+card_doomed_06_flavor,你吸气，他们窒息。
+card_doomed_07_name,同位素电池
+card_doomed_07_flavor,有点发光。正常的。
+card_doomed_08_name,辐射泄漏
+card_doomed_08_text,移除目标的所有改装件。
+card_doomed_08_flavor,所有拴上去的东西都掉了。
+card_doomed_09_name,防化面罩
+card_doomed_09_text,挡下下一次对你的骇入。
+card_doomed_09_flavor,只扛得住一个糟糕的日子。
+card_doomed_10_name,恶性代码
+card_doomed_10_text,目标故障 +2，并把你义体上所有骇入造成的故障转移到它身上。
+card_doomed_10_flavor,传下去。
+card_doomed_11_name,半衰期发生器
+card_doomed_11_text,对决时若对手失控，力量 +4。
+card_doomed_11_flavor,耐心。必然。
+card_doomed_12_name,裂变之拳
+card_doomed_12_text,你失控时，它的力量不会减半。
+card_doomed_12_flavor,着火了照样打得一样重。
+card_doomed_13_name,疫病行者
+card_doomed_13_text,你增加故障的骇入额外 +1。
+card_doomed_13_flavor,留下痕迹。人人都病了。
+card_oxygen_01_name,应急气罐
+card_oxygen_01_flavor,打破玻璃。呼吸。
+card_oxygen_02_name,真空密封
+card_oxygen_02_flavor,进不来，也出不去。
+card_oxygen_03_name,加压支柱
+card_oxygen_03_text,安装前你每进行过一个回合，力量 +1。
+card_oxygen_03_flavor,压力在累积。
+card_oxygen_04_name,气密头盔
+card_oxygen_04_flavor,一慌就起雾。
+card_oxygen_05_name,气动拳
+card_oxygen_05_flavor,干净、安静、极快。
+card_oxygen_06_name,推进背包
+card_oxygen_06_text,只能从你的第 5 个回合起打出。
+card_oxygen_06_flavor,留给最后的冲刺。
+card_oxygen_07_name,窒息
+card_oxygen_07_text,目标无法从改装件获得力量。
+card_oxygen_07_flavor,断了它的气，看它熄火。
+card_oxygen_08_name,氧气循环器
+card_oxygen_08_flavor,每一口气，用两次。
+card_oxygen_09_name,零重力校准
+card_oxygen_09_text,你的躯干可装 3 个改装件。
+card_oxygen_09_flavor,有地方飘，有地方装。
+card_oxygen_10_name,气闸超控
+card_oxygen_10_text,选择一个没有改装件的义体：它的力量记为 0。
+card_oxygen_10_flavor,循环中。再见。
+card_oxygen_11_name,冷冻休眠舱
+card_oxygen_11_text,你其他每个没有故障的义体，使力量 +2。
+card_oxygen_11_flavor,冰冷、静止、完美。
+card_oxygen_12_name,动能鱼叉
+card_oxygen_12_text,安装时，夺走对手最好的改装件装到这条手臂上。
+card_oxygen_12_flavor,拉过来。
+card_oxygen_13_name,气压骤降
+card_oxygen_13_text,目标故障 +1。
+card_oxygen_13_flavor,耳朵一鸣，系统一顿。
+card_grace_01_name,神盾光环
+card_grace_01_text,你永远不会失控：故障每超过稳定度 1 点，改为失去 1 点力量。
+card_grace_01_flavor,恩典不是没有罪，而是温柔地付出代价。
+card_grace_02_name,净化之光
+card_grace_02_text,装上时，清除所装义体上所有骇入造成的故障。
+card_grace_02_flavor,让一切都洗净。
+card_grace_03_name,炽天使引擎
+card_grace_03_flavor,六翼散热片。
+card_grace_04_name,无瑕装甲
+card_grace_04_flavor,一道划痕都没有。暂时。
+card_grace_05_name,神圣导管
+card_grace_05_text,若所装义体没有故障，力量额外 +2。
+card_grace_05_flavor,纯净的信号。
+card_grace_06_name,祝福护胫
+card_grace_06_flavor,好像永远不会磨损。
+card_grace_07_name,优雅一击
+card_grace_07_flavor,每个动作，皆有意图。
+card_grace_08_name,修复纳米机器人
+card_grace_08_flavor,小小的手，无尽的耐心。
+card_grace_09_name,复原力场
+card_grace_09_flavor,一种让一切平静下来的嗡鸣。
+card_grace_10_name,和平主义协议
+card_grace_10_text,选择一条手臂：它的力量记为 0。
+card_grace_10_flavor,放下武器。字面意义上的。
+card_grace_11_name,圣化握爪
+card_grace_11_flavor,稳如祷告。
+card_grace_12_name,光环发生器
+card_grace_12_text,所装义体无法成为骇入的目标。
+card_grace_12_flavor,它照耀之处，无物可触。
+card_brood_01_name,蜂巢核心
+card_brood_01_text,可装 4 个改装件，而非 2 个。
+card_brood_01_flavor,每个格子都是摇篮。
+card_brood_02_name,寄生感染
+card_brood_02_text,对手失去 1 点稳定度，你场上每有一张巢母之握的卡再失去 1 点。
+card_brood_02_flavor,一变多，多变全部。
+card_brood_03_name,几丁质腿
+card_brood_03_flavor,在金属地板上咔哒作响。
+card_brood_04_name,虫群之臂
+card_brood_04_text,你场上每有一张其他巢母之握的卡，力量 +1。
+card_brood_04_flavor,从不孤单。
+card_brood_05_name,生物激励
+card_brood_05_text,装在躯干上时，力量额外 +1。
+card_brood_05_flavor,心脏为蜂巢跳动。
+card_brood_06_name,毒囊
+card_brood_06_flavor,从后面拿。
+card_brood_07_name,巢群面罩
+card_brood_07_flavor,复眼，单一目的。
+card_brood_08_name,酸液喷吐
+card_brood_08_text,摧毁对手最好的 2 个改装件。
+card_brood_08_flavor,拴上去的都能融掉。
+card_brood_09_name,孕育舱
+card_brood_09_text,若没有人发起对决，力量 +6。
+card_brood_09_flavor,别急。
+card_brood_10_name,共生链接
+card_brood_10_flavor,它在帮忙。它想帮忙。
+card_brood_11_name,甲壳盾
+card_brood_11_flavor,长出来的，不是锻造的。
+card_brood_12_name,无人机群
+card_brood_12_text,对决时，对手每有一个空的部位，获得 1 点故障。
+card_brood_12_flavor,它们填满每个空隙。
+card_brood_13_name,巢母
+card_brood_13_text,你场上每有一张其他巢母之握的卡，力量 +2。
+card_brood_13_flavor,它们全是她的。
+card_neural_01_name,心智骇入发射器
+card_neural_01_text,目标故障 +1，对手每有一个改装件再 +1。
+card_neural_01_flavor,每次升级都是一扇门。
+card_neural_02_name,突触超载
+card_neural_02_text,安装时，对手随机弃一张牌。
+card_neural_02_flavor,它想得比你快。
+card_neural_03_name,记忆抹除
+card_neural_03_text,目标义体失去其效果。
+card_neural_03_flavor,它原本是干什么的？
+card_neural_04_name,皮层尖刺
+card_neural_04_flavor,直插皮层。
+card_neural_05_name,神经剪接器
+card_neural_05_flavor,比反射还快。
+card_neural_06_name,旁路中继
+card_neural_06_text,你改装件的故障改为计入对手，而不是你。
+card_neural_06_flavor,现在是你的问题了。
+card_neural_07_name,损坏数据
+card_neural_07_flavor,请勿打开。
+card_neural_08_name,劫持信号
+card_neural_08_text,与对手交换头部，连同改装件。
+card_neural_08_flavor,现在是谁在思考？
+card_neural_09_name,感官剥夺
+card_neural_09_text,对手接下来 2 个回合不能打出改装件。
+card_neural_09_flavor,静电，然后寂静。
+card_neural_10_name,神经网
+card_neural_10_flavor,穿过每一根神经。
+card_neural_11_name,幻肢
+card_neural_11_flavor,它比你先动。
+card_neural_12_name,逻辑炸弹
+card_neural_12_text,若对手没有故障，目标故障 +4；否则 +1。
+card_neural_12_flavor,完美的系统会完美地崩溃。
+card_fates_01_name,末日引擎
+card_fates_01_flavor,它会终结一切。包括你。
+card_fates_02_name,欧米伽协议
+card_fates_02_text,你场上每有一个改装件，力量 +2。
+card_fates_02_flavor,万物汇聚。
+card_fates_03_name,最终倒计时
+card_fates_03_text,只能在你的第 6 个回合打出。
+card_fates_03_flavor,三。二。
+card_fates_04_name,天启步伐
+card_fates_04_flavor,每一步都是一次震动。
+card_fates_05_name,虚空之爪
+card_fates_05_flavor,穿过虚无伸来。
+card_fates_06_name,事件视界
+card_fates_06_text,摧毁场上所有改装件，包括你的。
+card_fates_06_flavor,无物逃逸。
+card_fates_07_name,熵发生器
+card_fates_07_flavor,秩序，崩解。
+card_fates_08_name,致命一击
+card_fates_08_text,对手的最终得分减 2。
+card_fates_08_flavor,结局一直都是这样。
+card_fates_09_name,湮灭装甲
+card_fates_09_flavor,黑如终结。
+card_fates_10_name,虚无力场
+card_fates_10_text,目标的印刷力量记为 0，其改装件仍然计算。
+card_fates_10_flavor,被抹去。
+card_fates_11_name,命运编织者
+card_fates_11_flavor,它已看见结局。
+card_fates_12_name,最后一言
+card_fates_12_text,若在你的第 6 个回合或之后安装，力量 +3。
+card_fates_12_flavor,留到最后。
+card_ascension_01_name,天穹框架
+card_ascension_01_text,你的改装件无法被摧毁、移动或夺走。
+card_ascension_01_flavor,在这里给出的，不会被收回。
+card_ascension_02_name,黄金法则
+card_ascension_02_text,你每打出一张骇入，此头部力量 +1。
+card_ascension_02_flavor,己所欲，先施于人。
+card_ascension_03_name,天界虹吸
+card_ascension_03_text,装上时，抽一张牌。
+card_ascension_03_flavor,饮自高空之气。
+card_ascension_04_name,超射线面罩
+card_ascension_04_text,你每通过卡牌效果抽一张牌，力量 +1。
+card_ascension_04_flavor,看得见要来的一切。
+card_ascension_05_name,冲天一击
+card_ascension_05_flavor,向上，贯穿。
+card_ascension_06_name,超凡装甲
+card_ascension_06_flavor,轻得不讲道理。
+card_ascension_07_name,云端护胫
+card_ascension_07_flavor,踏空而行。大多时候。
+card_ascension_08_name,神级处理器
+card_ascension_08_text,算作两个改装件。
+card_ascension_08_flavor,一块芯片，两个心智。
+card_ascension_09_name,因果反弹
+card_ascension_09_text,目标故障 +1。若对手失控，抽 2 张牌。
+card_ascension_09_flavor,种什么因。
+card_ascension_10_name,以太上行链路
+card_ascension_10_text,你抽 2 张牌；对手抽 1 张。
+card_ascension_10_flavor,人人都收到了信号。
+card_ascension_11_name,逃离重力井
+card_ascension_11_flavor,挣脱引力。
+card_ascension_12_name,升腾核心
+card_ascension_12_flavor,上升，平稳。
+card_ascension_13_name,神化
+card_ascension_13_text,你的稳定度翻倍计算。
+card_ascension_13_flavor,超越错误所及之处。
+card_singularity_01_name,不归点
+card_singularity_01_text,安装时，本回合再进行 3 次行动。你会失去之后的一个回合。
+card_singularity_01_flavor,越过边缘，只剩向前。
+card_singularity_02_name,统一场
+card_singularity_02_text,你躯干上的改装件也作用于你的其他义体。
+card_singularity_02_flavor,一条定律，适用万物。
+card_singularity_03_name,吸积盘
+card_singularity_03_text,你手上每有一张牌，力量 +1。
+card_singularity_03_flavor,它只会越来越大。
+card_singularity_04_name,意面化
+card_singularity_04_text,把对手所有改装件移到目标上。之后它的力量记为 0。
+card_singularity_04_flavor,拉长。再拉长。
+card_singularity_05_name,超密合金
+card_singularity_05_flavor,一茶匙重一吨。
+card_singularity_06_name,快子之拳
+card_singularity_06_flavor,你还没出拳，它就打中了。
+card_singularity_07_name,量子护胫
+card_singularity_07_flavor,既在这里，也在那里。
+card_singularity_08_name,时间膨胀
+card_singularity_08_text,在你的第 5 和第 6 个回合，额外抽一张牌。
+card_singularity_08_flavor,慢下来。其他一切都慢下来。
+card_singularity_09_name,坍缩态
+card_singularity_09_text,目标的印刷力量记为 0，其改装件仍然计算。
+card_singularity_09_flavor,被观测，然后消散。
+card_singularity_10_name,重力碾压
+card_singularity_10_text,目标故障 +3。
+card_singularity_10_flavor,一切都向内坠落。
+card_singularity_11_name,致密装甲
+card_singularity_11_flavor,重到能弯曲光线。
+card_singularity_12_name,虚空凝视
+card_singularity_12_flavor,它也在凝视你。
+card_singularity_13_name,奇点核心
+card_singularity_13_text,加上对手最强义体的印刷力量。
+card_singularity_13_flavor,一切都坠入其中。一切。
+card_recursion_01_name,递归打击
+card_recursion_01_text,安装时，本回合再打出一张牌。
+card_recursion_01_flavor,再来。再来。
+card_recursion_02_name,无限循环
+card_recursion_02_text,每有一张骇入打在你身上，力量 +2。
+card_recursion_02_flavor,每次崩溃都让它更强。
+card_recursion_03_name,矩阵故障
+card_recursion_03_text,用你最差的改装件交换对手最好的那个。
+card_recursion_03_flavor,刚才是不是发生了两次？
+card_recursion_04_name,重启协议
+card_recursion_04_text,对手把手牌洗回牌库，然后抽 3 张。
+card_recursion_04_flavor,试过关机再开机吗？
+card_recursion_05_name,回音室
+card_recursion_05_text,你每装上一个改装件，此头部力量 +1。
+card_recursion_05_flavor,每个声音，都更响。
+card_recursion_06_name,迭代进程
+card_recursion_06_text,你场上每有一个改装件，力量 +1。
+card_recursion_06_flavor,每一轮都更好。
+card_recursion_07_name,缓存记忆
+card_recursion_07_text,装上时，抽一张牌。
+card_recursion_07_flavor,这个我见过。
+card_recursion_08_name,分形装甲
+card_recursion_08_flavor,装甲，一层套一层。
+card_recursion_09_name,循环破坏者
+card_recursion_09_flavor,终结不肯终结的东西。
+card_recursion_10_name,壳中幽灵
+card_recursion_10_flavor,别的什么在驾驶。
+card_recursion_11_name,栈溢出
+card_recursion_11_text,对手随机弃一张牌。
+card_recursion_11_flavor,太多，太深。
+card_recursion_12_name,系统还原
+card_recursion_12_flavor,回到上一个正常状态。
+card_recursion_13_name,衔尾蛇
+card_recursion_13_text,对决时，你最强的义体计算两次。
+card_recursion_13_flavor,终点吞下起点。
 guide_item_name,Zamco 经销商指南
 guide_item_desc,Zamco 电子的欢迎资料：Downside Den 的位置，以及 Aug Warriors 的玩法和组卡。
 guide_p1_title,致尊贵的经销商
@@ -304,7 +673,7 @@ guide_p2_4,后面那张桌子是空间站 Aug Warriors 常客的地盘。带上�
 guide_p3_title,玩法：目标
 guide_p3_1,两名佣兵比拼谁能打造最强的身体。每具身体有五个槽位：头部、躯干、两条手臂和腿部。
 guide_p3_2,你安装的每个义体都会增加力量，大多数也会增加故障。你的稳定度从 3 开始；躯干和部分改装会提高它。
-guide_p3_3,对决时力量高者获胜。但如果你的故障总值超过稳定度，你就会被入侵，力量减半。
+guide_p3_3,对决时力量高者获胜。但如果你的故障总值超过稳定度，你就会失控，力量减半。
 guide_p3_4,游戏的精髓：在不让故障失控的前提下，把力量推到你敢推的最高。
 guide_p4_title,玩法：你的回合
 guide_p4_1,双方各以 4 张手牌开始，掷硬币决定先手。
@@ -318,7 +687,7 @@ guide_p5_1,义体装进你自己身体对应的槽位；手臂义体两条手臂
 guide_p5_2,改装加装在你已安装的义体上，每个义体最多 2 个。有些只适用于特定槽位。好的改装能吸收故障或增加稳定度。
 guide_p5_3,骇入卡打在对手已安装的义体上。大多数会给目标增加故障，且可叠加。报废类骇入会把义体连同改装一起移除。
 guide_p5_4,特殊效果
-guide_p5_5,有些义体效果更多：安装时抽牌、让你免疫骇入、按其上的改装数、按你无故障的义体数或在你宣布对决时获得额外力量，或减轻被入侵的惩罚。具体数值印在每张卡上。
+guide_p5_5,有些义体效果更多：安装时抽牌、让你免疫骇入、按其上的改装数、按你无故障的义体数或在你宣布对决时获得额外力量，或减轻失控的惩罚。具体数值印在每张卡上。
 guide_example_title,读懂一张卡
 guide_example_caption,一个躯干义体：力量 1，稳定度 3，故障 0。
 guide_legend_title,卡牌符号
@@ -348,28 +717,3 @@ guide_p7_2,把卡组盒放进卡组槽，然后选择赌注：
 guide_p7_3,- 信用点：赢家通吃。
 guide_p7_4,- 卡牌：赢了保留自己的卡，再得一张同稀有度的新卡（有时更好，常常是你还没有的）。输了卡归对手。
 guide_p7_5,也可以什么都不押，只为荣誉而战。
-client_grader,卡牌评级师
-grader_offer,晚上好。我做卡牌评级：仔细检查后封进评级盒，标上等级。每张 {0} 信用点，明天送回。有兴趣吗？
-grader_choice_yes,来评级吧
-grader_choice_no,今天算了
-grader_accepted,好。我的箱子今天能装 {0} 张卡。把要评级的放进来。
-grader_declined,没问题。下次吧。
-grader_submitted,{0} 张卡。明天一早给你送回来。
-grader_return,说到做到。你的卡，评好级封好了。
-grader_title,卡牌评级
-grader_case,评级箱（{0} 格）
-grader_cost,{0} 张卡：{1} 信用点
-grader_submit,提交评级
-slab_label,AUG WARRIORS · 等级 {0} · {1}
-aug_log_hack_on,{0} 对 {2} 打出 {1}。
-aug_log_hack_on_you,你对 {2} 打出 {1}。
-aug_log_blocked,{0} 的 {1} 被挡下了。
-aug_log_blocked_you,你的 {1} 被挡下了。
-aug_log_steal,{0} 的 {1} 抢走了 {2}。
-aug_log_steal_you,你的 {1} 抢走了 {2}。
-upgrade_card_zamco,Zamco 经销
-upgrade_tier2_title,Zamco 二级授权
-upgrade_tier2_desc,Zamco 的高级系列：Restored Grace、Broodmother's Clutch、Neural Tap 和 Fate's End。卡牌更强、价格更高，在 Downside Den 有售，卡牌顾客也会带来。附赠一包样品。
-upgrade_tier3_title,Zamco 三级授权
-upgrade_tier3_desc,Zamco 的旗舰系列：Ascension、Singularity 和 Recursion。Zamco 最强的卡牌，价格也相称。附赠一包样品。
-box_status_master,{0} 大师套装，含超稀有卡。封装可得双倍加成。

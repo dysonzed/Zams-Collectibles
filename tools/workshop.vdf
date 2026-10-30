@@ -56,17 +56,19 @@ Begin with the Den open, three booster packs, a deck box and a binder.
 [h2]Notes[/h2]
 This is an early version: expect rough edges and placeholder card art. Text is in English, with a partial draft Chinese translation.
 
-Save warning: cards, packs, boxes and the other items from this mod disappear from your store if you disable or remove it."
-	"changenote"		"Version 0.2: a complete overhaul.
+Save warning: cards, packs, boxes and the other items from this mod disappear from your store if you disable or remove it.
 
-- The old card sets are replaced by ten new sets in three power tiers (save warning: cards from the old sets disappear from existing saves)
-- Tier 2 and Tier 3 are unlocked with Zamco licenses in Wild's Network
-- Ultra rares, gem 10 jackpots, and a reworked economy per tier
-- The Card Grader customer and graded slabs
-- Zamco Authorized Dealer Certificate: display it to draw card customers
-- New Card Dealer starting scenario
-- Oracle and new hidden play styles for the Den's regulars
-- Collector's Box grows as you fill it; Master Sets with the ultra rare
-- Clearer mini cards, a 12-card hand, a Glitch tracker, and a card-reading guide page
-- Themed packs, card backs, slabs and boxes for every set"
+[h2]中文简介[/h2]
+Zamco 电子把 Aug Warriors 集换式卡牌游戏带到了空间站。拆补充包、追稀有卡、给最好的卡评级、封装完整套装，还能在一家只在打烊后营业的卡牌店后桌打牌。
+[list]
+[*]十个系列，分三个强度等级；高等级系列需通过 Wild 的网络向 Zamco 购买授权
+[*]超过 120 张卡牌，每个系列都有自己的主题、补充包和补充盒；超稀有卡约每 100 包出一张
+[*]每张卡都有隐藏品相，满分 10 分是真正的大奖；评级师会把卡封进评级盒
+[*]用收藏盒封装完整套装获得加成，加入超稀有卡即为大师套装
+[*]Downside Den 卡牌店：每晚进货的补充包、补充盒和单卡，以及后桌的常客对手
+[*]完整的 Aug Warriors 卡牌对战：常客各有隐藏的打法风格，其中 Oracle 极其难缠
+[*]新顾客：补充包贩子、组卡客和卡牌评级师；新开局：卡牌经销商
+[/list]
+支持简体中文。注意：停用或移除本模组后，其物品会从你的商店中消失。"
+	"changenote"		"Version 0.2.1: full Simplified Chinese translation, including every card's name, rules and flavour text. 新增完整的简体中文翻译，包括所有卡牌的名称、规则和风味文字。"
 }
