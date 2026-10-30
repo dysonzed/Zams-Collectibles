@@ -112,6 +112,7 @@ namespace ZamsCollectibles
                     if (CardItems.RefreshText(item)) refreshed++;
             }
             if (refreshed > 0) Log.Log($"Refreshed the text of {refreshed} item(s).");
+            ZamcoGuide.GiveIfMissed();
         }
 
         // The F9 dev tooltip shows the hidden exact condition, for testing.
@@ -151,6 +152,8 @@ namespace ZamsCollectibles
                         ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardItems.COLLECTOR_BOX_ID)))
                     .AddButton("Collection Binder", () =>
                         ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardBinder.BINDER_ID)))
+                    .AddButton("Zamco Stockist Guide", () =>
+                        ModHelper.MoveItemToInventory(ModHelper.SpawnPaperItem(MOD_ID, ZamcoGuide.BOOK_ID)))
                     .AddButton("Deck Box", () =>
                         ModHelper.MoveItemToInventory(ModHelper.SpawnItem(AugWarriors.DeckBox.DECKBOX_ID)))
                     .AddButton("Test Match (random deck, no stakes)", () =>

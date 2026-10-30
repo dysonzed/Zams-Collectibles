@@ -128,7 +128,7 @@ namespace ZamsCollectibles.AugWarriors
             MachineryRadioList opponents = new MachineryRadioList(Regulars.Select(r => r.name).ToList(), regular,
                 i => { regular = i; Refresh(); });
             playButton = new MachineryButton(Loc.Get("aug_challenge_start"), Play);
-            MachineryButton rules = new MachineryButton(Loc.Get("aug_table_rules"), ShowRules);
+            MachineryButton rules = new MachineryButton(Loc.Get("aug_table_rules"), () => ZamcoGuide.Open(ZamcoGuide.RULES_PAGE));
 
             window = MachineHelper.CreateMachineryWindow(true,
                 MachineHelper.Panel(Loc.Get("aug_table_deck"), MachineryStack.Vertical(deckSlot, deckText), "deck"),
@@ -239,19 +239,6 @@ namespace ZamsCollectibles.AugWarriors
                 slot.Expel(item);
                 GraphUtils.EmporiumTryAdd(Home, item);
             }
-        }
-
-        private static void ShowRules()
-        {
-            if (CustomUIManager.Instance == null) return;
-            string id = ModEntry.MOD_ID + ".aug_rules";
-            CustomUIManager.Window(id, Loc.Get("aug_challenge_title"), CustomUIManager.LAYER_META)
-                .SetSize(460f, 300f).SetDraggable(true).SetCloseOnEscape(true)
-                .BeginColumn(6f)
-                    .AddLabel(Loc.Get("aug_challenge_rules", AugRules.MAX_TURNS))
-                    .AddLabel(Loc.Get("aug_table_ante_rules"))
-                    .AddButton(Loc.Get("aug_close"), () => CustomUIManager.Instance.CloseWindow(id))
-                .End().Center().Show();
         }
     }
 }

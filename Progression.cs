@@ -34,7 +34,7 @@ namespace ZamsCollectibles
                 ModHelper.AddNetworkUpgrade(ModEntry.MOD_ID, DEN_UPGRADE, DEN_UPGRADE_COST, "Referral",
                     title: () => Loc.Get("upgrade_den_title"),
                     description: () => Loc.Get("upgrade_den_desc"),
-                    onUnlock: () => { },
+                    onUnlock: ZamcoGuide.GiveToCounter,
                     iconKey: $"{ModEntry.MOD_ID}:booster_box_red");
             }
             catch (NullReferenceException)
