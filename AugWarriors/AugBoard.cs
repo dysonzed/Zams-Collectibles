@@ -33,7 +33,7 @@ namespace ZamsCollectibles.AugWarriors
         public const string MATCH_TAG = "ZAMS_AUG_MATCH_CARD";
         private const string USE_ON_UNOWNED_TAG = "CAN_USE_ON_NON_OWNED_TAG";   // the game's tag: may be dropped onto items the player doesn't own
         private const int HUMAN = 0, NPC = 1;
-        private const int HAND_COLUMNS = 12;     // six cards: four plus the two extra on a final turn
+        private const int HAND_COLUMNS = 12, HAND_ROWS = 6;   // two rows of six cards: room for the rules' maximum hand
         private const float NPC_DELAY = 0.7f;    // seconds between the opponent's moves
         private const float POWER_BAR_MAX = 20f;
 
@@ -85,6 +85,7 @@ namespace ZamsCollectibles.AugWarriors
         private static readonly MachineryProgressBar[] powerBar = new MachineryProgressBar[2];
         private static readonly SpritePixelElement[] stabilityBar = new SpritePixelElement[2];
         private static readonly MachineryText[] stabilityText = new MachineryText[2];
+        private static readonly MachineryText[] glitchText = new MachineryText[2];   // the Glitch total, under the Stability bar
         private static readonly MachineryText[] logText = new MachineryText[3];
         private static GameGridInventory hand;
         private static MachineryText statusText;
@@ -300,12 +301,14 @@ namespace ZamsCollectibles.AugWarriors
             rows.Add(powerBar[who]);
             rows.Add(stabilityText[who]);
             rows.Add(stabilityBar[who]);
+            glitchText[who] = new MachineryText(null, 6, TMPro.HorizontalAlignmentOptions.Center, true);
+            rows.Add(glitchText[who]);
             return MachineryStack.Vertical(rows.ToArray());
         }
 
         private static PixelElement HandPanel()
         {
-            hand = new GameGridInventory(HAND_COLUMNS, 3).SetMachineryStyle();
+            hand = new GameGridInventory(HAND_COLUMNS, HAND_ROWS).SetMachineryStyle();
             hand.mayInventoryAddItemFunc = (item, _) => syncing || item.parentInventory == hand;   // rearranging only
             statusText = new MachineryText(null, 6, TMPro.HorizontalAlignmentOptions.Left, false);
             for (int i = 0; i < logText.Length; i++) logText[i] = new MachineryText(null, 5, TMPro.HorizontalAlignmentOptions.Left, false);
@@ -529,6 +532,8 @@ namespace ZamsCollectibles.AugWarriors
             stabilityText[who].SetText(s.compromised ? Loc.Get("aug_board_compromised", s.glitch, s.stability) : Loc.Get("aug_board_stability", s.glitch, s.stability));
             stabilityText[who].SetColor(s.compromised ? Bad : s.glitch >= s.stability ? Risky : Good);
             stabilityBar[who].SetSprite(AugArt.StabilityBar(who, s.stability, s.glitch));
+            glitchText[who].SetText(Loc.Get("aug_board_glitch", s.glitch));
+            glitchText[who].SetColor(s.glitch == 0 ? Good : s.compromised ? Bad : Risky);
         }
 
         private static string Verdict()

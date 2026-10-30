@@ -256,7 +256,7 @@ namespace ZamsCollectibles.AugWarriors
 
         private void Draw(AugPlayer p)
         {
-            if (p.deck.Count == 0) return;
+            if (p.deck.Count == 0 || p.hand.Count >= AugRules.MAX_HAND) return;
             p.hand.Add(p.deck[0]);
             p.deck.RemoveAt(0);
         }
@@ -275,7 +275,8 @@ namespace ZamsCollectibles.AugWarriors
     {
         public const int SLOTS = 5;
         public const int START_HAND = 4;
-        public const int HAND_LIMIT = 4;
+        public const int HAND_LIMIT = 4;        // the turn's draw only tops the hand up to this
+        public const int MAX_HAND = 12;         // no draw goes past this (extra draws from effects and the final turn)
         public const int MAX_TURNS = 6;         // each; then the showdown happens on its own
         public const int FINAL_DRAW = 2;        // extra cards for the last turn after a call
         public const int BASE_STABILITY = 3;

@@ -268,6 +268,19 @@ challenge_they_lost,唉，被你赢了。打得好。
 challenge_draw,平局？行，改天再分高下。
 aug_table_opponent_hint,他们怎么打，你自己去发现吧。
 den_nobody_tonight,今晚后面那张桌子没人。
+certificate_name,Zamco 授权经销商证书
+certificate_desc,放进展示柜可吸引卡牌顾客：补充包贩子和组卡客。越久没来，几率越高。
+certificate_flavor,获准销售 Zamco 收藏品。不可用作货币、身份证明或武器。
+certificate_odds,已在展示柜中。今天卡牌顾客几率：{0}%
+certificate_not_displayed,未展示：卡牌顾客很少会来。
+scenario_title,卡牌经销商
+scenario_desc,你有 Zamco 经销执照、几包未拆的补充包，还有一张 Downside Den 的推荐。交易卡牌、组建卡组，去后面的桌子挑战常客。
+scenario_start_den,已解锁 Downside Den
+scenario_start_packs,{0} 包 Aug Warriors 补充包
+scenario_start_gear,卡组盒和卡册
+scenario_start_certificate,Zamco 授权经销商证书
+scenario_tag,收藏品
+aug_board_glitch,故障 · {0}
 guide_item_name,Zamco 经销商指南
 guide_item_desc,Zamco 电子的欢迎资料：Downside Den 的位置，以及 Aug Warriors 的玩法和组卡。
 guide_p1_title,致尊贵的经销商
@@ -284,6 +297,7 @@ guide_p1b_title,隆重推出：Aug Warriors
 guide_p1b_1,整个空间站都在谈论的卡牌游戏。一次装一个义体，打造终极佣兵，然后在对决中击败对手。
 guide_p1b_2,每个补充包都在 Zamco 轨道工厂密封出厂，内含随机卡牌：普通、非普通，运气好的话还有稀有卡。** 收集、交易、评级、对战，随你。
 guide_p1b_3,补充盒、收藏盒、卡册和卡组盒可在参与活动的零售商处购买。集齐全套！
+guide_p1b_5,授权经销商：把 Zamco 经销商证书挂进展示柜，收藏家就知道该去哪儿找你了。
 guide_p1b_4,**不保证稀有度。不保证能集齐全套。
 guide_p2_title,购买地点：Downside Den
 guide_p2_1,Zamco 产品在空间站各处的正规商店有售，也在一家不太正规的店里有售。
@@ -308,6 +322,20 @@ guide_p5_2,改装加装在你已安装的义体上，每个义体最多 2 个。
 guide_p5_3,骇入卡打在对手已安装的义体上。大多数会给目标增加故障，且可叠加。报废类骇入会把义体连同改装一起移除。
 guide_p5_4,特殊效果
 guide_p5_5,有些义体效果更多：安装时抽牌、让你免疫骇入、按其上的改装数、按你无故障的义体数或在你宣布对决时获得额外力量，或减轻被入侵的惩罚。具体数值印在每张卡上。
+guide_example_title,读懂一张卡
+guide_example_caption,一个躯干义体：力量 1，稳定度 3，故障 0。
+guide_legend_title,卡牌符号
+guide_legend_intro,Aug Warriors 牌桌上的小卡牌带有这些符号：
+guide_legend_power,力量。卡角上的数字。
+guide_legend_head,头部义体。
+guide_legend_torso,躯干义体。
+guide_legend_arm,手臂义体。两条手臂都能装。
+guide_legend_legs,腿部义体。
+guide_legend_mod,改装。加装在你的义体上。
+guide_legend_hack,骇入。打在对手的义体上。
+guide_legend_stability,增加的稳定度。
+guide_legend_glitch,增加的故障，带负号则为减少。骇入卡上表示给目标增加的故障。
+guide_legend_scrap,报废：移除目标义体及其改装。
 guide_p6_title,组建卡组
 guide_p6_1,合规卡组有 10 到 20 张牌，同名卡最多 2 张。把卡组放进卡组盒：盒子的验证按钮会帮你检查。
 guide_p6_2,常客的建议

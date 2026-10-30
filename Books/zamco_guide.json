@@ -278,6 +278,19 @@
      "y": 26,
      "w": 254,
      "h": 14,
+     "loc": "guide_p1b_5",
+     "style": "body",
+     "align": "left",
+     "wrap": true,
+     "autoHeight": true
+    },
+    {
+     "type": "text",
+     "flow": "flow2",
+     "x": 40,
+     "y": 26,
+     "w": 254,
+     "h": 14,
      "loc": "guide_p1b_4",
      "style": "caption",
      "align": "center",
@@ -638,6 +651,277 @@
      "align": "left",
      "wrap": true,
      "autoHeight": true
+    }
+   ]
+  },
+  {
+   "name": "Reading a Card",
+   "elements": [
+    {
+     "type": "text",
+     "x": 40,
+     "y": 26,
+     "w": 254,
+     "h": 16,
+     "loc": "guide_example_title",
+     "style": "title",
+     "align": "center"
+    },
+    {
+     "type": "image",
+     "x": 74,
+     "y": 48,
+     "w": 187,
+     "h": 290,
+     "sprite": "guide_example_card",
+     "fit": "fit"
+    },
+    {
+     "type": "text",
+     "x": 40,
+     "y": 342,
+     "w": 254,
+     "h": 20,
+     "loc": "guide_example_caption",
+     "style": "caption",
+     "align": "center",
+     "wrap": true
+    }
+   ]
+  },
+  {
+   "name": "Card Symbols",
+   "elements": [
+    {
+     "type": "text",
+     "x": 40,
+     "y": 26,
+     "w": 254,
+     "h": 16,
+     "loc": "guide_legend_title",
+     "style": "title",
+     "align": "center"
+    },
+    {
+     "type": "text",
+     "x": 40,
+     "y": 46,
+     "w": 254,
+     "h": 22,
+     "loc": "guide_legend_intro",
+     "style": "body",
+     "align": "left",
+     "wrap": true
+    },
+    {
+     "type": "image",
+     "x": 44,
+     "y": 72,
+     "w": 22,
+     "h": 22,
+     "sprite": "guide_icon_power",
+     "fit": "stretch"
+    },
+    {
+     "type": "text",
+     "x": 72,
+     "y": 72,
+     "w": 220,
+     "h": 28,
+     "loc": "guide_legend_power",
+     "style": "body",
+     "align": "left",
+     "valign": "middle",
+     "wrap": true
+    },
+    {
+     "type": "image",
+     "x": 44,
+     "y": 101,
+     "w": 22,
+     "h": 22,
+     "sprite": "guide_icon_head",
+     "fit": "stretch"
+    },
+    {
+     "type": "text",
+     "x": 72,
+     "y": 101,
+     "w": 220,
+     "h": 28,
+     "loc": "guide_legend_head",
+     "style": "body",
+     "align": "left",
+     "valign": "middle",
+     "wrap": true
+    },
+    {
+     "type": "image",
+     "x": 44,
+     "y": 130,
+     "w": 22,
+     "h": 22,
+     "sprite": "guide_icon_torso",
+     "fit": "stretch"
+    },
+    {
+     "type": "text",
+     "x": 72,
+     "y": 130,
+     "w": 220,
+     "h": 28,
+     "loc": "guide_legend_torso",
+     "style": "body",
+     "align": "left",
+     "valign": "middle",
+     "wrap": true
+    },
+    {
+     "type": "image",
+     "x": 44,
+     "y": 159,
+     "w": 22,
+     "h": 22,
+     "sprite": "guide_icon_arm",
+     "fit": "stretch"
+    },
+    {
+     "type": "text",
+     "x": 72,
+     "y": 159,
+     "w": 220,
+     "h": 28,
+     "loc": "guide_legend_arm",
+     "style": "body",
+     "align": "left",
+     "valign": "middle",
+     "wrap": true
+    },
+    {
+     "type": "image",
+     "x": 44,
+     "y": 188,
+     "w": 22,
+     "h": 22,
+     "sprite": "guide_icon_legs",
+     "fit": "stretch"
+    },
+    {
+     "type": "text",
+     "x": 72,
+     "y": 188,
+     "w": 220,
+     "h": 28,
+     "loc": "guide_legend_legs",
+     "style": "body",
+     "align": "left",
+     "valign": "middle",
+     "wrap": true
+    },
+    {
+     "type": "image",
+     "x": 44,
+     "y": 217,
+     "w": 22,
+     "h": 22,
+     "sprite": "guide_icon_mod",
+     "fit": "stretch"
+    },
+    {
+     "type": "text",
+     "x": 72,
+     "y": 217,
+     "w": 220,
+     "h": 28,
+     "loc": "guide_legend_mod",
+     "style": "body",
+     "align": "left",
+     "valign": "middle",
+     "wrap": true
+    },
+    {
+     "type": "image",
+     "x": 44,
+     "y": 246,
+     "w": 22,
+     "h": 22,
+     "sprite": "guide_icon_hack",
+     "fit": "stretch"
+    },
+    {
+     "type": "text",
+     "x": 72,
+     "y": 246,
+     "w": 220,
+     "h": 28,
+     "loc": "guide_legend_hack",
+     "style": "body",
+     "align": "left",
+     "valign": "middle",
+     "wrap": true
+    },
+    {
+     "type": "image",
+     "x": 44,
+     "y": 275,
+     "w": 22,
+     "h": 22,
+     "sprite": "guide_icon_stability",
+     "fit": "stretch"
+    },
+    {
+     "type": "text",
+     "x": 72,
+     "y": 275,
+     "w": 220,
+     "h": 28,
+     "loc": "guide_legend_stability",
+     "style": "body",
+     "align": "left",
+     "valign": "middle",
+     "wrap": true
+    },
+    {
+     "type": "image",
+     "x": 44,
+     "y": 304,
+     "w": 22,
+     "h": 22,
+     "sprite": "guide_icon_glitch",
+     "fit": "stretch"
+    },
+    {
+     "type": "text",
+     "x": 72,
+     "y": 304,
+     "w": 220,
+     "h": 28,
+     "loc": "guide_legend_glitch",
+     "style": "body",
+     "align": "left",
+     "valign": "middle",
+     "wrap": true
+    },
+    {
+     "type": "image",
+     "x": 44,
+     "y": 333,
+     "w": 22,
+     "h": 22,
+     "sprite": "guide_icon_scrap",
+     "fit": "stretch"
+    },
+    {
+     "type": "text",
+     "x": 72,
+     "y": 333,
+     "w": 220,
+     "h": 28,
+     "loc": "guide_legend_scrap",
+     "style": "body",
+     "align": "left",
+     "valign": "middle",
+     "wrap": true
     }
    ]
   },

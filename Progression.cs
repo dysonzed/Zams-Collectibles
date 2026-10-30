@@ -5,9 +5,10 @@ namespace ZamsCollectibles
 {
     /// <summary>
     /// How the collectibles open up over a run. Early on, booster packs only turn up by chance:
-    /// a pack flipper customer now and then, and sometimes a pack on Dr. Jackson's table. The
-    /// Downside Den (and the deck order customers) open once the player buys the Downside Den
-    /// upgrade from Wild's Network.
+    /// a rare pack flipper customer, and sometimes a pack on Dr. Jackson's table. The Downside
+    /// Den opens once the player buys its upgrade from Wild's Network, which also hands over the
+    /// Zamco guide and the dealer certificate; on display, the certificate brings card customers
+    /// (see DealerCertificate). The Card Dealer starting scenario begins with all of that.
     /// </summary>
     public static class Progression
     {
@@ -15,8 +16,6 @@ namespace ZamsCollectibles
         private const int DEN_UPGRADE_COST = 500;
 
         private const int JACKSON_PACK_CHANCE = 20;   // percent per visit
-        private const int PACK_FLIPPER_CHANCE = 6;    // percent per customer generated, at most once a day
-        private const int DECK_ORDER_CHANCE = 8;      // percent per customer generated, at most once a day, once unlocked
         private const int FLIPPER_GAME_CHANCE = 10;   // percent: asks for a game of Aug Warriors when sent off
 
         public static bool DenUnlocked => ModHelper.IsNetworkUpgradeUnlocked(DEN_UPGRADE);
@@ -34,7 +33,7 @@ namespace ZamsCollectibles
                 ModHelper.AddNetworkUpgrade(ModEntry.MOD_ID, DEN_UPGRADE, DEN_UPGRADE_COST, "Referral",
                     title: () => Loc.Get("upgrade_den_title"),
                     description: () => Loc.Get("upgrade_den_desc"),
-                    onUnlock: ZamcoGuide.GiveToCounter,
+                    onUnlock: OnDenUnlocked,
                     iconKey: $"{ModEntry.MOD_ID}:booster_box_red");
             }
             catch (NullReferenceException)
@@ -43,9 +42,28 @@ namespace ZamsCollectibles
             }
         }
 
+        // The referral comes with Zamco's welcome pack: the guide and the dealer certificate.
+        private static void OnDenUnlocked()
+        {
+            ZamcoGuide.GiveToCounter();
+            DealerCertificate.GiveToCounter();
+        }
+
+        /// <summary>Puts an item on the store's front counter (the back counter if it's full).</summary>
+        public static void PlaceOnCounter(GameItem item)
+        {
+            if (item == null) return;
+            if (GraphUtils.TryAcceptAllMid(EmporiumEntry.Instance.frontInvinvElement, item) > 0)
+                GraphUtils.EmporiumTryAdd(EmporiumEntry.Instance.backInvinvElement, item);
+        }
+
         public static void OnRunStarted() => Register();
 
-        public static void OnRunStarted(string _) => Register();
+        public static void OnRunStarted(string _)
+        {
+            Register();
+            CardDealerScenario.UnlockDen();
+        }
 
         /// <summary>Dr. Jackson sometimes has a booster pack on his table.</summary>
         public static void OnInventorStock(List<GameItem> ownedItems)
@@ -53,18 +71,6 @@ namespace ZamsCollectibles
             if (CardDatabase.Sets.Count == 0 || !RNG.Roll(JACKSON_PACK_CHANCE)) return;
             PlayerStore.Instance.AddDirectSellingItemToTable(CardItems.BoosterId(RNG.GetRandomElement(CardDatabase.Sets)));
         }
-
-        /// <summary>Now and then a customer comes in to sell packs; once the Den is open, deck orders too.</summary>
-        public static void OnGenerateCustomer(StoreClientManager manager)
-        {
-            if (CardDatabase.Sets.Count == 0) return;
-            if (OncePerDay("pack_flipper_day") && RNG.Roll(PACK_FLIPPER_CHANCE)) { MarkToday("pack_flipper_day"); manager.AddClient(CreatePackFlipper()); }
-            else if (DenUnlocked && OncePerDay("deck_order_day") && RNG.Roll(DECK_ORDER_CHANCE)) { MarkToday("deck_order_day"); manager.AddClient(DeckOrders.CreateCustomer()); }
-        }
-
-        private static bool OncePerDay(string key) => ModHelper.GetModDataInt(ModEntry.MOD_ID, key, -1) != StoreStation.GetDayCounter();
-
-        private static void MarkToday(string key) => ModHelper.SetModDataInt(ModEntry.MOD_ID, key, StoreStation.GetDayCounter());
 
         // A scavenger with a few packs they found or flipped.
         public static StoreClient CreatePackFlipper() => CreatePackFlipper(FLIPPER_GAME_CHANCE);

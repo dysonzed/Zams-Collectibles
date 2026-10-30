@@ -9,8 +9,10 @@ namespace ZamsCollectibles.AugWarriors
     /// drawn at runtime and added to this mod's item sprites, so match cards are real items
     /// that look like small cards.
     ///
-    /// Face: the set's frame, the art, a Power number top right, a slot letter, and pips:
-    /// red for Glitch (teal when a mod removes Glitch), teal for Stability.
+    /// Face: the set's frame, the art, a Power number top right, and an info panel: an icon for
+    /// what the card is (head, torso, a hand for arms, legs, a gear for mods, a chip for hacks) and the
+    /// stats as icon and number, a red bolt for Glitch (as on the board's Stability bar) and a
+    /// teal shield for Stability.
     /// </summary>
     public static class MiniCards
     {
@@ -42,6 +44,33 @@ namespace ZamsCollectibles.AugWarriors
             ['L'] = new[] { "#..", "#..", "#..", "#..", "###" },
             ['M'] = new[] { "#.#", "###", "###", "#.#", "#.#" },
             ['X'] = new[] { "#.#", "#.#", ".#.", "#.#", "#.#" },
+            ['-'] = new[] { "...", "...", "###", "...", "..." },
+        };
+
+        // Icons, rows top to bottom, '#' = colour: the small stat icons (5 wide) and the card types (head, torso, a hand for arms, legs, a gear for mods, a chip for hacks).
+        private static readonly Dictionary<string, string[]> Icons = new Dictionary<string, string[]>
+        {
+            ["bolt"] = new[] { "...##", "..##.", ".####", "..##.", ".##..", ".#..." },
+            ["shield"] = new[] { "#####", "#####", "#####", ".###.", "..#.." },
+            // the card's type, big, filling the left half of the info panel (11 x 11)
+            ["head"] = new[] {
+                "...#####...", "..#######..", ".#########.", ".##.....##.", ".##.#.#.##.", ".##.....##.",
+                ".#########.", "..#######..", "...#...#...", "...#####...", "....###...." },
+            ["torso"] = new[] {
+                ".###...###.", "###########", "###########", ".#########.", "..#######..", "..#.###.#..",
+                "..#######..", "..#######..", "...#####...", "...#####...", "..........." },
+            ["arm"] = new[] {
+                "...#.#.#...", "...#.#.#.#.", ".#.#.#.#.#.", ".#.#.#.#.#.", ".#.#######.", ".#########.",
+                ".#########.", ".########..", "..#######..", "...#####...", "...#####..." },
+            ["legs"] = new[] {
+                "..#######..", "..#######..", "..###.###..", "..##...##..", "..##...##..", "..##...##..",
+                "..##...##..", "..##...##..", ".###...###.", "####...####", "..........." },
+            ["mod"] = new[] {
+                "....###....", ".##.###.##.", ".#########.", "..#######..", "####...####", "####...####",
+                "####...####", "..#######..", ".#########.", ".##.###.##.", "....###...." },
+            ["hack"] = new[] {
+                "..#.#.#.#..", "...........", "#.#######.#", "..#.....#..", "#.#.###.#.#", "..#.###.#..",
+                "#.#.###.#.#", "..#.....#..", "#.#######.#", "...........", "..#.#.#.#.." },
         };
 
         public static string Key(CardDef card) => $"mini_{card.set.id}_{card.number:00}";
@@ -110,28 +139,50 @@ namespace ZamsCollectibles.AugWarriors
                 for (int i = 0; i < gem.Length && i < 2; i++) Glyph(px, gem[i], gx + i * 4, 3, Ink);
             }
 
-            // info panel: slot letter and pips
+            // info panel: what the card is, big on the left; Stability then Glitch on the right
             Fill(px, 2, 27, 28, 18, Cream);
             Box(px, 2, 27, 28, 18);
-            Glyph(px, KindLetter(card), 4, 29, Ink);
+            Icon(px, KindIcon(card), 4, 30, Ink);
             int glitch = card.kind == AugRules.HACK && card.effect == AugRules.GLITCH ? card.amount : card.glitch;
-            if (card.kind == AugRules.HACK && card.effect == AugRules.SCRAP) Glyph(px, 'X', 10, 29, GlitchRed);
-            else Pips(px, 10, 30, Math.Abs(glitch), glitch < 0 ? StableTeal : GlitchRed);
-            Pips(px, 4, 37, card.stability, StableTeal);
+            int row = 29;
+            if (card.stability != 0)
+            {
+                Stat(px, "shield", card.stability, 17, row, StableTeal);
+                row += 8;
+            }
+            if (card.kind == AugRules.HACK && card.effect == AugRules.SCRAP)
+                Glyph(px, 'X', 21, row, GlitchRed);   // scraps the part outright
+            else if (card.kind == AugRules.AUGMENT || glitch != 0)
+                Stat(px, "bolt", glitch, 17, row, GlitchRed);
             return px;
         }
 
-        private static char KindLetter(CardDef card)
+        private static string KindIcon(CardDef card)
         {
-            if (card.kind == AugRules.MOD) return 'M';
-            if (card.kind == AugRules.HACK) return 'X';
+            if (card.kind == AugRules.MOD) return "mod";
+            if (card.kind == AugRules.HACK) return "hack";
             switch (card.slot)
             {
-                case "head": return 'H';
-                case "torso": return 'T';
-                case "arm": return 'A';
-                default: return 'L';
+                case "head": return "head";
+                case "torso": return "torso";
+                case "arm": return "arm";
+                default: return "legs";
             }
+        }
+
+        // An icon and a signed number after it, e.g. bolt 2, bolt -1, shield 5.
+        private static void Stat(Color32[] px, string icon, int value, int x, int y, Color32 color)
+        {
+            Icon(px, icon, x, y, color);
+            x += 6;
+            if (value < 0) { Glyph(px, '-', x, y, color); x += 3; }
+            foreach (char c in Math.Abs(value).ToString()) { Glyph(px, c, x, y, Ink); x += 4; }
+        }
+
+        private static void Icon(Color32[] px, string name, int x0, int y0, Color32 color)
+        {
+            if (!Icons.TryGetValue(name, out string[] rows)) return;
+            for (int y = 0; y < rows.Length; y++) for (int x = 0; x < rows[y].Length; x++) if (rows[y][x] == '#') px[(y0 + y) * W + x0 + x] = color;
         }
 
         // A 2:1 downsample of the centre of the art into the given box.
@@ -148,11 +199,6 @@ namespace ZamsCollectibles.AugWarriors
                     if (c.a > 0) px[(y0 + y) * W + x0 + x] = c;
                 }
             }
-        }
-
-        private static void Pips(Color32[] px, int x0, int y, int count, Color32 color)
-        {
-            for (int i = 0; i < Math.Min(count, 6); i++) Fill(px, x0 + i * 3, y, 2, 2, color);
         }
 
         private static void Glyph(Color32[] px, char c, int x0, int y0, Color32 color)

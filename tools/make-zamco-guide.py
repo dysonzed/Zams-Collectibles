@@ -25,6 +25,8 @@ pages = [
    "每个补充包都在 Zamco 轨道工厂密封出厂，内含随机卡牌：普通、非普通，运气好的话还有稀有卡。** 收集、交易、评级、对战，随你。"),
   ("p1b_3", "body", "Booster boxes, Collector's Boxes, binders and deck boxes are available from participating retailers. Collect the whole set!",
    "补充盒、收藏盒、卡册和卡组盒可在参与活动的零售商处购买。集齐全套！"),
+  ("p1b_5", "body", "Authorized dealers: hang your Zamco Dealer Certificate in your display case, and collectors will know where to find you.",
+   "授权经销商：把 Zamco 经销商证书挂进展示柜，收藏家就知道该去哪儿找你了。"),
   ("p1b_4", "caption", "**Rarity not guaranteed. Collecting the whole set not guaranteed.", "**不保证稀有度。不保证能集齐全套。")],
  [("p2_title", "title", "Where to Buy: the Downside Den", "购买地点：Downside Den"),
   ("p2_1", "body", "Zamco products are sold by fine retailers across the station, and by one that isn't so fine.",
@@ -99,6 +101,49 @@ book = {"id": "zamco_guide", "title": "Zamco Stockist Guide", "background": "zam
 strings = [("guide_item_name", "Zamco Stockist Guide", "Zamco 经销商指南"),
            ("guide_item_desc", "Welcome pack from Zamco Electronics: where to find the Downside Den, and how to play and build decks for Aug Warriors.",
             "Zamco 电子的欢迎资料：Downside Den 的位置，以及 Aug Warriors 的玩法和组卡。")]
+# "Reading a Card": the mini card symbols, one row each, after the card types page.
+# Icons from make-guide-icons.py (Textures/Paper/guide_icon_*.png).
+legend = [
+    ("power", "Power. The number in the top corner.", "力量。卡角上的数字。"),
+    ("head", "Head augment.", "头部义体。"),
+    ("torso", "Torso augment.", "躯干义体。"),
+    ("arm", "Arm augment. Fits either arm.", "手臂义体。两条手臂都能装。"),
+    ("legs", "Legs augment.", "腿部义体。"),
+    ("mod", "Mod. Attaches to one of your augments.", "改装。加装在你的义体上。"),
+    ("hack", "Hack. Played on your opponent's augments.", "骇入。打在对手的义体上。"),
+    ("stability", "Stability it adds.", "增加的稳定度。"),
+    ("glitch", "Glitch it adds, or removes with a minus. On a hack, the Glitch it adds to the target.",
+     "增加的故障，带负号则为减少。骇入卡上表示给目标增加的故障。"),
+    ("scrap", "Scrap: removes the target augment and its mods.", "报废：移除目标义体及其改装。"),
+]
+
+
+def legend_page():
+    elements = [{"type": "text", "x": 40, "y": 26, "w": 254, "h": 16, "loc": "guide_legend_title", "style": "title", "align": "center"},
+                {"type": "text", "x": 40, "y": 46, "w": 254, "h": 22, "loc": "guide_legend_intro", "style": "body", "align": "left", "wrap": True}]
+    strings.append(("guide_legend_title", "Card Symbols", "卡牌符号"))
+    strings.append(("guide_legend_intro", "The small cards on the Aug Warriors table carry these symbols:", "Aug Warriors 牌桌上的小卡牌带有这些符号："))
+    y = 72
+    for icon, en, zh in legend:
+        elements.append({"type": "image", "x": 44, "y": y, "w": 22, "h": 22, "sprite": "guide_icon_" + icon, "fit": "stretch"})
+        elements.append({"type": "text", "x": 72, "y": y, "w": 220, "h": 28, "loc": "guide_legend_" + icon, "style": "body",
+                         "align": "left", "valign": "middle", "wrap": True})
+        strings.append(("guide_legend_" + icon, en, zh))
+        y += 29
+    return {"name": "Card Symbols", "elements": elements}
+
+
+# An annotated mini card (Textures/Paper/guide_example_card.png, 660 x 1024), before the symbols.
+def example_page():
+    strings.append(("guide_example_title", "Reading a Card", "读懂一张卡"))
+    strings.append(("guide_example_caption", "A torso augment: Power 1, Stability 3, Glitch 0.", "一个躯干义体：力量 1，稳定度 3，故障 0。"))
+    return {"name": "Reading a Card", "elements": [
+        {"type": "text", "x": 40, "y": 26, "w": 254, "h": 16, "loc": "guide_example_title", "style": "title", "align": "center"},
+        {"type": "image", "x": 74, "y": 48, "w": 187, "h": 290, "sprite": "guide_example_card", "fit": "fit"},
+        {"type": "text", "x": 40, "y": 342, "w": 254, "h": 20, "loc": "guide_example_caption", "style": "caption", "align": "center", "wrap": True},
+    ]}
+
+
 for n, page in enumerate(pages, 1):
     flow = f"flow{n}"
     top = 26
@@ -113,6 +158,9 @@ for n, page in enumerate(pages, 1):
                          "style": style, "align": align, "wrap": True, "autoHeight": True})
         strings.append(("guide_" + key, en, zh))
     book["pages"].append({"name": f"Page {n}", "elements": elements})
+    if page[0][0] == "p5_title":
+        book["pages"].append(example_page())
+        book["pages"].append(legend_page())
 
 with open(root + "/Books/zamco_guide.json", "w", encoding="utf-8") as f:
     json.dump(book, f, ensure_ascii=False, indent=1)

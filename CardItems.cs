@@ -59,6 +59,7 @@ namespace ZamsCollectibles
             CardBinder.Register(dir, textByItemId);
             AugWarriors.DeckBox.Register(dir, textByItemId);
             DeckOrders.Register(dir, textByItemId);
+            DealerCertificate.Register(dir, textByItemId);
         }
 
         /// <summary>Re-applies an item's name and descriptions in the current language; false if it isn't ours.</summary>

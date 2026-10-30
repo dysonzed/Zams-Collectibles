@@ -34,13 +34,14 @@ namespace ZamsCollectibles
             ModHook.OnCreateTooltipLate += OnCreateTooltip;
             ModHook.OnCreateDevTooltipLate += OnCreateDevTooltip;
             ModHook.OnGenerateCustomerLate += Collectibles.OnGenerateCustomer;
-            ModHook.OnGenerateCustomerNormal += Progression.OnGenerateCustomer;
+            ModHook.OnGenerateCustomerNormal += DealerCertificate.OnGenerateCustomer;
             ModHook.OnPlaceInventorInventoryItemLate += Progression.OnInventorStock;
             Progression.Register();
             ModHook.OnGameLoadedInit += Progression.OnRunStarted;
             ModHook.OnNewGameStarted += Progression.OnRunStarted;
             ModHook.OnGameLoadedLate += OnGameLoaded;
             DownsideDen.Register();
+            CardDealerScenario.Register();
             RegisterDebugButtons();
             Log.Log("Enabled.");
         }
@@ -51,13 +52,14 @@ namespace ZamsCollectibles
             ModHook.OnCreateTooltipLate -= OnCreateTooltip;
             ModHook.OnCreateDevTooltipLate -= OnCreateDevTooltip;
             ModHook.OnGenerateCustomerLate -= Collectibles.OnGenerateCustomer;
-            ModHook.OnGenerateCustomerNormal -= Progression.OnGenerateCustomer;
+            ModHook.OnGenerateCustomerNormal -= DealerCertificate.OnGenerateCustomer;
             ModHook.OnPlaceInventorInventoryItemLate -= Progression.OnInventorStock;
             ModHook.OnGameLoadedInit -= Progression.OnRunStarted;
             ModHook.OnNewGameStarted -= Progression.OnRunStarted;
             ModHelper.RemoveNetworkUpgrades(MOD_ID);
             ModHook.OnGameLoadedLate -= OnGameLoaded;
             ModHelper.RemoveAfterhourLocations(MOD_ID);
+            ModHelper.RemoveStartingScenarios(MOD_ID);
             ModHelper.RemoveDebugFunctions(MOD_ID);
             Log.Log("Disabled.");
         }
@@ -65,6 +67,7 @@ namespace ZamsCollectibles
         private void OnCreateTooltip(RichTextBuilder builder, GameItem item)
         {
             if (DeckOrders.IsOrderBox(item)) { DeckOrders.Tooltip(builder, item); return; }
+            if (item.identifier == DealerCertificate.ID) { DealerCertificate.Tooltip(builder); return; }
 
             if (item.IsTag(CardItems.BUNDLE_TAG))
             {
@@ -113,6 +116,7 @@ namespace ZamsCollectibles
             }
             if (refreshed > 0) Log.Log($"Refreshed the text of {refreshed} item(s).");
             ZamcoGuide.GiveIfMissed();
+            DealerCertificate.GiveIfMissed();
         }
 
         // The F9 dev tooltip shows the hidden exact condition, for testing.
@@ -136,6 +140,9 @@ namespace ZamsCollectibles
             if (CustomUIManager.Instance == null) return;
             CustomUIManager.Window(DEBUG_WINDOW_ID, "Zam's Collectibles", CustomUIManager.LAYER_OVERLAY)
                 .SetDraggable(true)
+                .SetSize(820f, 470f)
+                .BeginColumn(8f)
+                .BeginRow(16f)
                 .BeginColumn(4f)
                     .AddHeader("Spawn")
                     .AddButton("Booster Packs (one per set)", () =>
@@ -154,12 +161,10 @@ namespace ZamsCollectibles
                         ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardBinder.BINDER_ID)))
                     .AddButton("Zamco Stockist Guide", () =>
                         ModHelper.MoveItemToInventory(ModHelper.SpawnPaperItem(MOD_ID, ZamcoGuide.BOOK_ID)))
+                    .AddButton("Dealer Certificate", () =>
+                        ModHelper.MoveItemToInventory(ModHelper.SpawnItem(DealerCertificate.ID)))
                     .AddButton("Deck Box", () =>
                         ModHelper.MoveItemToInventory(ModHelper.SpawnItem(AugWarriors.DeckBox.DECKBOX_ID)))
-                    .AddButton("Test Match (random deck, no stakes)", () =>
-                        AugWarriors.AugBoard.Start(null, "Rook", AugWarriors.AugPersonality.Cautious, 0))
-                    .AddButton("Test Match vs Oracle (random deck, no stakes)", () =>
-                        AugWarriors.AugBoard.Start(null, "Oracle", AugWarriors.AugPersonality.Oracle, 0))
                     .AddButton("Full Card Set (first set)", () =>
                     {
                         CardSetDef set = CardDatabase.Sets.Count > 0 ? CardDatabase.Sets[0] : null;
@@ -167,14 +172,23 @@ namespace ZamsCollectibles
                         foreach (CardDef card in set.cards)
                             ModHelper.MoveItemToInventory(ModHelper.SpawnItem(CardItems.CardId(card)));
                     })
-                    .AddHeader("Command")
-                    // Stand-in for a real grading service: grades every card in the player's inventory.
-                    .AddButton("Unlock Downside Den", () => { ModHelper.GetNetworkUpgrade(Progression.DEN_UPGRADE)?.Unlock(); Log.Log("Downside Den unlocked."); })
+                .End()
+                .BeginColumn(4f)
+                    .AddHeader("Aug Warriors")
+                    .AddButton("Test Match (no stakes)", () =>
+                        AugWarriors.AugBoard.Start(null, "Rook", AugWarriors.AugPersonality.Cautious, 0))
+                    .AddButton("Test Match vs Oracle", () =>
+                        AugWarriors.AugBoard.Start(null, "Oracle", AugWarriors.AugPersonality.Oracle, 0))
                     .AddButton("Den Regulars: Log Pool", () => Log.Log("Den regulars " + AugWarriors.DenRegulars.Describe()))
-                    .AddButton("Den Regulars: Someone In Tonight", () => { AugWarriors.DenRegulars.ForceSomeoneTonight(); Log.Log("Den regulars " + AugWarriors.DenRegulars.Describe()); })
+                    .AddButton("Den Regulars: Someone In", () => { AugWarriors.DenRegulars.ForceSomeoneTonight(); Log.Log("Den regulars " + AugWarriors.DenRegulars.Describe()); })
+                .End()
+                .BeginColumn(4f)
+                    .AddHeader("Store")
+                    .AddButton("Unlock Downside Den", () => { ModHelper.GetNetworkUpgrade(Progression.DEN_UPGRADE)?.Unlock(); Log.Log("Downside Den unlocked."); })
                     .AddButton("Next Customer: Deck Builder", () => NextCustomer(DeckOrders.CreateCustomer()))
                     .AddButton("Next Customer: Pack Flipper", () => NextCustomer(Progression.CreatePackFlipper()))
-                    .AddButton("Next Customer: Pack Flipper (asks for a game)", () => NextCustomer(Progression.CreatePackFlipper(100)))
+                    .AddButton("Next Customer: Flipper (asks for game)", () => NextCustomer(Progression.CreatePackFlipper(100)))
+                    // Stand-in for a real grading service: grades every card in the player's inventory.
                     .AddButton("Grade Inventory Cards", () =>
                     {
                         int graded = 0;
@@ -182,7 +196,9 @@ namespace ZamsCollectibles
                             if (CardItems.Grade(item)) graded++;
                         Log.Log($"Graded {graded} card(s).");
                     })
-                    .AddButton("Close", () => CustomUIManager.Instance.CloseWindow(DEBUG_WINDOW_ID))
+                .End()
+                .End()
+                .AddButton("Close", () => CustomUIManager.Instance.CloseWindow(DEBUG_WINDOW_ID))
                 .End()
                 .Center()
                 .Show();

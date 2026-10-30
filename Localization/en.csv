@@ -268,6 +268,19 @@ challenge_they_lost,"Ugh, you got me. Good game."
 challenge_draw,"A draw? Huh. We'll settle it another day."
 aug_table_opponent_hint,How they play is for you to find out.
 den_nobody_tonight,Nobody's at the back table tonight.
+certificate_name,Zamco Authorized Dealer Certificate
+certificate_desc,"Put it in your display case to draw card customers: pack flippers and deck builders. The longer one doesn't come, the better the odds."
+certificate_flavor,"Licensed to sell Zamco collectibles. Not valid as currency, identification or a weapon."
+certificate_odds,"In the display case. Card customer odds today: {0}%"
+certificate_not_displayed,Not on display: card customers will rarely come.
+scenario_title,Card Dealer
+scenario_desc,"You've got a Zamco dealer licence, a few sealed packs and a referral to the Downside Den. Trade cards, build decks, and take on the regulars at the back table."
+scenario_start_den,Downside Den unlocked
+scenario_start_packs,{0} Aug Warriors booster packs
+scenario_start_gear,Deck box and collection binder
+scenario_start_certificate,Zamco Authorized Dealer Certificate
+scenario_tag,Collectibles
+aug_board_glitch,Glitch · {0}
 guide_item_name,Zamco Stockist Guide
 guide_item_desc,"Welcome pack from Zamco Electronics: where to find the Downside Den, and how to play and build decks for Aug Warriors."
 guide_p1_title,A Message to Our Valued Stockists
@@ -284,6 +297,7 @@ guide_p1b_title,Introducing: Aug Warriors
 guide_p1b_1,"The card game the whole station is talking about. Build the ultimate mercenary one augment at a time, then outplay your rivals at the showdown."
 guide_p1b_2,"Every booster pack is factory sealed at Zamco's orbital plant and holds a random assortment of cards: commons, uncommons and, if fortune smiles, something rare.** Collect them, trade them, grade them, play them."
 guide_p1b_3,"Booster boxes, Collector's Boxes, binders and deck boxes are available from participating retailers. Collect the whole set!"
+guide_p1b_5,"Authorized dealers: hang your Zamco Dealer Certificate in your display case, and collectors will know where to find you."
 guide_p1b_4,**Rarity not guaranteed. Collecting the whole set not guaranteed.
 guide_p2_title,Where to Buy: the Downside Den
 guide_p2_1,"Zamco products are sold by fine retailers across the station, and by one that isn't so fine."
@@ -308,6 +322,20 @@ guide_p5_2,"MODS attach to one of your installed augments, up to 2 on each. Some
 guide_p5_3,"HACKS are played on your opponent's installed augments. Most add Glitch to the target, and it stacks. Scrap hacks remove the augment and its mods entirely."
 guide_p5_4,Special effects
 guide_p5_5,"Some augments do more: draw cards when installed, make you immune to hacks, gain Power for each mod on them, for each of your Glitch-free augments or if you called the showdown, or soften the blow of being Compromised. The numbers are printed on each card."
+guide_example_title,Reading a Card
+guide_example_caption,"A torso augment: Power 1, Stability 3, Glitch 0."
+guide_legend_title,Card Symbols
+guide_legend_intro,The small cards on the Aug Warriors table carry these symbols:
+guide_legend_power,Power. The number in the top corner.
+guide_legend_head,Head augment.
+guide_legend_torso,Torso augment.
+guide_legend_arm,Arm augment. Fits either arm.
+guide_legend_legs,Legs augment.
+guide_legend_mod,Mod. Attaches to one of your augments.
+guide_legend_hack,Hack. Played on your opponent's augments.
+guide_legend_stability,Stability it adds.
+guide_legend_glitch,"Glitch it adds, or removes with a minus. On a hack, the Glitch it adds to the target."
+guide_legend_scrap,Scrap: removes the target augment and its mods.
 guide_p6_title,Deck Building
 guide_p6_1,"A legal deck has 10 to 20 cards, with no more than 2 copies of any one card. Keep it in a deck box: the box's Validate button checks it for you."
 guide_p6_2,Tips from the regulars

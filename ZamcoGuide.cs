@@ -22,10 +22,7 @@ namespace ZamsCollectibles
         public static void GiveToCounter()
         {
             ModHelper.SetModDataInt(ModEntry.MOD_ID, GIVEN_KEY, 1);
-            GameItem guide = ModHelper.SpawnPaperItem(ModEntry.MOD_ID, BOOK_ID);
-            if (guide == null) return;
-            if (GraphUtils.TryAcceptAllMid(EmporiumEntry.Instance.frontInvinvElement, guide) > 0)
-                GraphUtils.EmporiumTryAdd(EmporiumEntry.Instance.backInvinvElement, guide);
+            Progression.PlaceOnCounter(ModHelper.SpawnPaperItem(ModEntry.MOD_ID, BOOK_ID));
         }
 
         public static void Open(int page = 0) => ModHelper.OpenPaper(ModEntry.MOD_ID, BOOK_ID)?.FlipTo(page);
