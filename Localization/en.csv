@@ -44,7 +44,7 @@ booster_flavor,Sealed packs are worth more to collectors. Probably.
 
 # Collector's Box
 box_name,Collector's Box
-box_desc,"A display box for one card set. It grows a slot for each card you add. Fill it with one of each card, then seal it: sealed sets sell for more than the loose cards. Include the ultra rare for a Master Set, worth more again."
+box_desc,"A display box for one card set. It grows a slot for each card you add. Fill it with one of each card, then seal it: sealed sets sell for more than the loose cards, and a collector may come looking for them. Include the ultra rare for a Master Set, worth more again."
 box_panel_cards,Cards
 box_panel_seal,Seal
 box_seal_button,Seal Set
@@ -61,6 +61,8 @@ box_seal_confirm,"Seal the {0} set?\nThe cards can't be taken out again.\nLoose 
 
 # Sealed sets
 sealed_name,Sealed Set: {0}
+sealed_master_name,Sealed Master Set: {0}
+tooltip_master_set,"Master Set: every card, ultra rare included"
 sealed_desc,"All {0} cards of {1}, sealed in a display box."
 
 # Card viewer (plain fallback window)
@@ -193,6 +195,7 @@ aug_table_card_ante,Anteing {0}.
 aug_table_need_deck,Put your deck box in the deck slot.
 aug_table_fix_deck,Your deck isn't legal: open the deck box and Validate.
 aug_table_ready,Ready.
+aug_table_played_tonight,You've already had your game tonight.
 
 # Aug Warriors board
 aug_title_vs,Aug Warriors vs {0}
@@ -264,7 +267,9 @@ challenge_they_won,"Good game! Better luck next time."
 challenge_they_lost,"Ugh, you got me. Good game."
 challenge_draw,"A draw? Huh. We'll settle it another day."
 aug_table_opponent_hint,How they play is for you to find out.
+aug_table_high_stakes,"High stakes: Oracle pays triple the credit ante. Win a card ante and you get two cards and a booster pack."
 den_nobody_tonight,Nobody's at the back table tonight.
+den_all_played,You've had your game tonight. The regulars have moved on; come back tomorrow.
 certificate_name,Zamco Authorized Dealer Certificate
 certificate_desc,"Put it in your display case to draw card customers: pack flippers, deck builders and card graders. The longer one doesn't come, the better the odds."
 certificate_flavor,"Licensed to sell Zamco collectibles. Not valid as currency, identification or a weapon."
@@ -279,6 +284,9 @@ scenario_start_certificate,Zamco Authorized Dealer Certificate
 scenario_tag,Collectibles
 aug_board_glitch,Glitch · {0}
 client_grader,Card Grader
+client_collector,Set Collector
+client_collector_line,"Word is you deal Aug Warriors. I don't open packs and I don't play. I collect."
+client_collector_wants,"Complete sets, sealed. A Master Set if you've got one. Show me what you have and I'll pay what it's worth."
 grader_offer,"Evening. I grade cards: I check them over properly and seal them in a slab with their grade. {0} credits a card, back tomorrow. Interested?"
 grader_choice_yes,Let's grade some cards
 grader_choice_no,Not today
@@ -324,7 +332,7 @@ guide_p1b_4,**Rarity not guaranteed. Collecting the whole set not guaranteed.
 guide_p2_title,Where to Buy: the Downside Den
 guide_p2_1,"Zamco products are sold by fine retailers across the station, and by one that isn't so fine."
 guide_p2_2,"Take the service lift down past the recycling decks. Step off where the lights stop working properly, follow the smell of fried noodles and the sound of shuffling, and look for the hand-painted sign: DOWNSIDE DEN."
-guide_p2_3,"Ask for Dan. He stocks fresh booster packs and boxes every night, keeps singles in the case, and buys collectibles over the counter. The Den opens after hours: drop by once your own shop has closed for the night."
+guide_p2_3,"Ask for Dan. He stocks fresh booster packs and boxes every night, keeps singles in the case, and buys collectibles over the counter. The Den opens after hours, every night but Sunday: drop by once your own shop has closed for the night."
 guide_p2_4,The back table belongs to the station's Aug Warriors regulars. Bring a deck.
 guide_p3_title,How to Play: the Goal
 guide_p3_1,"Two mercenaries race to build the strongest body. Each body has five slots: head, torso, two arms and legs."

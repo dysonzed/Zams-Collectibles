@@ -24,7 +24,7 @@
 [*]Every card has a hidden condition you judge by its wear. Most packs are well travelled: clean cards are a real find, and a perfect gem 10 is a true jackpot
 [*]Playing wears your cards down. Sleeve your best ones with card sleeves from the Den
 [*]The Card Grader seals your cards in graded slabs, with a big premium for top grades
-[*]Seal a complete set in a Collector's Box for a bonus; include the ultra rare for a Master Set
+[*]Seal a complete set in a Collector's Box for a bonus; include the ultra rare for a Master Set, worth twice the bonus
 [*]Collection binders, deck boxes, and a Collectible item category only the right customers buy
 [*]Double-click any card to see it full size, and open as many as you like side by side
 [*]The economy is tuned per tier: Tier 1 is a gamble, Tier 3 pays back the investment
@@ -33,7 +33,7 @@
 [h2]The Downside Den[/h2]
 [list]
 [*]Unlock a card shop down in the lower section through Wild's Network
-[*]Downside Dan sells fresh packs, boxes and singles every night and buys cards over the counter
+[*]Downside Dan sells fresh packs, boxes and singles six nights a week (the Den is closed on Sundays) and buys cards over the counter
 [*]Arrive with the Zamco Stockist Guide (how to play, how to read a card, deck building) and an Authorized Dealer Certificate: hang it in your display case to draw card customers
 [/list]
 
@@ -41,7 +41,8 @@
 [list]
 [*]Build a mercenary one augment at a time: push your Power, keep your Glitch under your Stability, and call the showdown at the right moment
 [*]Dozens of card effects: hacks, mod stealing, extra actions, swarm synergies and more
-[*]Play the Den's regulars for credits or cards. Each save has its own regulars with hidden play styles, and one of them, Oracle, is very, very good
+[*]Play the Den's regulars for credits or cards, one game a night. Each save has its own regulars with hidden play styles, and one of them, Oracle, is very, very good
+[*]Oracle plays for high stakes: antes of 100, 250 or 500 credits that pay three times over, or a card ante that wins you two cards and a booster pack
 [*]Card customers may challenge you to a game at your counter
 [/list]
 
@@ -50,13 +51,14 @@
 [*]Pack flippers who sell you packs below Dan's prices
 [*]Deck builders who hand you a box and a wish list, shown on your shop tablet
 [*]The Card Grader, who takes your cards away for a day and brings them back slabbed
+[*]A rare Set Collector who comes looking for sealed sets, and grows more likely to visit the longer one sits on your shelf
 [/list]
 
 [h2]New start: Card Dealer[/h2]
 Begin with the Den open, three booster packs, a deck box and a binder.
 
 [h2]Notes[/h2]
-This is an early version: expect rough edges. The Tier 1 sets have their full card art; the other sets still use placeholder art. Text is in English and Simplified Chinese.
+This is an early version: expect rough edges. The Tier 1 sets, Restored Grace and Broodmother's Clutch have their full card art; the other sets still use placeholder art. Text is in English and Simplified Chinese.
 
 Save warning: cards, packs, boxes and the other items from this mod disappear from your store if you disable or remove it.
 
@@ -68,34 +70,36 @@ Zamco 电子把 Aug Warriors 集换式卡牌游戏带到了空间站。拆补充
 [*]每张卡都有隐藏品相，满分 10 分是真正的大奖；评级师会把卡封进评级盒
 [*]打牌会磨损卡牌，用卡套保护你最好的卡
 [*]用收藏盒封装完整套装获得加成，加入超稀有卡即为大师套装
-[*]Downside Den 卡牌店：每晚进货的补充包、补充盒和单卡，以及后桌的常客对手
+[*]Downside Den 卡牌店（周日休息）：新到的补充包、补充盒和单卡，以及后桌的常客对手，每晚可对战一局
 [*]完整的 Aug Warriors 卡牌对战：常客各有隐藏的打法风格，其中 Oracle 极其难缠
-[*]新顾客：补充包贩子、组卡客和卡牌评级师；新开局：卡牌经销商
+[*]新顾客：补充包贩子、组卡客、卡牌评级师和稀有的套装收藏家；新开局：卡牌经销商
 [/list]
 支持简体中文。注意：停用或移除本模组后，其物品会从你的商店中消失。"
-	"changenote"		"Version 0.3.0: card art, sleeves and a condition rebalance.
+	"changenote"		"Version 0.3.1: fixes the mod being refused after the game's latest update, plus new card art, a Set Collector and high-stakes games against Oracle.
+
+Fix
+- The game's new mod scanner refused to enable 0.3.0 ("uses capabilities its manifest does not declare"). The mod no longer needs any special permissions and enables normally again
 
 Card art
-- Full card art for all three Tier 1 sets: Rustwave Rising, Doomed Decay and Oxygen Leak
-- Open as many full-size card views as you like at once (double-click a card); the guide and card tooltips now mention it
+- Full card art for Restored Grace and Broodmother's Clutch
 
-Condition and grading
-- Fresh packs now roll the whole condition scale, mostly Moderately Played: this is a run-down station. Clean cards are rare and worth much more
-- Raw and graded prices rebalanced around the new spread: grading a card that looks Near Mint or better pays well, grading blind does not
-- Deck builder orders that ask for clean cards now accept Lightly Played or better
-- Existing saves: cards keep their condition, so collections from earlier versions are worth noticeably more
-
-Card sleeves and wear
-- Every Aug Warriors game wears the unsleeved cards in your deck box a little
-- Downside Dan sells Card Sleeves, 10 to a pack: open the pack, put cards in its tray and press Sleeve. Sleeved and graded cards take no wear
+Collecting
+- A rare new customer, the Set Collector, comes looking for sealed sets once the Den is open, and grows more likely to visit the longer a sealed set waits in your shop
+- Collector's Boxes sealed with the ultra rare are marked as Master Sets, by name and in the tooltip
+- Opening a booster pack no longer asks for confirmation
 
 Aug Warriors
-- The match window shows the turn (Turn 3 of 6)
-- Mods installed on an augment show as small gems under its slot: hover one for the mod's tooltip, double-click it to view the card
+- Oracle plays for high stakes: credit antes of 100, 250 or 500 that pay three times your ante if you win. A card ante against Oracle wins two cards plus a booster pack from your highest unlocked tier
+- The ante is exactly what you lose: losing or conceding costs your ante and nothing more
 
-版本 0.3.0：卡图、卡套与品相重新平衡。
-- 第一等级的三个系列现已拥有完整卡图；可同时打开任意多张大图
-- 新补充包的品相覆盖整个范围，多为中度使用；品相好的卡更稀有、更值钱；评级收益随之调整
-- 每局 Aug Warriors 都会让卡盒里没套卡套的卡略有磨损；Downside Dan 出售卡套，每包 10 个
-- 对战窗口显示回合数；增强件上安装的改装以小宝石显示，悬停查看说明，双击查看卡牌"
+Downside Den
+- The regulars play one game a night at the back table, whoever is in
+- The Den is closed on Sundays
+
+版本 0.3.1：修复游戏最新更新后模组无法启用的问题，并新增卡图、套装收藏家和与 Oracle 的高额对局。
+- 修复：游戏新的模组扫描器拒绝启用 0.3.0；现在本模组无需任何特殊权限，可正常启用
+- Restored Grace 和 Broodmother's Clutch 现已拥有完整卡图
+- 稀有新顾客“套装收藏家”会来收购封装好的套装；含超稀有卡的收藏盒标记为大师套装；打开补充包不再需要确认
+- Oracle 对局为高额赌注：100、250 或 500 信用点，赢了获得三倍；以卡牌下注赢得两张卡和一包最高等级的补充包。输了只损失赌注
+- Den 每晚只能对战一局；周日休息"
 }

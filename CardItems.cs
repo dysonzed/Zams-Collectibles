@@ -21,6 +21,7 @@ namespace ZamsCollectibles
         public const string BOOSTER_SET_STRING = "ZAMS_BOOSTER_SET_STRING";
         public const string BUNDLE_TAG = "ZAMS_SET_BUNDLE_TAG";
         public const string BUNDLE_AVG_CONDITION_FLOAT = "ZAMS_BUNDLE_AVG_CONDITION_FLOAT";
+        public const string BUNDLE_MASTER_TAG = "ZAMS_BUNDLE_MASTER_TAG";   // sealed with the ultra rare (sets sealed before 0.3.1 lack it)
 
         public const string COLLECTOR_BOX_ID = ModEntry.MOD_ID + ".collector_box";
 
@@ -451,6 +452,7 @@ namespace ZamsCollectibles
             List<GameItem> cards = grid.childItems.Where(IsCard).ToList();
             long loose = cards.Sum(c => c.unitValue);
             long sealedValue = (long)Math.Round(loose * (1f + set.sealedMarkup * (IsMaster(grid) ? 2f : 1f)));
+            bool master = IsMaster(grid);
             Confirm(Loc.Get("box_seal_confirm", Loc.SetName(set), loose, sealedValue), () =>
             {
                 float avgCondition = cards.Average(GetCondition);
@@ -461,6 +463,11 @@ namespace ZamsCollectibles
                 GameItem sealedSet = DirectoryMaster.Item(BundleId(set));
                 sealedSet.SetValue(sealedValue);
                 sealedSet.ModifyTag(BUNDLE_AVG_CONDITION_FLOAT, s => s.Enable().SetFloat(avgCondition));
+                if (master)
+                {
+                    sealedSet.EnableTag(BUNDLE_MASTER_TAG);
+                    SetBundleText(sealedSet, set);
+                }
                 if (parent != null) GraphUtils.EmporiumTryAdd(parent, sealedSet);
                 else GraphUtils.EmporiumTryAdd(sealedSet);
             });
@@ -478,9 +485,11 @@ namespace ZamsCollectibles
             return item;
         }
 
+        public static bool IsMasterSet(GameItem item) => item != null && item.IsTag(BUNDLE_MASTER_TAG);
+
         private static void SetBundleText(GameItem item, CardSetDef set)
         {
-            item.name = Loc.Get("sealed_name", Loc.SetName(set));
+            item.name = Loc.Get(IsMasterSet(item) ? "sealed_master_name" : "sealed_name", Loc.SetName(set));
             item.shortDescription = Loc.Get("sealed_desc", set.cards.Length, Loc.SetName(set));
         }
 

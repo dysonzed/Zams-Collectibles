@@ -68,7 +68,7 @@ namespace ZamsCollectibles.AugWarriors
         {
             if (settled || ante <= 0) { settled = true; return; }
             settled = true;
-            if (match.winner == HUMAN) ModHelper.AddCredit(ante);
+            if (match.winner == HUMAN) ModHelper.AddCredit(AugStakes.Won(npcStyle, ante));
             else if (match.winner == NPC) ModHelper.AddCredit(-ante);
         }
 
@@ -200,7 +200,8 @@ namespace ZamsCollectibles.AugWarriors
             b.Last.SetTextColor(match.winner == HUMAN ? Good : match.winner == NPC ? Warning : Color.white);
             b.AddLabel(Loc.Get("aug_result_scores", ScoreText(you), npcName, ScoreText(them)));
             if (ante > 0 && match.winner.HasValue)
-                b.AddLabel(Loc.Get(match.winner == HUMAN ? "aug_result_won_ante" : "aug_result_lost_ante", ante + GeneralHelper.CreditIcon()));
+                b.AddLabel(match.winner == HUMAN ? Loc.Get("aug_result_won_ante", AugStakes.Won(npcStyle, ante) + GeneralHelper.CreditIcon())
+                    : Loc.Get("aug_result_lost_ante", ante + GeneralHelper.CreditIcon()));
             b.AddButton(Loc.Get("aug_close"), () => CustomUIManager.Instance.CloseWindow(MATCH_WINDOW));
         }
 

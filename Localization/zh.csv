@@ -44,7 +44,7 @@ booster_flavor,未拆封的卡包更受收藏家青睐。大概吧。
 
 # 收藏盒
 box_name,收藏盒
-box_desc,一套卡牌的展示盒。每放进一张卡就多出一个格子。每张卡各放一张后即可封装：封装的套装比散卡更值钱。加入超稀有卡可组成大师套装，价值更高。
+box_desc,一套卡牌的展示盒。每放进一张卡就多出一个格子。每张卡各放一张后即可封装：封装的套装比散卡更值钱，还可能有收藏家专程来收。加入超稀有卡可组成大师套装，价值更高。
 box_panel_cards,卡牌
 box_panel_seal,封装
 box_seal_button,封装套卡
@@ -61,6 +61,8 @@ box_seal_confirm,要封装 {0} 套卡吗？\n封装后卡牌无法再取出。\n
 
 # 封装套卡
 sealed_name,封装套卡：{0}
+sealed_master_name,封装大师套装：{0}
+tooltip_master_set,大师套装：全套卡牌，含超稀有卡
 sealed_desc,{1} 全部 {0} 张卡牌，封装在展示盒中。
 
 # 卡牌查看器（备用窗口）
@@ -193,6 +195,7 @@ aug_table_card_ante,押上：{0}。
 aug_table_need_deck,把卡组盒放进卡组槽。
 aug_table_fix_deck,你的卡组不合规：打开卡组盒并检查。
 aug_table_ready,准备就绪。
+aug_table_played_tonight,你今晚已经打过一局了。
 
 # Aug Warriors 对战板
 aug_title_vs,Aug Warriors 对阵 {0}
@@ -264,7 +267,9 @@ challenge_they_won,打得好！下次好运。
 challenge_they_lost,唉，被你赢了。打得好。
 challenge_draw,平局？行，改天再分高下。
 aug_table_opponent_hint,他们怎么打，你自己去发现吧。
+aug_table_high_stakes,高额赌注：Oracle 支付三倍信用点赌注。押卡获胜可得两张卡和一个补充包。
 den_nobody_tonight,今晚后面那张桌子没人。
+den_all_played,你今晚已经打过一局了。常客们都散了，明天再来吧。
 certificate_name,Zamco 授权经销商证书
 certificate_desc,放进展示柜可吸引卡牌顾客：补充包贩子、组卡客和评级师。越久没来，几率越高。
 certificate_flavor,获准销售 Zamco 收藏品。不可用作货币、身份证明或武器。
@@ -279,6 +284,9 @@ scenario_start_certificate,Zamco 授权经销商证书
 scenario_tag,收藏品
 aug_board_glitch,故障 · {0}
 client_grader,卡牌评级师
+client_collector,套装收藏家
+client_collector_line,听说你卖 Aug Warriors。我不拆包，也不打牌，我只收藏。
+client_collector_wants,封装好的完整套装，有大师套装更好。拿出来看看，我按价付钱。
 grader_offer,晚上好。我做卡牌评级：仔细检查后封进评级盒，标上等级。每张 {0} 信用点，明天送回。有兴趣吗？
 grader_choice_yes,来评级吧
 grader_choice_no,今天算了
@@ -668,7 +676,7 @@ guide_p1b_4,**不保证稀有度。不保证能集齐全套。
 guide_p2_title,购买地点：Downside Den
 guide_p2_1,Zamco 产品在空间站各处的正规商店有售，也在一家不太正规的店里有售。
 guide_p2_2,乘维修电梯下行，经过回收甲板。在灯光开始不正常的地方下来，循着炸面的味道和洗牌的声音走，找那块手绘招牌：DOWNSIDE DEN。
-guide_p2_3,找 Dan。他每晚进新的补充包和补充盒，柜子里有单卡，也在柜台收购收藏品。Den 只在打烊后营业：你的店关门后过来就行。
+guide_p2_3,找 Dan。他每晚进新的补充包和补充盒，柜子里有单卡，也在柜台收购收藏品。Den 只在打烊后营业，周日休息：你的店关门后过来就行。
 guide_p2_4,后面那张桌子是空间站 Aug Warriors 常客的地盘。带上卡组。
 guide_p3_title,玩法：目标
 guide_p3_1,两名佣兵比拼谁能打造最强的身体。每具身体有五个槽位：头部、躯干、两条手臂和腿部。

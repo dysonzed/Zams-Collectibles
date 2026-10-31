@@ -36,6 +36,7 @@ namespace ZamsCollectibles
             ModHook.OnGenerateCustomerLate += Collectibles.OnGenerateCustomer;
             ModHook.OnGenerateCustomerNormal += DealerCertificate.OnGenerateCustomer;
             ModHook.OnGenerateCustomerNormal += CardGrading.OnGenerateCustomer;
+            ModHook.OnGenerateCustomerNormal += SetCollector.OnGenerateCustomer;
             ModHook.OnGenerateCustomerVeryLate += CardGrading.OnGenerateCustomerLast;
             ModHook.OnPlaceInventorInventoryItemLate += Progression.OnInventorStock;
             Progression.Register();
@@ -56,6 +57,7 @@ namespace ZamsCollectibles
             ModHook.OnGenerateCustomerLate -= Collectibles.OnGenerateCustomer;
             ModHook.OnGenerateCustomerNormal -= DealerCertificate.OnGenerateCustomer;
             ModHook.OnGenerateCustomerNormal -= CardGrading.OnGenerateCustomer;
+            ModHook.OnGenerateCustomerNormal -= SetCollector.OnGenerateCustomer;
             ModHook.OnGenerateCustomerVeryLate -= CardGrading.OnGenerateCustomerLast;
             ModHook.OnPlaceInventorInventoryItemLate -= Progression.OnInventorStock;
             ModHook.OnGameLoadedInit -= Progression.OnRunStarted;
@@ -76,6 +78,7 @@ namespace ZamsCollectibles
             if (item.IsTag(CardItems.BUNDLE_TAG))
             {
                 float avg = item.GetTagReadonly(CardItems.BUNDLE_AVG_CONDITION_FLOAT).GetFloat();
+                if (CardItems.IsMasterSet(item)) builder.AddLine(Loc.Get("tooltip_master_set"), color: RenderHandler.ColorPalette.Yellow);
                 if (avg > 0f) builder.AddLine(Loc.Get("tooltip_sealed_condition", CardCondition.Label(avg)));
                 return;
             }
@@ -200,11 +203,8 @@ namespace ZamsCollectibles
                         CustomUIManager.Instance.CloseWindow(DEBUG_WINDOW_ID);
                         CardRenders.CaptureAll(true);
                     })
-                    .AddButton("Open Renders Folder", () =>
-                    {
-                        System.IO.Directory.CreateDirectory(CardRenders.Folder);
-                        Application.OpenURL("file:///" + CardRenders.Folder.Replace('\\', '/'));
-                    })
+                    // opening the folder for you would need the "start other programs" capability
+                    .AddButton("Log Renders Folder", () => Log.Log("Card renders folder: " + CardRenders.Folder))
                 .End()
                 .BeginColumn(4f)
                     .AddHeader("Store")
@@ -215,6 +215,7 @@ namespace ZamsCollectibles
                     .AddButton("Grader: Return Cards Now", () => { StoreClient back = CardGrading.DebugReturnNow(); if (back != null) NextCustomer(back); })
                     .AddButton("Next Customer: Deck Builder", () => NextCustomer(DeckOrders.CreateCustomer()))
                     .AddButton("Next Customer: Pack Flipper", () => NextCustomer(Progression.CreatePackFlipper()))
+                    .AddButton("Next Customer: Set Collector", () => NextCustomer(SetCollector.CreateCustomer()))
                     .AddButton("Next Customer: Flipper (asks for game)", () => NextCustomer(Progression.CreatePackFlipper(100)))
                     // Stand-in for a real grading service: grades every card in the player's inventory.
                     .AddButton("Grade Inventory Cards", () =>

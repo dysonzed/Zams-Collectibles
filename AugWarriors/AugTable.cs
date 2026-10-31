@@ -19,15 +19,17 @@ namespace ZamsCollectibles.AugWarriors
     /// </summary>
     public static class AugTable
     {
-        private static readonly int[] CreditAntes = { 0, 10, 25, 50 };
         private const int RARITY_UP_CHANCE = 15;    // percent: the won card is one rarity up
         private const int NEW_CARD_CHANCE = 25;     // percent: the won card is one the player doesn't own
+        private const int HIGH_STAKES_PRIZES = 2, HIGH_STAKES_RARITY_UP = 40;   // a card ante won off Oracle
 
         private static PixelWindow window;
         private static GameSlotInventory deckSlot, anteSlot;
         private static MachineryText deckText, anteText, opponentText, statusText;
         private static MachineryButton playButton;
-        private static int chosen, creditAnte;
+        private static int chosen, anteChoice;
+        private static MachineryRadioList creditList;
+        private static int CreditAnte => AugStakes.Options(Opponent.style)[anteChoice];
         private static bool inMatch;
 
         // Who can be played: the regulars at the Den tonight, or one store customer. Their play
@@ -119,18 +121,18 @@ namespace ZamsCollectibles.AugWarriors
             opponentText = new MachineryText();
             statusText = new MachineryText();
 
-            MachineryRadioList credits = new MachineryRadioList(
-                CreditAntes.Select(a => a == 0 ? Loc.Get("aug_no_stakes") : a + GeneralHelper.CreditIcon()).ToList(), 0,
-                i => { creditAnte = CreditAntes[i]; Refresh(); });
+            // the same buttons for every opponent; Refresh labels them with this opponent's antes
+            anteChoice = 0;
+            creditList = new MachineryRadioList(AnteLabels(), 0, i => { anteChoice = i; Refresh(); });
             MachineryStack opponentPanel = opponents.Count > 1
-                ? MachineryStack.Vertical(new MachineryRadioList(opponents.Select(o => o.name).ToList(), chosen, i => { chosen = i; Refresh(); }), opponentText)
+                ? MachineryStack.Vertical(new MachineryRadioList(opponents.Select(o => o.name).ToList(), chosen, ChooseOpponent), opponentText)
                 : MachineryStack.Vertical(opponentText);
             playButton = new MachineryButton(Loc.Get("aug_challenge_start"), Play);
             MachineryButton rules = new MachineryButton(Loc.Get("aug_table_rules"), () => ZamcoGuide.Open(ZamcoGuide.RULES_PAGE));
 
             window = MachineHelper.CreateMachineryWindow(true,
                 MachineHelper.Panel(Loc.Get("aug_table_deck"), MachineryStack.Vertical(deckSlot, deckText), "deck"),
-                MachineHelper.Panel(Loc.Get("aug_challenge_ante"), MachineryStack.Vertical(anteSlot, anteText, credits), "ante"),
+                MachineHelper.Panel(Loc.Get("aug_challenge_ante"), MachineryStack.Vertical(anteSlot, anteText, creditList), "ante"),
                 MachineHelper.Panel(Loc.Get("aug_challenge_opponent"), opponentPanel, "opponent"),
                 MachineHelper.Panel(Loc.Get("aug_table_play"), MachineryStack.Vertical(playButton, rules, statusText), "play"));
             window.SetTitle(Loc.Get("aug_challenge_title"));
@@ -146,14 +148,19 @@ namespace ZamsCollectibles.AugWarriors
                 : errors.Count == 0 ? Loc.Get("deckbox_status_ok", deck.Count)
                 : Loc.Get("deckbox_status_errors", deck.Count, errors.Count));
 
+            List<string> labels = AnteLabels();
+            for (int i = 0; i < labels.Count; i++) creditList.Get(i)?.SetText(labels[i]);
+
             CardDef ante = CardItems.GetCardDef(anteSlot.childItem);
             anteText.SetText(ante == null ? Loc.Get("aug_table_no_card") : Loc.Get("aug_table_card_ante", Loc.CardTitle(ante)));
             // how they play is for the player to find out
-            opponentText.SetText(opponents.Count > 1 ? Loc.Get("aug_table_opponent_hint") : Opponent.name);
+            opponentText.SetText(AugStakes.HighStakes(Opponent.style) ? Loc.Get("aug_table_high_stakes")
+                : opponents.Count > 1 ? Loc.Get("aug_table_opponent_hint") : Opponent.name);
 
-            string problem = deckSlot.childItem == null ? Loc.Get("aug_table_need_deck")
+            string problem = !AtStore && DenRegulars.PlayedTonight() ? Loc.Get("aug_table_played_tonight")
+                : deckSlot.childItem == null ? Loc.Get("aug_table_need_deck")
                 : errors.Count > 0 ? Loc.Get("aug_table_fix_deck")
-                : PlayerStore.Instance.GetCash() < creditAnte ? Loc.Get("den_not_enough")
+                : PlayerStore.Instance.GetCash() < CreditAnte ? Loc.Get("den_not_enough")
                 : null;
             statusText.SetText(problem ?? Loc.Get("aug_table_ready"));
             if (problem == null) playButton.Enable(); else playButton.Disable();
@@ -162,20 +169,22 @@ namespace ZamsCollectibles.AugWarriors
         private static void Play()
         {
             List<CardDef> deck = DeckBox.Cards(deckSlot.childItem);
-            if (inMatch || !AugRules.IsLegalDeck(deck) || PlayerStore.Instance.GetCash() < creditAnte) return;
+            if (inMatch || !AugRules.IsLegalDeck(deck) || PlayerStore.Instance.GetCash() < CreditAnte) return;
+            var (name, style) = Opponent;
+            if (!AtStore && DenRegulars.PlayedTonight()) return;
+            if (!AtStore) DenRegulars.MarkPlayed();   // the night's one game, conceded or not
             inMatch = true;
             window.Hide();
-            var (name, style) = Opponent;
             try
             {
-                AugBoard.Start(deck, name, style, creditAnte, Finished);
+                AugBoard.Start(deck, name, style, CreditAnte, Finished);
             }
             catch (Exception e)
             {
                 // The board drives the game's own widgets; if a game update breaks it, play in the plain window.
                 ModEntry.Instance.Log.Warning($"Aug Warriors: the board could not open ({e.GetType().Name}: {e.Message}). Using the plain match window.");
                 AugBoard.CloseIfOpen();
-                AugMatchWindow.Start(deck, name, style, creditAnte, Finished);
+                AugMatchWindow.Start(deck, name, style, CreditAnte, Finished);
             }
         }
 
@@ -194,8 +203,13 @@ namespace ZamsCollectibles.AugWarriors
             }
             else if (anteCard != null && winner == 0)
             {
-                GameItem prize = PrizeCard(anteCard);
-                if (prize != null) GraphUtils.EmporiumTryAdd(Home, prize);
+                bool high = AugStakes.HighStakes(Opponent.style);
+                for (int i = 0; i < (high ? HIGH_STAKES_PRIZES : 1); i++)
+                {
+                    GameItem prize = PrizeCard(anteCard, high ? HIGH_STAKES_RARITY_UP : RARITY_UP_CHANCE);
+                    if (prize != null) GraphUtils.EmporiumTryAdd(Home, prize);
+                }
+                if (high) GraphUtils.EmporiumTryAdd(Home, PrizePack());
             }
             if (AtStore)
             {
@@ -206,12 +220,39 @@ namespace ZamsCollectibles.AugWarriors
             Show();
         }
 
+        // Switching between Oracle's antes and everyone else's goes back to no stakes, so 50 never quietly becomes 500.
+        private static void ChooseOpponent(int i)
+        {
+            bool wasHigh = AugStakes.HighStakes(Opponent.style);
+            chosen = i;
+            if (AugStakes.HighStakes(Opponent.style) != wasHigh)
+            {
+                anteChoice = 0;
+                creditList.Select(0);
+            }
+            Refresh();
+        }
+
+        private static List<string> AnteLabels() =>
+            AugStakes.Options(opponents.Count == 0 ? null : Opponent.style)
+                .Select(a => a == 0 ? Loc.Get("aug_no_stakes") : a + GeneralHelper.CreditIcon()).ToList();
+
+        /// <summary>A booster pack from one of the highest licensed tier's sets.</summary>
+        private static GameItem PrizePack()
+        {
+            List<CardSetDef> sets = Progression.AvailableSets();
+            int top = sets.Max(s => s.tier);
+            GameItem pack = DirectoryMaster.Item(CardItems.BoosterId(RNG.GetRandomElement(sets.Where(s => s.tier == top).ToList())));
+            ModEntry.Instance.Log.Log($"Aug Warriors: won {pack.name} off Oracle.");
+            return pack;
+        }
+
         /// <summary>A card of the anted card's rarity, sometimes one up, a quarter of the time one the player doesn't own.</summary>
-        private static GameItem PrizeCard(CardDef anted)
+        private static GameItem PrizeCard(CardDef anted, int rarityUpChance)
         {
             List<string> order = CardDatabase.Rarities.Keys.ToList();
             int rank = Math.Max(0, order.IndexOf(anted.rarity));
-            if (RNG.Roll(RARITY_UP_CHANCE) && rank < order.Count - 1) rank++;
+            if (RNG.Roll(rarityUpChance) && rank < order.Count - 1) rank++;
             string rarity = order[rank];
 
             List<CardDef> pool = Progression.AvailableCards().Where(c => c.rarity == rarity).ToList();

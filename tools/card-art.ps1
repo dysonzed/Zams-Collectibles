@@ -481,7 +481,10 @@ $miniCaption = Add-Control (New-Object Windows.Forms.Label) 810 (80 + 22 * $MINI
 $miniCaption.Text = 'Board mini card'
 
 # what the card is and says, to help choose its art
-$details = Add-Control (New-Object Windows.Forms.RichTextBox) 810 (108 + 22 * $MINI_SCALE) 230 (270 - 22 * $MINI_SCALE)
+$details = Add-Control (New-Object Windows.Forms.RichTextBox) 810 (108 + 22 * $MINI_SCALE) 230 (238 - 22 * $MINI_SCALE)
+# name, slot (or card type) and flavour, for pasting into an image prompt
+$copyBtn = Add-Control (New-Object Windows.Forms.Button) 810 352 150 26
+$copyBtn.Text = 'Copy card data'; $copyBtn.Enabled = $false
 $details.ReadOnly = $true; $details.BorderStyle = 'None'; $details.BackColor = $form.BackColor; $details.TabStop = $false
 $details.ScrollBars = 'Vertical'
 
@@ -509,6 +512,29 @@ function Show-Details($c) {
     if ($card.flavor) { & $add "`n`"$($card.flavor)`"`n" ([Drawing.FontStyle]::Italic) }
     & $add "`n$($c.set.name) (Tier $($c.set.tier))" ([Drawing.FontStyle]::Regular)
     $details.SelectionStart = 0
+}
+
+function Copy-CardData {
+    if (-not $script:current) { return }
+    # Labelled and punctuated, so it still reads right if the target squashes it onto one line,
+    # and the card type is spelled out for a model that doesn't know the game.
+    $card = $script:current.card
+    $type = switch ($card.kind) {
+        'augment' {
+            $part = @{ head = 'head'; torso = 'torso (chest and core)'; arm = 'arm'; legs = 'legs' }[$card.slot]
+            "Augment, a cybernetic body part that replaces the $part"
+        }
+        'mod' {
+            $fits = if ($card.modFor -and $card.modFor -ne 'any') { "a $($card.modFor) augment" } else { 'any cybernetic body part' }
+            "Augment Modifier, an add-on module that attaches to $fits"
+        }
+        'hack' { 'Hack, a cyberattack or malicious program used against an enemy''s cybernetics' }
+        default { $card.kind }
+    }
+    $lines = @("Card name: $($card.name).", "Card type: $type.")
+    if ($card.flavor) { $lines += "Flavor text: `"$($card.flavor)`"" }
+    [Windows.Forms.Clipboard]::SetText($lines -join "`r`n")
+    $status.Text = "Copied $($card.name) to the clipboard"
 }
 
 # sliders: name, min, max, default, display
@@ -721,6 +747,7 @@ function Select-Card($c) {
     $script:current = $c
     $cardLabel.Text = "$($c.label)  $($c.card.name)"
     Show-Details $c
+    $copyBtn.Enabled = $true
     $srcPath = Join-Path $sourceDir "$($c.key).png"
     $setPath = Join-Path $sourceDir "$($c.key).json"
     if (Test-Path $srcPath) {
@@ -791,6 +818,7 @@ $resetBtn.Add_Click({
         Render
     })
 $saveBtn.Add_Click({ Save-Art })
+$copyBtn.Add_Click({ Copy-CardData })
 
 # right-click: the source pixel under the cursor becomes the colour to remove
 function Pick-Background($px, $py) {

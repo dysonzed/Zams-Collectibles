@@ -11,6 +11,8 @@ namespace ZamsCollectibles.AugWarriors
     ///
     /// Oracle is in every save's pool, always with the Oracle style, and has two tickets in
     /// the nightly draw of who turns up.
+    ///
+    /// One game a night at the back table, whoever it's against: the rest don't wait around.
     /// </summary>
     public static class DenRegulars
     {
@@ -22,6 +24,7 @@ namespace ZamsCollectibles.AugWarriors
         private const string POOL_KEY = "den_regulars";            // "name:style;name:style"
         private const string TONIGHT_KEY = "den_regulars_tonight"; // pool indices, "0,4"; empty: nobody
         private const string DAY_KEY = "den_regulars_day";
+        private const string PLAYED_DAY_KEY = "den_regulars_played_day";   // the last night the player had a game
 
         // Street handles: proper nouns, not localized.
         private static readonly string[] Names =
@@ -68,9 +71,17 @@ namespace ZamsCollectibles.AugWarriors
                 .Select(n => pool[n]).ToList();
         }
 
-        /// <summary>Debug: rerolls tonight, with someone guaranteed to be in.</summary>
+        /// <summary>Whether the player has already had tonight's game.</summary>
+        public static bool PlayedTonight() =>
+            ModHelper.GetModDataInt(ModEntry.MOD_ID, PLAYED_DAY_KEY, -1) == StoreStation.GetDayCounter();
+
+        /// <summary>A game has started: that's the night's game, conceded or not.</summary>
+        public static void MarkPlayed() => ModHelper.SetModDataInt(ModEntry.MOD_ID, PLAYED_DAY_KEY, StoreStation.GetDayCounter());
+
+        /// <summary>Debug: rerolls tonight, with someone guaranteed to be in (and nobody played yet).</summary>
         public static void ForceSomeoneTonight()
         {
+            ModHelper.SetModDataInt(ModEntry.MOD_ID, PLAYED_DAY_KEY, -1);
             int count = RNG.GetRandomInt(1, MAX_TONIGHT);
             ModHelper.SetModData(ModEntry.MOD_ID, TONIGHT_KEY, string.Join(",", Enumerable.Range(0, Pool().Count).OrderBy(_ => RNG.GetRandomInt(0, 9999)).Take(count)));
             ModHelper.SetModDataInt(ModEntry.MOD_ID, DAY_KEY, StoreStation.GetDayCounter());

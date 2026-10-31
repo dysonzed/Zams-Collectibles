@@ -51,6 +51,11 @@ namespace ZamsCollectibles
         public override string GetTitle() => Loc.Get("den_name");
         public override bool IsDiscovered() => Progression.DenUnlocked;   // found through Wild's Network
 
+        // Dan takes Sundays off: the travel screen shows the Den as unavailable (the day counter's
+        // weekday, as the game's own weekly events read it).
+        public override bool IsAvailable() =>
+            base.IsAvailable() && (StoreStation.Instance == null || StoreStation.Instance.dayCounter % 7 != (int)AfterhourWeekday.Sunday);
+
         // The board sits inside the frame painted on the right of den_scene.png; the counter
         // (where items are dropped to trade) is in the same place as Jackson's.
         public override Vector2? GetFrontCounterPosition(int w, int h) => new Vector2((float)(w / 100) * 80f, -(float)(h / 100) * 14.3f);
@@ -269,6 +274,8 @@ namespace ZamsCollectibles
             builder.AddButton(Loc.Get("den_challenge"), AugWarriors.AugTable.Open);
             if (AugWarriors.DenRegulars.Tonight().Count == 0)
                 builder.Last.SetInteractable(false).SetTooltip(Loc.Get("den_nobody_tonight"));
+            else if (AugWarriors.DenRegulars.PlayedTonight())
+                builder.Last.SetInteractable(false).SetTooltip(Loc.Get("den_all_played"));
         }
 
         // Fallback when the board can't open: the stock as a list with Buy and View buttons.

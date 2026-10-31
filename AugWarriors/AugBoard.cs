@@ -159,7 +159,7 @@ namespace ZamsCollectibles.AugWarriors
             if (settled) return;
             settled = true;
             if (ante <= 0) return;
-            if (match.winner == HUMAN) ModHelper.AddCredit(ante);
+            if (match.winner == HUMAN) ModHelper.AddCredit(AugStakes.Won(npcStyle, ante));
             else if (match.winner == NPC) ModHelper.AddCredit(-ante);
         }
 
@@ -548,7 +548,8 @@ namespace ZamsCollectibles.AugWarriors
             string verdict = Loc.Get(match.winner == HUMAN ? "aug_result_win" : match.winner == NPC ? "aug_result_lose" : "aug_result_draw", npcName);
             string scores = Loc.Get("aug_result_scores", Score(you), npcName, Score(them));
             string stakes = ante > 0 && match.winner.HasValue
-                ? " " + Loc.Get(match.winner == HUMAN ? "aug_result_won_ante" : "aug_result_lost_ante", ante + GeneralHelper.CreditIcon())
+                ? " " + (match.winner == HUMAN ? Loc.Get("aug_result_won_ante", AugStakes.Won(npcStyle, ante) + GeneralHelper.CreditIcon())
+                    : Loc.Get("aug_result_lost_ante", ante + GeneralHelper.CreditIcon()))
                 : "";
             return $"{verdict} {scores}{stakes}";
         }
