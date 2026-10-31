@@ -78,7 +78,7 @@ Zamco 电子把 Aug Warriors 集换式卡牌游戏带到了空间站。拆补充
 	"changenote"		"Version 0.3.1: fixes the mod being refused after the game's latest update, plus new card art, a Set Collector and high-stakes games against Oracle.
 
 Fix
-- The game's new mod scanner refused to enable 0.3.0 ("uses capabilities its manifest does not declare"). The mod no longer needs any special permissions and enables normally again
+- The game's new mod scanner refused to enable 0.3.0, saying it 'uses capabilities its manifest does not declare'. The mod no longer needs any special permissions and enables normally again
 
 Card art
 - Full card art for Restored Grace and Broodmother's Clutch
