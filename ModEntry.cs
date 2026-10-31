@@ -110,19 +110,24 @@ namespace ZamsCollectibles
         }
 
         // Item names and descriptions are saved with the items, in the language they were made in:
-        // re-apply ours in the current language whenever a save loads.
+        // re-apply ours in the current language whenever a save loads. Containers from older saves
+        // get their nestable tag back too.
         private void OnGameLoaded()
         {
             EmporiumEntry store = EmporiumEntry.Instance;
             if (store == null) return;
-            int refreshed = 0;
+            int refreshed = 0, nested = 0;
             foreach (GraphNodeStorage root in new GraphNodeStorage[] { store.invElement, store.frontInvinvElement, store.backInvinvElement, store.showcaseElement, store.afterhourInventory })
             {
                 if (root == null) continue;
                 foreach (GameItem item in GraphUtils.FindAllChildrenType<GameItem>(root))
+                {
                     if (CardItems.RefreshText(item)) refreshed++;
+                    if (CardItems.RefreshNesting(item)) nested++;
+                }
             }
             if (refreshed > 0) Log.Log($"Refreshed the text of {refreshed} item(s).");
+            if (nested > 0) Log.Log($"Made {nested} container(s) nestable.");
             ZamcoGuide.GiveIfMissed();
             DealerCertificate.GiveIfMissed();
         }

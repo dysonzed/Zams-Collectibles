@@ -75,31 +75,24 @@ Zamco 电子把 Aug Warriors 集换式卡牌游戏带到了空间站。拆补充
 [*]新顾客：补充包贩子、组卡客、卡牌评级师和稀有的套装收藏家；新开局：卡牌经销商
 [/list]
 支持简体中文。注意：停用或移除本模组后，其物品会从你的商店中消失。"
-	"changenote"		"Version 0.3.1: fixes the mod being refused after the game's latest update, plus new card art, a Set Collector and high-stakes games against Oracle.
-
-Fix
-- The game's new mod scanner refused to enable 0.3.0, saying it 'uses capabilities its manifest does not declare'. The mod no longer needs any special permissions and enables normally again
-
-Card art
-- Full card art for Restored Grace and Broodmother's Clutch
+	"changenote"		"Version 0.3.2: carry your card binders to the Den, look at any card, and fixes for store challenges and the Card Grader.
 
 Collecting
-- A rare new customer, the Set Collector, comes looking for sealed sets once the Den is open, and grows more likely to visit the longer a sealed set waits in your shop
-- Collector's Boxes sealed with the ultra rare are marked as Master Sets, by name and in the tooltip
-- Opening a booster pack no longer asks for confirmation
+- Card binders, Collector's Boxes, deck order boxes, sleeve packs and opened booster boxes now fit in backpacks and other containers, so you can take your collection to the Den. Ones already in your save are updated when it loads
+- Double-click any card to look at it, including singles for sale and the opponent's cards on the Aug Warriors board. You still have to buy singles, and board cards stay where they are
 
 Aug Warriors
-- Oracle plays for high stakes: credit antes of 100, 250 or 500 that pay three times your ante if you win. A card ante against Oracle wins two cards plus a booster pack from your highest unlocked tier
-- The ante is exactly what you lose: losing or conceding costs your ante and nothing more
+- Fixed: accepting a store challenge after an earlier game in the same session could dismiss the customer at once and leave your deck stuck to the cursor, with the mouse unresponsive
+- Your deck box is locked while its deck is in a match: it won't open and its cards can't be swapped until the game ends
 
-Downside Den
-- The regulars play one game a night at the back table, whoever is in
-- The Den is closed on Sundays
+Card Grader
+- The grader only visits when you have cards to grade
+- When bringing your cards back, the grader waits to be sent off like any customer instead of leaving on their own
 
-版本 0.3.1：修复游戏最新更新后模组无法启用的问题，并新增卡图、套装收藏家和与 Oracle 的高额对局。
-- 修复：游戏新的模组扫描器拒绝启用 0.3.0；现在本模组无需任何特殊权限，可正常启用
-- Restored Grace 和 Broodmother's Clutch 现已拥有完整卡图
-- 稀有新顾客“套装收藏家”会来收购封装好的套装；含超稀有卡的收藏盒标记为大师套装；打开补充包不再需要确认
-- Oracle 对局为高额赌注：100、250 或 500 信用点，赢了获得三倍；以卡牌下注赢得两张卡和一包最高等级的补充包。输了只损失赌注
-- Den 每晚只能对战一局；周日休息"
+版本 0.3.2：可以带着卡册去 Den、查看任意卡牌，并修复店内挑战和卡牌评级师的问题。
+- 卡册、收藏盒、组卡订单盒、卡套包和已打开的补充盒现在可以放进背包和其他容器；已有存档中的物品会在读档时更新
+- 双击即可查看任意卡牌，包括待售单卡和对战板上对手的卡牌（单卡仍需购买，对战板上的卡牌不可移动）
+- 修复：同一次游戏中先对战过再接受店内挑战时，顾客可能立刻离开、卡组卡在鼠标上且无法点击
+- 对战进行中卡组盒被锁定，不能打开或更换卡牌
+- 评级师只在你有可评级的卡牌时来访；归还卡牌后会等你送客，而不是自行离开"
 }

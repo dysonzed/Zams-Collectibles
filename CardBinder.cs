@@ -55,6 +55,7 @@ namespace ZamsCollectibles
             item.SetValue(BINDER_VALUE);
             foreach (GameGridInventory page in pages)
                 ContainerHelper.InitContainerItem(page, item, allowedTags: new List<string> { CardItems.CARD_TAG });
+            CardItems.MakeNestable(item);
             CardItems.TrackContainerValue(item, BINDER_VALUE, pages);
             return item;
         }

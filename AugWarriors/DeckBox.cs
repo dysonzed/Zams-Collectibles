@@ -17,7 +17,6 @@ namespace ZamsCollectibles.AugWarriors
         private const string REPORT_WINDOW = ModEntry.MOD_ID + ".deck_report";
         private const int COLUMNS = 5, ROWS = 4;   // 20 cards, the largest legal deck
         private const long DECKBOX_VALUE = 5;
-        private const string NESTABLE_TAG = "NESTABLE_DEVICE_TAG";   // the game's tag for containers that fit in containers
 
         private static readonly Color Warning = new Color32(0xE0, 0x50, 0x5A, 0xFF);
         private static readonly Color Advice = new Color32(0xCC, 0x77, 0x55, 0xFF);
@@ -47,7 +46,7 @@ namespace ZamsCollectibles.AugWarriors
             item.SetGameItemType(Collectibles.TYPE);
             item.SetValue(DECKBOX_VALUE);
             ContainerHelper.InitContainerItem(grid, item, allowedTags: new List<string> { CardItems.CARD_TAG });
-            item.EnableTag(NESTABLE_TAG);
+            CardItems.MakeNestable(item);
             CardItems.TrackContainerValue(item, DECKBOX_VALUE, grid);
             grid.onSlotAddItemEndFunc += (_, _, _) => Refresh(grid, summary);
             grid.onSlotRemoveItemEndFunc += (_, _, _) => Refresh(grid, summary);
@@ -61,6 +60,27 @@ namespace ZamsCollectibles.AugWarriors
         }
 
         public static bool IsDeckBox(GameItem item) => item != null && item.identifier == DECKBOX_ID;
+
+        /// <summary>
+        /// Locks a deck box while its deck is being played: its window closes and won't open, and
+        /// its cards can't be taken out or added (in case a window was left open some other way).
+        /// </summary>
+        public static void SetInPlay(GameItem box, bool inPlay)
+        {
+            GameGridInventory grid = box == null ? null : GraphUtils.FindChildType<GameGridInventory>(box);
+            if (grid == null) return;
+            if (inPlay)
+            {
+                box.contentWindow?.Hide();
+                box.contentWindow?.Lock();
+                grid.LockInv();
+            }
+            else
+            {
+                box.contentWindow?.Unlock();
+                grid.UnlockInv();
+            }
+        }
 
         /// <summary>The cards in a deck box (or its grid).</summary>
         public static List<CardDef> Cards(GameItem box) => Cards(box == null ? null : GraphUtils.FindChildType<GameGridInventory>(box));

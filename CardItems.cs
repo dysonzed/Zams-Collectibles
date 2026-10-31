@@ -323,6 +323,7 @@ namespace ZamsCollectibles
             item.SetValue(OPENED_BOX_VALUE);
             // An empty tag list matters: with no tag list at all the game lets anything in.
             ContainerHelper.InitContainerItem(grid, item, allowedTags: new List<string>(), allowedId: new List<string> { BoosterId(set) });
+            MakeNestable(item);
             // Emptied boxes go away when their window is closed (not the moment the last pack
             // leaves: a cancelled drag of that pack would have nowhere to return to).
             window.closeCallback += () => { if (grid.childItems.Count == 0 && item.parentInventory != null) item.Destroy(); };
@@ -372,6 +373,7 @@ namespace ZamsCollectibles
             item.SetValue(BOX_VALUE);
 
             ContainerHelper.InitContainerItem(grid, item, allowedTags: new List<string> { CARD_TAG });
+            MakeNestable(item);
             TrackContainerValue(item, BOX_VALUE, grid);
             grid.onSlotAddItemEndFunc += (_, _, _) => { Grow(grid, rows); RefreshStatus(grid, status); };
             grid.onSlotRemoveItemEndFunc += (_, _, _) => { Grow(grid, rows); RefreshStatus(grid, status); };
@@ -494,6 +496,27 @@ namespace ZamsCollectibles
         }
 
         // ---------------------------------------------------------------- shared
+
+        // Ids of our containers that fit in backpacks and other containers.
+        private static readonly HashSet<string> nestableIds = new HashSet<string>();
+
+        /// <summary>Lets a container go into backpacks and other containers (the game's nestable tag).</summary>
+        public static void MakeNestable(GameItem item)
+        {
+            item.EnableTag(ContainerHelper.NESTABLE_DEVICE_TAG);
+            nestableIds.Add(item.identifier);
+        }
+
+        /// <summary>
+        /// A save replaces an item's tags with the saved ones, so containers saved before they
+        /// nested get the tag back here; false if the item didn't need it.
+        /// </summary>
+        public static bool RefreshNesting(GameItem item)
+        {
+            if (item?.identifier == null || !nestableIds.Contains(item.identifier) || ContainerHelper.IsNestableDevice(item)) return false;
+            item.EnableTag(ContainerHelper.NESTABLE_DEVICE_TAG);
+            return true;
+        }
 
         /// <summary>
         /// Keeps a container's value at its own value plus everything inside it. Recomputed from

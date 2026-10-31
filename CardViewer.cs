@@ -1,4 +1,5 @@
 using System;
+using HarmonyLib;
 using UnityEngine;
 
 namespace ZamsCollectibles
@@ -72,6 +73,18 @@ namespace ZamsCollectibles
                 .End()
                 .Center();
             CardWindow.Track(item, builder.Show());
+        }
+    }
+
+    // The game only lets the player activate items they own (documents aside), so singles for
+    // sale and the cards on the Aug Warriors board wouldn't open. Reading a card is always allowed;
+    // this only affects activation, not moving, buying or dropping them.
+    [HarmonyPatch(typeof(GeneralHelper), nameof(GeneralHelper.MayInteractNonOwnedActivate))]
+    public static class CardViewerNonOwnedPatch
+    {
+        static void Postfix(GameItem item, ref bool __result)
+        {
+            if (CardItems.IsCard(item)) __result = true;
         }
     }
 }

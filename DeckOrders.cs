@@ -291,6 +291,7 @@ namespace ZamsCollectibles
             SetText(item);
             item.SetGameItemType(Collectibles.TYPE);
             ContainerHelper.InitContainerItem(grid, item, allowedTags: new List<string> { CardItems.CARD_TAG });
+            CardItems.MakeNestable(item);
             // worth the cards, the order's base pay and the extras it meets so far
             CardItems.TrackContainerValue(item, () => item.GetTagReadonly(BONUS_TAG).GetInt() + ExtrasEarned(item), grid);
             return item;

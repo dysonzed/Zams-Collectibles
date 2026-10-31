@@ -69,7 +69,10 @@ namespace ZamsCollectibles.AugWarriors
             string layout = string.Join("|", opponents.Select(o => o.name));
             if (window != null && window.handler != null && builtFor != layout)
             {
-                // a different set of opponents: rebuild the opponent panel
+                // a different set of opponents: rebuild the opponent panel. This isn't the player
+                // closing the table, so OnClosed must not run: it would take a new store challenge as a no.
+                ReturnItems();
+                window.closeCallback -= OnClosed;
                 window.Hide();
                 UnityEngine.Object.Destroy(window.handler.gameObject);
                 window = null;
@@ -107,14 +110,14 @@ namespace ZamsCollectibles.AugWarriors
             deckSlot = new GameSlotInventory();
             deckSlot.mayInventoryAddItemFunc = (item, _) => GeneralHelper.IsItemOwned(item) && DeckBox.IsDeckBox(item) && !inMatch;
             deckSlot.mayInventoryRemoveItemFunc = (_, _) => !inMatch;
-            deckSlot.onSlotAddItemEndFunc += (_, _, _) => Refresh();
-            deckSlot.onSlotRemoveItemEndFunc += (_, _, _) => Refresh();
+            deckSlot.onSlotAddItemEndFunc += (_, _, _) => SlotChanged();
+            deckSlot.onSlotRemoveItemEndFunc += (_, _, _) => SlotChanged();
 
             anteSlot = new GameSlotInventory();
             anteSlot.mayInventoryAddItemFunc = (item, _) => GeneralHelper.IsItemOwned(item) && CardItems.IsCard(item) && !inMatch;
             anteSlot.mayInventoryRemoveItemFunc = (_, _) => !inMatch;
-            anteSlot.onSlotAddItemEndFunc += (_, _, _) => Refresh();
-            anteSlot.onSlotRemoveItemEndFunc += (_, _, _) => Refresh();
+            anteSlot.onSlotAddItemEndFunc += (_, _, _) => SlotChanged();
+            anteSlot.onSlotRemoveItemEndFunc += (_, _, _) => SlotChanged();
 
             deckText = new MachineryText();
             anteText = new MachineryText();
@@ -137,6 +140,14 @@ namespace ZamsCollectibles.AugWarriors
                 MachineHelper.Panel(Loc.Get("aug_table_play"), MachineryStack.Vertical(playButton, rules, statusText), "play"));
             window.SetTitle(Loc.Get("aug_challenge_title"));
             window.closeCallback += OnClosed;
+        }
+
+        // Runs inside the game's drop of an item into a slot. An exception there skips the end of
+        // the drop, leaving the item stuck to the cursor and the mouse dead, so log it instead.
+        private static void SlotChanged()
+        {
+            try { Refresh(); }
+            catch (Exception e) { ModEntry.Instance.Log.Warning($"Aug Warriors table: {e.GetType().Name}: {e.Message}\n{e.StackTrace}"); }
         }
 
         private static void Refresh()
@@ -174,6 +185,7 @@ namespace ZamsCollectibles.AugWarriors
             if (!AtStore && DenRegulars.PlayedTonight()) return;
             if (!AtStore) DenRegulars.MarkPlayed();   // the night's one game, conceded or not
             inMatch = true;
+            DeckBox.SetInPlay(deckSlot.childItem, true);
             window.Hide();
             try
             {
@@ -192,6 +204,7 @@ namespace ZamsCollectibles.AugWarriors
         private static void Finished(int? winner)
         {
             inMatch = false;
+            DeckBox.SetInPlay(deckSlot.childItem, false);
             int worn = CardSleeves.WearDeck(deckSlot.childItem);   // every game handles the cards
             if (worn > 0) ModEntry.Instance.Log.Log($"Aug Warriors: {worn} unsleeved card(s) took some wear.");
             GameItem anted = anteSlot.childItem;

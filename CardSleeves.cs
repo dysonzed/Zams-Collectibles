@@ -51,6 +51,7 @@ namespace ZamsCollectibles
             SetText(item);
             item.SetGameItemType(Collectibles.TYPE);
             ContainerHelper.InitContainerItem(tray, item, allowedTags: new List<string> { CardItems.CARD_TAG });
+            CardItems.MakeNestable(item);
             // only cards that can take a sleeve: not sleeved yet, not slabbed, not a match card
             tray.mayInventoryAddItemFunc = (card, _) => GeneralHelper.IsItemOwned(card) && CardItems.IsCard(card)
                 && !IsSleeved(card) && !CardItems.IsGraded(card) && !AugWarriors.AugBoard.IsMatchCard(card);

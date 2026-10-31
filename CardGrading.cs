@@ -46,13 +46,20 @@ namespace ZamsCollectibles
 
         // ------------------------------------------------------------ visits
 
-        /// <summary>Once a day: maybe the grader, by the certificate's odds (not while they have cards).</summary>
+        private static bool Gradeable(GameItem item) =>
+            GeneralHelper.IsItemOwned(item) && CardItems.IsCard(item) && !CardItems.IsGraded(item) && !AugWarriors.AugBoard.IsMatchCard(item);
+
+        /// <summary>
+        /// Once a day: maybe the grader, by the certificate's odds (not while they have cards, and
+        /// not to a shop with nothing to grade).
+        /// </summary>
         public static void OnGenerateCustomer(StoreClientManager manager)
         {
             if (CardDatabase.Sets.Count == 0 || Load() != null) return;
             int day = StoreStation.GetDayCounter();
             if (ModHelper.GetModDataInt(ModEntry.MOD_ID, DAY_KEY, -1) == day) return;
             ModHelper.SetModDataInt(ModEntry.MOD_ID, DAY_KEY, day);
+            if (!EmporiumEntry.Instance.GetAllOwnedItems().Any(Gradeable)) return;
 
             int missed = ModHelper.GetModDataInt(ModEntry.MOD_ID, MISSED_KEY, 0);
             if (RNG.Roll(DealerCertificate.ChanceFor(missed)))
@@ -104,14 +111,12 @@ namespace ZamsCollectibles
             return client;
         }
 
+        // Hands the cards over and waits to be sent off like any customer, rather than leaving on
+        // their own the moment the line is shown.
         private static StoreClient CreateReturn()
         {
             StoreClient client = NewClient(".grader_return");
-            client.mainDialogue.SetText(client.displayName, Loc.Get("grader_return")).SetEndAction(() =>
-            {
-                ReturnCards();
-                Leave(client);
-            });
+            client.mainDialogue.SetText(client.displayName, Loc.Get("grader_return")).SetEndAction(ReturnCards);
             client.CompleteClientCreation();
             return client;
         }
@@ -145,8 +150,7 @@ namespace ZamsCollectibles
             submitted = false;
 
             slotsGrid = new GameGridInventory(slots, 1).SetMachineryStyle();
-            slotsGrid.mayInventoryAddItemFunc = (item, _) =>
-                GeneralHelper.IsItemOwned(item) && CardItems.IsCard(item) && !CardItems.IsGraded(item) && !AugWarriors.AugBoard.IsMatchCard(item);
+            slotsGrid.mayInventoryAddItemFunc = (item, _) => Gradeable(item);
             slotsGrid.onSlotAddItemEndFunc += (_, _, _) => Refresh();
             slotsGrid.onSlotRemoveItemEndFunc += (_, _, _) => Refresh();
             costText = new MachineryText();
