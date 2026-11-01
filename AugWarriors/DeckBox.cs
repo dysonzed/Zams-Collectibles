@@ -33,10 +33,12 @@ namespace ZamsCollectibles.AugWarriors
             MachineryText summary = MachineryText.Status(Loc.Get("deckbox_status"), "");
             MachineryButton validate = new MachineryButton(Loc.Get("deckbox_validate"), () => OpenReport(Cards(grid)))
                 .SetDescription(Loc.Get("deckbox_validate_desc"));
+            MachineryButton copyCode = new MachineryButton(Loc.Get("deckcode_copy"), () => summary.SetStatus(Loc.Get("deckbox_status"), DeckCode.CopyToClipboard(Cards(grid))))
+                .SetDescription(Loc.Get("deckcode_copy_desc"));
 
             PixelWindow window = MachineHelper.CreateMachineryWindow(true,
                 MachineHelper.Panel(Loc.Get("deckbox_panel_cards"), grid, "cards"),
-                MachineHelper.Panel(Loc.Get("deckbox_panel_deck"), MachineryStack.Vertical(summary, validate), "deck"));
+                MachineHelper.Panel(Loc.Get("deckbox_panel_deck"), MachineryStack.Vertical(summary, validate, copyCode), "deck"));
             window.openCallback += () => Refresh(grid, summary);
 
             GameItem item = ItemDirectory.CreateEmptyItem(DECKBOX_ID)
@@ -121,6 +123,13 @@ namespace ZamsCollectibles.AugWarriors
             if (augments.Count > 0)
                 b.AddLabel(Loc.Get("deckbox_report_average", augments.Average(c => c.power).ToString("0.0"), augments.Average(c => c.glitch).ToString("0.0")));
 
+            if (deck.Count > 0)
+            {
+                // the code to select and copy by hand, in case the clipboard doesn't work
+                b.AddHeader(Loc.Get("deckcode_header"));
+                b.AddInput("", DeckCode.Encode(deck));
+                b.Last.SetPreferredSize(420f, -1f);
+            }
             b.AddButton(Loc.Get("aug_close"), () => CustomUIManager.Instance.CloseWindow(REPORT_WINDOW));
             b.End().Center().Show();
         }

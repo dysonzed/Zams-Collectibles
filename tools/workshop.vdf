@@ -8,6 +8,14 @@
 	"title"		"Zam's Collectibles"
 	"description"		"Zamco Electronics brings the Aug Warriors trading card game to the station. Open packs, chase rares, grade your best pulls, seal complete sets, and play the game at the back table of a card shop that only opens after hours.
 
+[h1]Multiplayer(-ish)![/h1]
+Send your Aug Warriors deck to your friends. Any deck box can copy its deck as a short deck code. Paste a friend's code at the Downside Den and play against their deck, played by the AI the way they built it.
+[list]
+[*]Share codes anywhere text goes: Discord, Steam chat, the comments below
+[*]Free practice any night the Den is open: no ante, and it doesn't use up your game with the regulars
+[*]Got a deck you're proud of? Post its code in the comments and see who can beat it
+[/list]
+
 [h2]Ten sets, three tiers[/h2]
 [list]
 [*][b]Tier 1:[/b] Rustwave Rising, Doomed Decay, Oxygen Leak
@@ -26,7 +34,8 @@
 [*]The Card Grader seals your cards in graded slabs, with a big premium for top grades
 [*]Seal a complete set in a Collector's Box for a bonus; include the ultra rare for a Master Set, worth twice the bonus
 [*]Collection binders, deck boxes, and a Collectible item category only the right customers buy
-[*]Double-click any card to see it full size, and open as many as you like side by side
+[*]Binders, deck boxes and the other card containers fit in your backpack, so your collection can come along to the Den
+[*]Double-click any card to see it full size, even singles for sale and your opponent's cards, and open as many as you like side by side
 [*]The economy is tuned per tier: Tier 1 is a gamble, Tier 3 pays back the investment
 [/list]
 
@@ -44,10 +53,12 @@
 [*]Play the Den's regulars for credits or cards, one game a night. Each save has its own regulars with hidden play styles, and one of them, Oracle, is very, very good
 [*]Oracle plays for high stakes: antes of 100, 250 or 500 credits that pay three times over, or a card ante that wins you two cards and a booster pack
 [*]Card customers may challenge you to a game at your counter
+[*]Share decks with friends as deck codes and play each other's decks at the Den
 [/list]
 
 [h2]Customers[/h2]
 [list]
+[*]Put collectibles in your display case and card buyers come for them, just like the game's own goods: a fan, a player, or a big-spending investor, depending on what you show
 [*]Pack flippers who sell you packs below Dan's prices
 [*]Deck builders who hand you a box and a wish list, shown on your shop tablet
 [*]The Card Grader, who takes your cards away for a day and brings them back slabbed
@@ -72,27 +83,28 @@ Zamco 电子把 Aug Warriors 集换式卡牌游戏带到了空间站。拆补充
 [*]用收藏盒封装完整套装获得加成，加入超稀有卡即为大师套装
 [*]Downside Den 卡牌店（周日休息）：新到的补充包、补充盒和单卡，以及后桌的常客对手，每晚可对战一局
 [*]完整的 Aug Warriors 卡牌对战：常客各有隐藏的打法风格，其中 Oracle 极其难缠
+[*]准多人模式：把卡组复制成卡组代码发给好友，在 Downside Den 与彼此的卡组对战（免费练习）
+[*]在展示柜里摆放收藏品，就会吸引卡牌买家上门
 [*]新顾客：补充包贩子、组卡客、卡牌评级师和稀有的套装收藏家；新开局：卡牌经销商
 [/list]
 支持简体中文。注意：停用或移除本模组后，其物品会从你的商店中消失。"
-	"changenote"		"Version 0.3.2: carry your card binders to the Den, look at any card, and fixes for store challenges and the Card Grader.
+	"changenote"		"Version 0.3.3: Multiplayer(-ish)! Send your deck to friends as a deck code, plus card buyers drawn by your display case.
 
-Collecting
-- Card binders, Collector's Boxes, deck order boxes, sleeve packs and opened booster boxes now fit in backpacks and other containers, so you can take your collection to the Den. Ones already in your save are updated when it loads
-- Double-click any card to look at it, including singles for sale and the opponent's cards on the Aug Warriors board. You still have to buy singles, and board cards stay where they are
+Multiplayer(-ish)
+- Every deck box has a Copy Deck Code button: it copies your deck as a short code to send to friends. The code is also shown in the deck report, to copy by hand
+- New at the Downside Den: Play a Friend's Deck. Paste a code and play against that deck at the table. The AI plays it the way it was built (hack-heavy decks hack, mod decks stack mods)
+- Games against a friend's deck are free practice: no ante, and they don't use up your game with the regulars. Unsleeved cards still take wear
 
-Aug Warriors
-- Fixed: accepting a store challenge after an earlier game in the same session could dismiss the customer at once and leave your deck stuck to the cursor, with the mouse unresponsive
-- Your deck box is locked while its deck is in a match: it won't open and its cards can't be swapped until the game ends
+Display case
+- Collectibles in your display case now draw card buyers, the way the game's own goods draw theirs: they come first in the day's line and show in the clientele forecast. What you show decides who comes: an Aug Warriors Fan, a Card Player, or (later on, with a valuable display) a Card Investor with a big budget
 
-Card Grader
-- The grader only visits when you have cards to grade
-- When bringing your cards back, the grader waits to be sent off like any customer instead of leaving on their own
+Fixes
+- The Downside Den menu is taller, so all its buttons fit
+- The mod is sturdier against game updates: if an update changes part of the game the mod hooks into, only that feature switches off (and says so in the log) instead of the whole mod failing to load
 
-版本 0.3.2：可以带着卡册去 Den、查看任意卡牌，并修复店内挑战和卡牌评级师的问题。
-- 卡册、收藏盒、组卡订单盒、卡套包和已打开的补充盒现在可以放进背包和其他容器；已有存档中的物品会在读档时更新
-- 双击即可查看任意卡牌，包括待售单卡和对战板上对手的卡牌（单卡仍需购买，对战板上的卡牌不可移动）
-- 修复：同一次游戏中先对战过再接受店内挑战时，顾客可能立刻离开、卡组卡在鼠标上且无法点击
-- 对战进行中卡组盒被锁定，不能打开或更换卡牌
-- 评级师只在你有可评级的卡牌时来访；归还卡牌后会等你送客，而不是自行离开"
+版本 0.3.3：准多人模式！把卡组以卡组代码发给好友，展示柜也会吸引卡牌买家。
+- 每个卡组盒都有“复制卡组代码”按钮，可把卡组复制成代码发给好友
+- Downside Den 新增“挑战好友卡组”：粘贴代码即可在牌桌上与该卡组对战，AI 会按卡组的构筑思路出牌。免费练习：不下注，也不占用今晚的对局
+- 展示柜里的收藏品会吸引卡牌买家：卡迷、牌手，或预算充足的卡牌投资客
+- Den 菜单加高，按钮都能显示；游戏更新改动相关内容时，只会关闭对应功能，不会导致整个模组无法加载"
 }

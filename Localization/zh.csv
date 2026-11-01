@@ -750,3 +750,28 @@ sleeves_button_desc,给托盘里的每张卡套上卡套。卡套套上后不会
 sleeves_status,剩 {0} 个卡套，{1} 张卡待套
 tooltip_sleeved,已套卡套
 guide_p7_6,每局对战都会磨损卡牌：卡组盒里没套卡套的卡都会多一点磨损。Dan 卖 10 个一包的卡套，留给你品相最好的卡吧。
+client_card_fan,Aug Warriors 卡迷
+client_card_fan_line,你展示柜里的是 Aug Warriors 吗？我攒了好久的钱。你有什么卡？
+client_card_player,牌手
+client_card_player_line,看到你展示柜里的卡了。我在组新卡组，需要补点卡：卡包、单卡，好的都行。
+client_card_investor,卡牌投资客
+client_card_investor_line,你的展示柜吸引了我。我把 Aug Warriors 当投资：未拆封产品、评级卡、稀有单卡。把好东西拿出来看看。
+den_friend_deck,挑战好友卡组
+deckcode_title,挑战好友卡组
+deckcode_intro,粘贴好友发给你的卡组代码，然后到牌桌上与他们的卡组对战。这是免费练习：不下注，也不占用你今晚的对局。
+deckcode_placeholder,"卡组代码，例如 AW1:RWR=1,4,7/T8"
+deckcode_paste,粘贴
+deckcode_play,前往牌桌
+deckcode_paste_hint,在上方粘贴卡组代码。
+deckcode_check_failed,此代码校验不通过：有字符错误或缺失。请重新复制，或逐个字符检查。
+deckcode_unreadable,这不是卡组代码。卡组代码以 AW1: 开头，列出系列代码和卡牌编号。
+deckcode_unknown_set,此代码使用了你的游戏中没有的系列。请确认你们都安装了最新版本的 Zam's Collectibles。
+deckcode_illegal,此卡组不合规：{0}
+deckcode_valid,合规的 {0} 张卡组：{1} 张义体、{2} 张改装件、{3} 张骇入。
+deckcode_copy,复制卡组代码
+deckcode_copy_desc,将此卡组复制为代码发给好友，他们可以在 Downside Den 与之对战。
+deckcode_copied,卡组代码已复制，发给好友吧！
+deckcode_empty,请先在卡组盒里放入卡牌。
+deckcode_header,卡组代码
+aug_friend_name,好友卡组
+aug_friend_info,好友的 {0} 张卡组，按其构筑思路出牌。免费练习：不下注，也不占用你今晚的对局。

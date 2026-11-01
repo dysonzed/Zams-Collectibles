@@ -44,6 +44,7 @@ namespace ZamsCollectibles
             ModHook.OnNewGameStarted += Progression.OnRunStarted;
             ModHook.OnGameLoadedLate += OnGameLoaded;
             DownsideDen.Register();
+            DisplayCaseBuyers.Enable();
             CardDealerScenario.Register();
             RegisterDebugButtons();
             Log.Log("Enabled.");
@@ -64,6 +65,7 @@ namespace ZamsCollectibles
             ModHook.OnNewGameStarted -= Progression.OnRunStarted;
             ModHelper.RemoveNetworkUpgrades(MOD_ID);
             ModHook.OnGameLoadedLate -= OnGameLoaded;
+            DisplayCaseBuyers.Disable();
             ModHelper.RemoveAfterhourLocations(MOD_ID);
             ModHelper.RemoveStartingScenarios(MOD_ID);
             ModHelper.RemoveDebugFunctions(MOD_ID);

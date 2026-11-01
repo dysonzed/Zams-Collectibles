@@ -29,7 +29,7 @@ namespace ZamsCollectibles.AugWarriors
         private static MachineryButton playButton;
         private static int chosen, anteChoice;
         private static MachineryRadioList creditList;
-        private static int CreditAnte => AugStakes.Options(Opponent.style)[anteChoice];
+        private static int CreditAnte => Friend ? 0 : AugStakes.Options(Opponent.style)[anteChoice];
         private static bool inMatch;
 
         // Who can be played: the regulars at the Den tonight, or one store customer. Their play
@@ -42,6 +42,11 @@ namespace ZamsCollectibles.AugWarriors
         private static Action<int?, bool> challengeOver;
         private static bool AtStore => challengeOver != null;
 
+        // A friend's deck from a deck code, played by the AI as free practice: no antes, and it
+        // doesn't use up the night's game (nobody real is on the other side).
+        private static List<CardDef> friendDeck;
+        private static bool Friend => friendDeck != null;
+
         private static (string name, AugPersonality style) Opponent => opponents[Math.Min(chosen, opponents.Count - 1)];
 
         // Where the player's things go back to: the Den's inventory, or the store counter.
@@ -51,6 +56,7 @@ namespace ZamsCollectibles.AugWarriors
         public static void Open()
         {
             challengeOver = null;
+            friendDeck = null;
             opponents = DenRegulars.Tonight();
             if (opponents.Count == 0) return;
             Show();
@@ -60,13 +66,26 @@ namespace ZamsCollectibles.AugWarriors
         public static void OpenChallenge(string name, AugPersonality style, Action<int?, bool> over)
         {
             challengeOver = over;
+            friendDeck = null;
             opponents = new List<(string, AugPersonality)> { (name, style) };
             Show();
         }
 
+        /// <summary>The Den's table against a friend's deck (see DeckCode), any night.</summary>
+        public static void OpenFriend(List<CardDef> deck)
+        {
+            challengeOver = null;
+            friendDeck = deck;
+            opponents = new List<(string, AugPersonality)> { (Loc.Get("aug_friend_name"), DeckCode.FriendStyle(deck)) };
+            Show();
+        }
+
+        // What the window is built for: the opponents, and whether it's a friend's deck (no ante panel).
+        private static string Layout() => (Friend ? "friend|" : "") + string.Join("|", opponents.Select(o => o.name));
+
         private static void Show()
         {
-            string layout = string.Join("|", opponents.Select(o => o.name));
+            string layout = Layout();
             if (window != null && window.handler != null && builtFor != layout)
             {
                 // a different set of opponents: rebuild the opponent panel. This isn't the player
@@ -106,7 +125,7 @@ namespace ZamsCollectibles.AugWarriors
 
         private static void Build()
         {
-            builtFor = string.Join("|", opponents.Select(o => o.name));
+            builtFor = Layout();
             deckSlot = new GameSlotInventory();
             deckSlot.mayInventoryAddItemFunc = (item, _) => GeneralHelper.IsItemOwned(item) && DeckBox.IsDeckBox(item) && !inMatch;
             deckSlot.mayInventoryRemoveItemFunc = (_, _) => !inMatch;
@@ -114,7 +133,7 @@ namespace ZamsCollectibles.AugWarriors
             deckSlot.onSlotRemoveItemEndFunc += (_, _, _) => SlotChanged();
 
             anteSlot = new GameSlotInventory();
-            anteSlot.mayInventoryAddItemFunc = (item, _) => GeneralHelper.IsItemOwned(item) && CardItems.IsCard(item) && !inMatch;
+            anteSlot.mayInventoryAddItemFunc = (item, _) => GeneralHelper.IsItemOwned(item) && CardItems.IsCard(item) && !inMatch && !Friend;
             anteSlot.mayInventoryRemoveItemFunc = (_, _) => !inMatch;
             anteSlot.onSlotAddItemEndFunc += (_, _, _) => SlotChanged();
             anteSlot.onSlotRemoveItemEndFunc += (_, _, _) => SlotChanged();
@@ -133,11 +152,14 @@ namespace ZamsCollectibles.AugWarriors
             playButton = new MachineryButton(Loc.Get("aug_challenge_start"), Play);
             MachineryButton rules = new MachineryButton(Loc.Get("aug_table_rules"), () => ZamcoGuide.Open(ZamcoGuide.RULES_PAGE));
 
-            window = MachineHelper.CreateMachineryWindow(true,
-                MachineHelper.Panel(Loc.Get("aug_table_deck"), MachineryStack.Vertical(deckSlot, deckText), "deck"),
-                MachineHelper.Panel(Loc.Get("aug_challenge_ante"), MachineryStack.Vertical(anteSlot, anteText, creditList), "ante"),
-                MachineHelper.Panel(Loc.Get("aug_challenge_opponent"), opponentPanel, "opponent"),
-                MachineHelper.Panel(Loc.Get("aug_table_play"), MachineryStack.Vertical(playButton, rules, statusText), "play"));
+            MachineryPanel deckPanel = MachineHelper.Panel(Loc.Get("aug_table_deck"), MachineryStack.Vertical(deckSlot, deckText), "deck");
+            MachineryPanel opponentBox = MachineHelper.Panel(Loc.Get("aug_challenge_opponent"), opponentPanel, "opponent");
+            MachineryPanel playPanel = MachineHelper.Panel(Loc.Get("aug_table_play"), MachineryStack.Vertical(playButton, rules, statusText), "play");
+            window = Friend
+                ? MachineHelper.CreateMachineryWindow(true, deckPanel, opponentBox, playPanel)
+                : MachineHelper.CreateMachineryWindow(true, deckPanel,
+                    MachineHelper.Panel(Loc.Get("aug_challenge_ante"), MachineryStack.Vertical(anteSlot, anteText, creditList), "ante"),
+                    opponentBox, playPanel);
             window.SetTitle(Loc.Get("aug_challenge_title"));
             window.closeCallback += OnClosed;
         }
@@ -165,10 +187,11 @@ namespace ZamsCollectibles.AugWarriors
             CardDef ante = CardItems.GetCardDef(anteSlot.childItem);
             anteText.SetText(ante == null ? Loc.Get("aug_table_no_card") : Loc.Get("aug_table_card_ante", Loc.CardTitle(ante)));
             // how they play is for the player to find out
-            opponentText.SetText(AugStakes.HighStakes(Opponent.style) ? Loc.Get("aug_table_high_stakes")
-                : opponents.Count > 1 ? Loc.Get("aug_table_opponent_hint") : Opponent.name);
+            opponentText.SetText(Wrap(Friend ? Loc.Get("aug_friend_info", friendDeck.Count)
+                : AugStakes.HighStakes(Opponent.style) ? Loc.Get("aug_table_high_stakes")
+                : opponents.Count > 1 ? Loc.Get("aug_table_opponent_hint") : Opponent.name));
 
-            string problem = !AtStore && DenRegulars.PlayedTonight() ? Loc.Get("aug_table_played_tonight")
+            string problem = !AtStore && !Friend && DenRegulars.PlayedTonight() ? Loc.Get("aug_table_played_tonight")
                 : deckSlot.childItem == null ? Loc.Get("aug_table_need_deck")
                 : errors.Count > 0 ? Loc.Get("aug_table_fix_deck")
                 : PlayerStore.Instance.GetCash() < CreditAnte ? Loc.Get("den_not_enough")
@@ -177,26 +200,49 @@ namespace ZamsCollectibles.AugWarriors
             if (problem == null) playButton.Enable(); else playButton.Disable();
         }
 
+        // The machinery panels grow to fit their text instead of wrapping it, so long lines are broken here:
+        // at spaces, or every few characters for text without them (Chinese).
+        private const int WRAP_CHARS = 44;
+
+        private static string Wrap(string text)
+        {
+            if (string.IsNullOrEmpty(text) || text.Length <= WRAP_CHARS) return text;
+            List<string> lines = new List<string>();
+            if (!text.Contains(" "))
+            {
+                for (int i = 0; i < text.Length; i += WRAP_CHARS / 2) lines.Add(text.Substring(i, Math.Min(WRAP_CHARS / 2, text.Length - i)));
+                return string.Join("\n", lines);
+            }
+            string line = "";
+            foreach (string word in text.Split(' '))
+            {
+                if (line.Length > 0 && line.Length + 1 + word.Length > WRAP_CHARS) { lines.Add(line); line = word; }
+                else line = line.Length == 0 ? word : line + " " + word;
+            }
+            lines.Add(line);
+            return string.Join("\n", lines);
+        }
+
         private static void Play()
         {
             List<CardDef> deck = DeckBox.Cards(deckSlot.childItem);
             if (inMatch || !AugRules.IsLegalDeck(deck) || PlayerStore.Instance.GetCash() < CreditAnte) return;
             var (name, style) = Opponent;
-            if (!AtStore && DenRegulars.PlayedTonight()) return;
-            if (!AtStore) DenRegulars.MarkPlayed();   // the night's one game, conceded or not
+            if (!AtStore && !Friend && DenRegulars.PlayedTonight()) return;
+            if (!AtStore && !Friend) DenRegulars.MarkPlayed();   // the night's one game, conceded or not
             inMatch = true;
             DeckBox.SetInPlay(deckSlot.childItem, true);
             window.Hide();
             try
             {
-                AugBoard.Start(deck, name, style, CreditAnte, Finished);
+                AugBoard.Start(deck, name, style, CreditAnte, Finished, friendDeck);
             }
             catch (Exception e)
             {
                 // The board drives the game's own widgets; if a game update breaks it, play in the plain window.
                 ModEntry.Instance.Log.Warning($"Aug Warriors: the board could not open ({e.GetType().Name}: {e.Message}). Using the plain match window.");
                 AugBoard.CloseIfOpen();
-                AugMatchWindow.Start(deck, name, style, CreditAnte, Finished);
+                AugMatchWindow.Start(deck, name, style, CreditAnte, Finished, friendDeck);
             }
         }
 

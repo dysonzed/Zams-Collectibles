@@ -406,3 +406,28 @@ sleeves_button_desc,Puts a sleeve on each card in the tray. Sleeves stay on for 
 sleeves_status,"{0} sleeves left, {1} card(s) to sleeve"
 tooltip_sleeved,In a sleeve
 guide_p7_6,Every game is hard on your cards: anything in your deck box that isn't sleeved picks up a little wear. Dan sells sleeves in packs of 10. Save them for your best-looking cards.
+client_card_fan,Aug Warriors Fan
+client_card_fan_line,"Is that Aug Warriors in your display case? I've been saving up. What have you got?"
+client_card_player,Card Player
+client_card_player_line,"Saw the cards in your display. I'm building a new deck and need some pulls: packs, singles, whatever's good."
+client_card_investor,Card Investor
+client_card_investor_line,"Your display caught my eye. I buy Aug Warriors as an investment: sealed product, graded slabs, rare singles. Show me the good stuff."
+den_friend_deck,Play a Friend's Deck
+deckcode_title,Play a Friend's Deck
+deckcode_intro,"Paste the deck code a friend sent you, then take it to the table to play against their deck. It's free practice: no ante, and it doesn't count as your game tonight."
+deckcode_placeholder,"Deck code, e.g. AW1:RWR=1,4,7/T8"
+deckcode_paste,Paste
+deckcode_play,Go to the Table
+deckcode_paste_hint,Paste a deck code above.
+deckcode_check_failed,"This code doesn't add up: a character is wrong or missing. Copy it again, or check it character by character."
+deckcode_unreadable,That isn't a deck code. Deck codes start with AW1: and list set codes and card numbers.
+deckcode_unknown_set,This code uses a set your game doesn't have. Make sure you both have the latest version of Zam's Collectibles.
+deckcode_illegal,This deck isn't legal: {0}
+deckcode_valid,"A legal {0}-card deck: {1} augments, {2} mods, {3} hacks."
+deckcode_copy,Copy Deck Code
+deckcode_copy_desc,Copies this deck as a code you can send to friends. They can play against it at the Downside Den.
+deckcode_copied,Deck code copied. Send it to a friend!
+deckcode_empty,Put some cards in the deck box first.
+deckcode_header,Deck code
+aug_friend_name,Friend's Deck
+aug_friend_info,"A friend's {0}-card deck, played the way it was built. Free practice: no ante, and it doesn't use up your game tonight."

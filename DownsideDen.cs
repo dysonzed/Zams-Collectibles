@@ -261,7 +261,7 @@ namespace ZamsCollectibles
             if (stock == null) stock = LoadStock();
             if (boardOpen)
             {
-                builder.SetSize(360f, 250f);
+                builder.SetSize(360f, 310f);   // room for the hint, Challenge a Player, Play a Friend's Deck and Return
                 builder.AddLabel(Loc.Get("den_board_hint"));
             }
             else
@@ -276,6 +276,8 @@ namespace ZamsCollectibles
                 builder.Last.SetInteractable(false).SetTooltip(Loc.Get("den_nobody_tonight"));
             else if (AugWarriors.DenRegulars.PlayedTonight())
                 builder.Last.SetInteractable(false).SetTooltip(Loc.Get("den_all_played"));
+            // A friend's deck from a deck code: free practice, any night.
+            builder.AddButton(Loc.Get("den_friend_deck"), AugWarriors.DeckCode.OpenImport);
         }
 
         // Fallback when the board can't open: the stock as a list with Buy and View buttons.

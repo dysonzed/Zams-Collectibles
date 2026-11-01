@@ -79,12 +79,17 @@ namespace ZamsCollectibles
     // The game only lets the player activate items they own (documents aside), so singles for
     // sale and the cards on the Aug Warriors board wouldn't open. Reading a card is always allowed;
     // this only affects activation, not moving, buying or dropping them.
-    [HarmonyPatch(typeof(GeneralHelper), nameof(GeneralHelper.MayInteractNonOwnedActivate))]
+    [HarmonyPatch(typeof(GeneralHelper), nameof(GeneralHelper.MayInteractNonOwnedActivate), typeof(GameItem))]
     public static class CardViewerNonOwnedPatch
     {
-        static void Postfix(GameItem item, ref bool __result)
+        private const string FEATURE = "Viewing cards you don't own";
+
+        static bool Prepare() =>
+            PatchGuard.Target(FEATURE, "GeneralHelper.MayInteractNonOwnedActivate", AccessTools.Method(typeof(GeneralHelper), nameof(GeneralHelper.MayInteractNonOwnedActivate), new[] { typeof(GameItem) }), typeof(bool));
+
+        static void Postfix(GameItem __0, ref bool __result)
         {
-            if (CardItems.IsCard(item)) __result = true;
+            if (!__result && CardItems.IsCard(__0)) __result = true;
         }
     }
 }

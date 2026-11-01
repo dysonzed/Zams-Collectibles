@@ -30,13 +30,13 @@ namespace ZamsCollectibles.AugWarriors
         // ------------------------------------------------------------ match
 
         /// <summary>Starts a match. A null deck gets a random one (debug test matches); ante 0 plays for nothing.</summary>
-        public static void Start(List<CardDef> deck, string opponentName, AugPersonality style, int stake, Action<int?> finished = null)
+        public static void Start(List<CardDef> deck, string opponentName, AugPersonality style, int stake, Action<int?> finished = null, List<CardDef> opponentDeck = null)
         {
             onFinished = finished;
             System.Random rng = new System.Random(RNG.random.Next());
             List<CardDef> pool = Progression.AvailableCards();
             AugPlayer you = new AugPlayer(Loc.Get("aug_you"), deck ?? AugAI.BuildDeck(pool, AugPersonality.Cautious, rng));
-            AugPlayer them = new AugPlayer(opponentName, AugAI.BuildDeck(pool, style, rng));
+            AugPlayer them = new AugPlayer(opponentName, opponentDeck ?? AugAI.BuildDeck(pool, style, rng));   // a friend's deck, or one built for their style
             match = new AugMatch(you, them, rng.Next());
             npcName = opponentName;
             npcStyle = style;

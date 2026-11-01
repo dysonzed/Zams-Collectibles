@@ -458,36 +458,40 @@ namespace ZamsCollectibles
 
     // The deck builder is a buying customer, so the tablet shows its buying page; the order sheet goes on top.
     // The tablet isn't part of the modding API, so this reaches into its private code. If a game update
-    // changes that code the patch skips itself (Prepare) or swallows its error, and the order box's
-    // tooltip is still there.
-    [HarmonyPatch(typeof(NegociationUIManager), "BuildBuying")]
+    // changes that code the patches skip themselves (Prepare) or turn off on their first error (PatchGuard),
+    // and the order box's tooltip is still there.
+    [HarmonyPatch(typeof(NegociationUIManager), "BuildBuying", typeof(StoreClient), typeof(bool))]
     public static class DeckOrderTabletPatch
     {
+        private const string FEATURE = "The deck order sheet on the shop tablet";
         private static readonly System.Reflection.FieldInfo FrameField = AccessTools.Field(typeof(NegociationUIManager), "frame");
-        private static bool failed;
 
-        static bool Prepare() =>
-            FrameField != null && typeof(NegotiationTabletFrame).IsAssignableFrom(FrameField.FieldType)
-            && AccessTools.Method(typeof(NegociationUIManager), "BuildBuying", new[] { typeof(StoreClient), typeof(bool) }) != null;
-
-        static void Prefix(NegociationUIManager __instance, StoreClient storeClient)
+        static bool Prepare()
         {
-            if (failed) return;
-            try { DeckOrders.DrawTabletSheet(FrameField.GetValue(__instance) as NegotiationTabletFrame, storeClient); }
-            catch (Exception e) { failed = true; ModEntry.Instance.Log.Log($"Deck order tablet sheet disabled: {e.Message}"); }
+            if (!PatchGuard.Target(FEATURE, "NegociationUIManager.BuildBuying", AccessTools.Method(typeof(NegociationUIManager), "BuildBuying", new[] { typeof(StoreClient), typeof(bool) }), typeof(float))) return false;
+            if (FrameField != null && typeof(NegotiationTabletFrame).IsAssignableFrom(FrameField.FieldType)) return true;
+            UnityEngine.Debug.LogWarning($"[Zam's Collectibles] NegociationUIManager.frame has changed in this game version; {FEATURE} is off.");
+            return false;
+        }
+
+        static void Prefix(NegociationUIManager __instance, StoreClient __0)
+        {
+            PatchGuard.Run(FEATURE, () => DeckOrders.DrawTabletSheet(FrameField.GetValue(__instance) as NegotiationTabletFrame, __0));
         }
     }
 
-    [HarmonyPatch(typeof(NegociationUIManager), "BuildSignature")]
+    [HarmonyPatch(typeof(NegociationUIManager), "BuildSignature", typeof(StoreClient))]
     public static class DeckOrderTabletSignaturePatch
     {
-        static bool Prepare() =>
-            AccessTools.Method(typeof(NegociationUIManager), "BuildSignature", new[] { typeof(StoreClient) })?.ReturnType == typeof(string);
+        private const string FEATURE = "The deck order sheet's refresh on the shop tablet";
 
-        static void Postfix(StoreClient storeClient, ref string __result)
+        static bool Prepare() =>
+            PatchGuard.Target(FEATURE, "NegociationUIManager.BuildSignature", AccessTools.Method(typeof(NegociationUIManager), "BuildSignature", new[] { typeof(StoreClient) }), typeof(string));
+
+        static void Postfix(StoreClient __0, ref string __result)
         {
-            try { __result += DeckOrders.TabletSignature(storeClient); }
-            catch (Exception) { }
+            string signature = null;
+            if (PatchGuard.Run(FEATURE, () => signature = DeckOrders.TabletSignature(__0))) __result += signature;
         }
     }
 }

@@ -41,23 +41,32 @@ namespace ZamsCollectibles
     }
 
     // The game looks category names up in its own string table, which has no entry for ours.
-    [HarmonyPatch(typeof(TypeHelper), nameof(TypeHelper.GetTypeDisplayName))]
+    [HarmonyPatch(typeof(TypeHelper), nameof(TypeHelper.GetTypeDisplayName), typeof(string))]
     public static class CollectibleTypeNamePatch
     {
-        static void Postfix(string typeConst, ref string __result)
+        private const string FEATURE = "The Collectible category name";
+
+        static bool Prepare() =>
+            PatchGuard.Target(FEATURE, "TypeHelper.GetTypeDisplayName", AccessTools.Method(typeof(TypeHelper), nameof(TypeHelper.GetTypeDisplayName), new[] { typeof(string) }), typeof(string));
+
+        static void Postfix(string __0, ref string __result)
         {
-            if (typeConst == Collectibles.TYPE) __result = Loc.Get("type_collectible");
+            if (__0 == Collectibles.TYPE) __result = Loc.Get("type_collectible");
         }
     }
 
-    [HarmonyPatch(typeof(TypeHelper), nameof(TypeHelper.GetTypeColor))]
+    [HarmonyPatch(typeof(TypeHelper), nameof(TypeHelper.GetTypeColor), typeof(string))]
     public static class CollectibleTypeColorPatch
     {
+        private const string FEATURE = "The Collectible category colour";
         private static readonly Color CollectibleColor = new Color32(0xB0, 0x7A, 0x2E, 0xFF);
 
-        static void Postfix(string typeConst, ref Color __result)
+        static bool Prepare() =>
+            PatchGuard.Target(FEATURE, "TypeHelper.GetTypeColor", AccessTools.Method(typeof(TypeHelper), nameof(TypeHelper.GetTypeColor), new[] { typeof(string) }), typeof(Color));
+
+        static void Postfix(string __0, ref Color __result)
         {
-            if (typeConst == Collectibles.TYPE) __result = CollectibleColor;
+            if (__0 == Collectibles.TYPE) __result = CollectibleColor;
         }
     }
 }
