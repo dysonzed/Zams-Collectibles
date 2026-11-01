@@ -3,8 +3,8 @@
 #   workshop/gallery_sets.png       every set's pack, box, card back and graded slab, by tier
 #   workshop/gallery_features.png   the mod's features at a glance
 #   workshop/gallery_multiplayer.png  deck codes, step by step (the first gallery image)
-#   workshop/banner_multiplayer.png   the "Multiplayer(-ish)!" banner for the description: upload it as a
-#                                     gallery image, then put its Steam image URL in an [img] tag
+#   workshop/banner_multiplayer.png   the "Multiplayer(-ish)!" banner at the top of the description; the
+#                                     description loads it from GitHub, so push it before publishing
 # Gallery images are added by hand on the Workshop page (steamcmd only uploads the preview).
 # Usage: python make-workshop-images.py <repo root>
 import json
