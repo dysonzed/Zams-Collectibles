@@ -88,7 +88,21 @@ Zamco 电子把 Aug Warriors 集换式卡牌游戏带到了空间站。拆补充
 [*]新顾客：补充包贩子、组卡客、卡牌评级师和稀有的套装收藏家；新开局：卡牌经销商
 [/list]
 支持简体中文。注意：停用或移除本模组后，其物品会从你的商店中消失。"
-	"changenote"		"Workshop page update: the new Multiplayer(-ish) banner in the description. No changes to the mod since 0.3.3.
+	"changenote"		"Version 0.3.4: drawing from an empty deck now has a cost, deck counts on the board, and a smarter AI with draw cards.
 
-创意工坊页面更新：简介中新增准多人模式横幅。模组本身与 0.3.3 相同。"
+Aug Warriors
+- Drawing from an empty deck overloads your system: each draw that finds no card adds 1 Glitch. Thin decks packed with draw cards now have a risk to weigh. A draw stopped by the hand limit still costs nothing, and no existing deck becomes illegal
+- The board shows how many cards are left in each deck, next to Power
+- The match log says when someone draws from an empty deck
+- The AI values draw cards by the cards actually left in its deck, so it plays them better late in a game
+- The Stockist Guide's rules page explains the new rule
+
+Fixes
+- The Stockist Guide's page counter fits again (it showed Page 10/1 on two lines), and its arrows no longer crowd it
+
+版本 0.3.4：从空牌库抽牌会有代价，对战板显示牌库数量，AI 更会使用抽牌效果。
+- 从空牌库抽牌会让系统过载：每次没抽到牌，故障 +1。手牌已满时抽不到牌不受影响，现有卡组均不会变为不合规
+- 对战板在力量旁显示双方牌库剩余张数；对战记录会提示从空牌库抽牌
+- AI 按牌库实际剩余张数评估抽牌效果
+- 修复：指南页码显示不全的问题"
 }

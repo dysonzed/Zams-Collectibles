@@ -155,6 +155,8 @@ aug_log_mod,{0} attaches {1} to {2}.
 aug_log_hack,"{0} hacks {2} with {1}: +{3} Glitch."
 aug_log_scrap,{0} scraps {2} with {1}.
 aug_log_showdown,Showdown!
+aug_log_empty_draw,{0} draws from an empty deck: +{1} Glitch.
+aug_log_empty_draw_you,You draw from an empty deck: +{1} Glitch.
 aug_result_win,You beat {0}!
 aug_result_lose,{0} wins.
 aug_result_draw,A draw with {0}.
@@ -217,7 +219,7 @@ aug_log_replace_you,You install {1} over {2}.
 aug_log_mod_you,You attach {1} to {2}.
 aug_log_hack_you,"You hack {2} with {1}: +{3} Glitch."
 aug_log_scrap_you,You scrap {2} with {1}.
-aug_board_power,Power {0}
+aug_board_power_deck,Power {0} · Deck {1}
 aug_board_stability,Stability · {0} of {1} used
 aug_board_compromised,COMPROMISED · Glitch {0} over {1}
 aug_board_stuck,"No card you can play: you must call the showdown."
@@ -345,7 +347,7 @@ guide_p4_2,"At the start of your turn, draw a card if you hold fewer than 4. The
 guide_p4_3,"- Play a card: install an augment, attach a mod, or hack your opponent."
 guide_p4_4,"- Call the showdown. Your opponent gets one last turn, and draws 2 extra cards for it."
 guide_p4_5,"If you have nothing you can play, you must call. On the last turn, if there's nothing to play, the turn simply passes."
-guide_p4_6,"The showdown also happens on its own once both players have taken 6 turns. A tie goes to whoever did not call; if nobody called, it's a draw."
+guide_p4_6,"The showdown also happens on its own once both players have taken 6 turns. A tie goes to whoever did not call; if nobody called, it's a draw. Drawing from an empty deck overloads your system: each draw that finds no card adds 1 Glitch."
 guide_p5_title,How to Play: the Cards
 guide_p5_1,"AUGMENTS go into the matching slot of your own body; an arm augment fits either arm. Installing over an augment replaces it, and its mods are lost."
 guide_p5_2,"MODS attach to one of your installed augments, up to 2 on each. Some only fit certain slots. A good mod soaks up Glitch or adds Stability."

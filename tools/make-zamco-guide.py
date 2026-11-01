@@ -93,9 +93,9 @@ pages = [
 chrome = [
     # this game build can't resolve the vanilla paper art by name, so the book ships its own copies
     {"type": "button", "id": "close", "action": "close", "x": 297, "y": 2.5, "w": 14, "h": 15, "sprite": "paper_close", "hoverSprite": "paper_close_hover"},
-    {"type": "button", "id": "flip_left", "action": "flip_left", "x": 124, "y": 380, "w": 14, "h": 15, "sprite": "paper_prev", "hoverSprite": "paper_prev_hover"},
-    {"type": "button", "id": "flip_right", "action": "flip_right", "x": 176, "y": 380.5, "w": 14, "h": 15, "sprite": "paper_next", "hoverSprite": "paper_next_hover"},
-    {"type": "text", "id": "page_indicator", "action": "page_indicator", "style": "page_number", "align": "center", "valign": "middle", "x": 140.5, "y": 374, "w": 33, "h": 25},
+    {"type": "button", "id": "flip_left", "action": "flip_left", "x": 101, "y": 380, "w": 14, "h": 15, "sprite": "paper_prev", "hoverSprite": "paper_prev_hover"},
+    {"type": "button", "id": "flip_right", "action": "flip_right", "x": 199, "y": 380.5, "w": 14, "h": 15, "sprite": "paper_next", "hoverSprite": "paper_next_hover"},
+    {"type": "text", "id": "page_indicator", "action": "page_indicator", "style": "page_number", "align": "center", "valign": "middle", "x": 117, "y": 374, "w": 80, "h": 25},
 ]
 book = {"id": "zamco_guide", "title": "Zamco Stockist Guide", "background": "zamco_notebook", "width": 628, "height": 804,
         "posX": -450, "posY": 0, "chrome": chrome, "pages": [],

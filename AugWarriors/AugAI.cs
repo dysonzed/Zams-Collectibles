@@ -135,9 +135,12 @@ namespace ZamsCollectibles.AugWarriors
             AugRules.Resolve(meAfter, themAfter, card, target, null);
             float gain = Value(meAfter, themAfter, style) - now;
             gain += (theirs - AugRules.Score(themAfter, false, meAfter).final) * style.hackWeight;
-            if (card.effect == AugRules.DRAW) gain += card.amount;
+            // a draw is only worth the cards left in the deck; past that it costs Glitch
+            float DrawWorth(int n) => Math.Min(n, me.deck.Count) - 1.5f * AugRules.EMPTY_DRAW_GLITCH * Math.Max(0, n - me.deck.Count);
+            if (card.effect == AugRules.DRAW) gain += DrawWorth(card.amount);
             if (card.effect == AugRules.EXTRA_ACTIONS || card.effect == AugRules.EXTRA_ACTIONS_COSTLY) gain += 1.5f * card.amount;
-            if (card.effect == AugRules.DRAW_BOTH || card.effect == AugRules.KARMIC) gain += 1f;
+            if (card.effect == AugRules.DRAW_BOTH) gain += DrawWorth(card.amount) - (card.amount - 1);   // they draw one fewer
+            if (card.effect == AugRules.KARMIC) gain += 1f;
             if (card.kind == AugRules.MOD) gain += style.modBonus;
             return gain;
         }

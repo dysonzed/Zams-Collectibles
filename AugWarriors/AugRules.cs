@@ -295,10 +295,18 @@ namespace ZamsCollectibles.AugWarriors
             log.Add(new AugEvent("aug_log_showdown"));
         }
 
-        // bonus: a draw from a card's effect, not the turn's draw (Over-Ray Visor counts those)
+        // bonus: a draw from a card's effect, not the turn's draw (Over-Ray Visor counts those).
+        // A draw from an empty deck overloads the system instead: it adds Glitch, so drawing a
+        // thin deck dry has a cost. A draw stopped by the hand limit costs nothing.
         private void Draw(AugPlayer p, bool bonus = false)
         {
-            if (p.deck.Count == 0 || p.hand.Count >= AugRules.MAX_HAND) return;
+            if (p.hand.Count >= AugRules.MAX_HAND) return;
+            if (p.deck.Count == 0)
+            {
+                p.looseGlitch += AugRules.EMPTY_DRAW_GLITCH;
+                log.Add(new AugEvent("aug_log_empty_draw", p.name, AugRules.EMPTY_DRAW_GLITCH));
+                return;
+            }
             p.hand.Add(p.deck[0]);
             p.deck.RemoveAt(0);
             if (bonus) p.bonusDraws++;
@@ -322,6 +330,7 @@ namespace ZamsCollectibles.AugWarriors
         public const int MAX_HAND = 12;         // no draw goes past this (extra draws from effects and the final turn)
         public const int MAX_TURNS = 6;         // each; then the showdown happens on its own
         public const int FINAL_DRAW = 2;        // extra cards for the last turn after a call
+        public const int EMPTY_DRAW_GLITCH = 1; // Glitch for each draw that finds the deck empty
         public const int BASE_STABILITY = 3;
         public const int MAX_MODS = 2;          // per augment
 
