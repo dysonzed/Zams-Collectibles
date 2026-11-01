@@ -63,6 +63,7 @@ namespace ZamsCollectibles
 
         private bool boardOpen;      // the board and Dan are up (false: shop list fallback)
         private bool panelPlaced;
+        private Vector2Int placedFor;   // the screen size the panel was placed for
         private Stock stock;
         private readonly List<(GameItem item, PackStock pack, SingleStock single)> onBoard = new List<(GameItem, PackStock, SingleStock)>();
 
@@ -103,14 +104,45 @@ namespace ZamsCollectibles
             boardOpen = false;
         }
 
-        // The game positions the panel after building it; move it once it exists.
+        // The game positions the panel after building it; move it once it exists, and again if the
+        // game window changes size.
         public override void Tick()
         {
-            if (panelPlaced || CustomUIManager.Instance == null) return;
+            Vector2Int screen = new Vector2Int(Screen.width, Screen.height);
+            if ((panelPlaced && screen == placedFor) || CustomUIManager.Instance == null) return;
             CustomUIWindow panel = CustomUIManager.Instance.GetWindow(PANEL_WINDOW_ID);
             if (panel == null || !panel.IsAlive) return;
             panel.SetPosition(boardOpen ? PanelPosition : ListPanelPosition);
+            KeepOnScreen(panel.Rect);
             panelPlaced = true;
+            placedFor = screen;
+        }
+
+        /// <summary>
+        /// Moves a window back inside the screen if any of it falls outside. The positions above are
+        /// offsets from the screen's centre, tuned at a large resolution; at a small or narrower
+        /// screen the game's UI scaling pushes them past the edge, taking the Return button with it.
+        /// If the window is bigger than the screen, its top left (title and close button) stays in view.
+        /// </summary>
+        private static void KeepOnScreen(RectTransform window, float margin = 8f)
+        {
+            Canvas canvas = window == null ? null : window.GetComponentInParent<Canvas>();
+            RectTransform screen = canvas == null ? null : canvas.rootCanvas.transform as RectTransform;
+            if (screen == null) return;
+            Canvas.ForceUpdateCanvases();
+            Vector3[] corners = new Vector3[4];
+            window.GetWorldCorners(corners);
+            Vector2 min = screen.InverseTransformPoint(corners[0]), max = screen.InverseTransformPoint(corners[2]);
+            Rect bounds = screen.rect;
+            Vector2 shift = Vector2.zero;
+            if (max.x + shift.x > bounds.xMax - margin) shift.x = bounds.xMax - margin - max.x;
+            if (min.x + shift.x < bounds.xMin + margin) shift.x = bounds.xMin + margin - min.x;
+            if (min.y + shift.y < bounds.yMin + margin) shift.y = bounds.yMin + margin - min.y;
+            if (max.y + shift.y > bounds.yMax - margin) shift.y = bounds.yMax - margin - max.y;
+            if (shift == Vector2.zero) return;
+            // the shift is in screen-canvas units; anchoredPosition is in the window's parent's units
+            float scale = window.parent == null ? 1f : window.parent.lossyScale.x / screen.lossyScale.x;
+            window.anchoredPosition += shift / (scale == 0f ? 1f : scale);
         }
 
         // Mirrors Jackson's arrival: counters out, stock on the board, the shopkeeper at the counter.
@@ -135,6 +167,7 @@ namespace ZamsCollectibles
             var credits = StoreUIManager.Instance.storeCreditDisplay.creditDisplayText;
             credits.gameObject.SetActive(true);
             credits.rectTransform.anchoredPosition = CreditPosition;
+            KeepOnScreen(credits.rectTransform);
             ColorUtility.TryParseHtmlString(CREDIT_COLOR, out Color screen);
             credits.color = screen;
         }

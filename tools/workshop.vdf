@@ -88,21 +88,13 @@ Zamco 电子把 Aug Warriors 集换式卡牌游戏带到了空间站。拆补充
 [*]新顾客：补充包贩子、组卡客、卡牌评级师和稀有的套装收藏家；新开局：卡牌经销商
 [/list]
 支持简体中文。注意：停用或移除本模组后，其物品会从你的商店中消失。"
-	"changenote"		"Version 0.3.4: drawing from an empty deck now has a cost, deck counts on the board, and a smarter AI with draw cards.
-
-Aug Warriors
-- Drawing from an empty deck overloads your system: each draw that finds no card adds 1 Glitch. Thin decks packed with draw cards now have a risk to weigh. A draw stopped by the hand limit still costs nothing, and no existing deck becomes illegal
-- The board shows how many cards are left in each deck, next to Power
-- The match log says when someone draws from an empty deck
-- The AI values draw cards by the cards actually left in its deck, so it plays them better late in a game
-- The Stockist Guide's rules page explains the new rule
+	"changenote"		"Version 0.3.5: the Downside Den menu always fits on screen.
 
 Fixes
-- The Stockist Guide's page counter fits again (it showed Page 10/1 on two lines), and its arrows no longer crowd it
+- At lower screen resolutions (or narrower screen shapes), the Downside Den menu could sit partly off screen, hiding the Return button. It now always moves fully into view, and finds its place again if you resize the game window
+- The Den's credit display on the wall stays on screen the same way
 
-版本 0.3.4：从空牌库抽牌会有代价，对战板显示牌库数量，AI 更会使用抽牌效果。
-- 从空牌库抽牌会让系统过载：每次没抽到牌，故障 +1。手牌已满时抽不到牌不受影响，现有卡组均不会变为不合规
-- 对战板在力量旁显示双方牌库剩余张数；对战记录会提示从空牌库抽牌
-- AI 按牌库实际剩余张数评估抽牌效果
-- 修复：指南页码显示不全的问题"
+版本 0.3.5：Downside Den 菜单始终完整显示在屏幕内。
+- 修复：在较低分辨率或较窄的屏幕比例下，Den 菜单可能有一部分超出屏幕，导致看不到返回按钮。现在菜单会自动移到屏幕内，调整游戏窗口大小时也会重新定位
+- Den 墙上的信用点显示同样会保持在屏幕内"
 }
